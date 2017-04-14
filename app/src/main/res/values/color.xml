@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="tv_selected_bg">#FFFFFF</color>
+    <color name="tv_unselected_bg">#77ffffff</color>
+    <color name="top_bar_normal_bg">#333333</color>
+    <color name="btn_bg_normal">#F5F5F5</color>
+    <color name="listview_divider">#dbdbdb</color>
+    <color name="divider_list">#dbdbdb</color>
+    
+    
+    <color name="transparent">#00000000</color>
+    <color name="dark_slate_gray">#2F4F4F</color>
+	<color name="gray_2">#AFAFAF</color>
+	<color name="gray_1">#C0C0C0</color>
+	<color name="black">#000000</color>
+	<!-- #1d232e -->
+	<color name="bg_top_bar_2">#333333</color>
+	<color name="line_color_2">#e5e5e5</color>
+	<color name="blue_color_2">#1ba8ed</color>
+	<color name="input_hint_color">#999</color>
+	<color name="input_text_color">#1a1a1a</color>
+	<color name="text_color_4c4c4c">#4c4c4c</color>
+	<color name="wheel_divider_line">#C7C7C7</color>
+	<color name="item_gray">#f0f0f0</color>
+
+
+
+    <!-- chatui start -->
+    <color name="bg_content_2">#f2f2f2</color>
+    <color name="message_textcolor_right">@android:color/white</color>
+    <color name="message_textcolor_left">#1a1a1a</color>
+    <!-- chatui end-->
+	
+    <!-- A light Holo shade of red -->
+    <color name="holo_red_light">#ffff4444</color>
+    <!-- A light Holo shade of orange -->
+    <color name="holo_orange_light">#ffffbb33</color>
+    <!-- A really bright Holo shade of blue -->
+    <color name="holo_blue_bright">#ff00ddff</color>
+    <!-- A dark Holo shade of green -->
+    <color name="holo_green_dark">#ff669900</color>
+    
+    
+    
+    <!-- expandlistview -->
+    <color name="expandlistview_selector">#00000000</color>
+    <color name="item_press">#E8941A</color>
+    <color name="parent_color">#ffffff</color>
+    <color name="child_color">#ccc</color>
+
+
+    <!-- photo picker-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- copy from color-->
+    <color name="color_copy_from">#1ba8ed</color>
+    <color name="color_copy_from_99">#969696</color>
+
+
+    <!--slidingmenu item bg color start -->
+    <color name="bg_list_item_slidingmenu_normal">#1a1a1a</color>
+    <color name="bg_list_item_slidingmenu_select">#33ee33</color>
+    <!-- end-->
+
+
+
+    <!-- visitor ui start -->
+    <!--<color name="status_bar_color_visitor_ui">#333333</color>-->
+    <!-- visitor ui end-->
+
+
+    <!-- manager ui start-->
+    <color name="manager_label_text_color">#262626</color>
+    <color name="manager_left_menu_item_color_normal">#1a1a1a</color>
+    <color name="manager_left_menu_item_color_pressed">#333333</color>
+
+    <color name="btn_refresh_text_color">#474747</color>
+    <!-- manager ui end -->
+    <!-- manager today data start -->
+    <color name="today_session_text_color">#73a827</color>
+    <color name="inpro_session_text_color">#5c5b17</color>
+    <color name="online_agent_text_color">#fc5b17</color>
+    <color name="today_message_text_color">#1fa0ed</color>
+    <!-- manager today data end -->
+
+
+</resources>

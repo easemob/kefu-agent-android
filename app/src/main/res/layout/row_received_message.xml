@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/msg_item_liear_padding_top" >
+
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_gravity="center"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" >
+
+        <com.easemob.helpdesk.widget.imageview.RoundImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="@dimen/size_avatar"
+            android:layout_height="@dimen/size_avatar"
+            android:layout_marginTop="@dimen/magin_top_avatar"
+            android:layout_marginBottom="@dimen/magin_bottom_avatar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/default_avatar"
+            android:scaleType="fitXY" />
+
+        <!--<com.easemob.helpdesk.widget.TextViewFixTouchConsume-->
+        <!--android:id="@+id/tv_chatcontent"-->
+        <!--style="@style/chat_message_text_style"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="5dp"-->
+        <!--android:layout_marginRight="@dimen/size_avatar"-->
+        <!--android:layout_toRightOf="@id/iv_userhead"-->
+        <!--android:background="@drawable/message_bubble_left"-->
+        <!--android:textColorLink="@color/message_textcolor_left"-->
+        <!--android:textColor="@color/message_textcolor_left"-->
+        <!--&gt;</com.easemob.helpdesk.widget.TextViewFixTouchConsume>-->
+        <com.easemob.helpdesk.widget.LinkClickTextView
+            android:id="@+id/tv_chatcontent"
+            style="@style/chat_message_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="@dimen/size_avatar"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:background="@drawable/message_bubble_left"
+            android:textColorLink="@color/message_textcolor_left"
+            android:textColor="@color/message_textcolor_left"
+            app:textColorLinkClick="@color/message_textcolor_left"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_userid"
+            style="@style/chat_text_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:layout_below="@id/iv_userhead"/>
+    </RelativeLayout>
+
+</LinearLayout>

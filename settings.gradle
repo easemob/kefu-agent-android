@@ -1,0 +1,1 @@
+include ':app', ':xhsemotionskeyboard', ':kmpautotextview', ':filepicker', ':photopicker'

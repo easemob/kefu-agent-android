@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="dialog_btn_item_history">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_radiobtn</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+    <style name="main_tab_btn">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:onClick">onTabClicked</item>
+        <item name="android:scaleType">matrix</item>
+        <item name="android:paddingBottom">1dip</item>
+        <item name="android:background">#fff</item>
+        <item name="android:textColor">@color/main_item_text_font</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="main_tabbutton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">#fff</item>
+    </style>
+    
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
+    <style name="toast_anim">
+        <item name="@android:windowEnterAnimation">@anim/toast_anim_in</item>
+        <item name="@android:windowExitAnimation">@anim/toast_anim_out</item>
+    </style>
+    <style name="line_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/line_color_2</item>
+    </style>
+    <style name="line_view_1dp">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/line_color_2</item>
+    </style>
+    <style name="AnimPreview">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+    <style name="time_radiobutton_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dip</item>
+        <item name="android:background">#fff</item>
+        <item name="android:button">@null</item>
+        <item name="android:textColor">@color/popup_time_select_text_color</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:drawableRight">@drawable/icon_select_right_2</item>
+        <item name="android:paddingRight">5dip</item>
+    </style>
+    
+    <declare-styleable name="Navbar">
+        <attr name="textTitle" format="string|reference" />
+        <attr name="onLeftAction" format="string" />
+        <attr name="onRightAction" format="string" />
+        <attr name="onLeftRes" format="reference"/>
+        <attr name="onRightRes" format="reference"/>
+    </declare-styleable>
+
+    <style name="profile_textview_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">42dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Theme_Audio_Dialog">
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+
+    </style>
+
+    <style name="select_channel_anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/pop_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
+    </style>
+
+
+</resources>

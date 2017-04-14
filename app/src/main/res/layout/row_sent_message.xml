@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/msg_item_liear_padding_top" >
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" >
+
+        <com.easemob.helpdesk.widget.imageview.RoundImageView
+            android:id="@+id/iv_userhead"
+            android:clickable="false"
+            android:layout_width="@dimen/size_avatar"
+            android:layout_height="@dimen/size_avatar"
+            android:layout_marginTop="@dimen/magin_top_avatar"
+            android:layout_marginBottom="@dimen/magin_bottom_avatar"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/mini_avatar_shadow"
+            android:scaleType="fitXY" />
+
+        <com.easemob.helpdesk.widget.LinkClickTextView
+            android:id="@+id/tv_chatcontent"
+            style="@style/chat_message_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="@dimen/size_avatar"
+            android:layout_toLeftOf="@id/iv_userhead"
+            android:background="@drawable/message_bubble_right"
+            android:textColorLink="@color/message_textcolor_right"
+            android:textColor="@color/message_textcolor_right"
+            app:textColorLinkClick="@color/message_textcolor_right"
+            />
+
+
+        <ImageView
+            android:id="@+id/msg_status"
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3dip"
+            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:clickable="true"
+            android:src="@drawable/pop_error"
+            android:visibility="gone"
+            tools:ignore="ContentDescription" />
+
+        <ProgressBar
+            android:id="@+id/pb_sending"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+</LinearLayout>

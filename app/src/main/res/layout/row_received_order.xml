@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/msg_item_liear_padding_top" >
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_text_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp" >
+
+        <com.easemob.helpdesk.widget.imageview.RoundImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="@dimen/size_avatar"
+            android:layout_height="@dimen/size_avatar"
+            android:layout_marginTop="@dimen/magin_top_avatar"
+            android:layout_marginBottom="@dimen/magin_bottom_avatar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+			android:src="@drawable/default_avatar"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:id="@+id/ly_chatcontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/message_bubble_left"
+            android:orientation="vertical" >
+            <LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="7dip"
+			    android:orientation="horizontal" >
+
+			    <TextView
+			        android:id="@+id/tvTitle"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_margin="3dp"
+			        android:textColor="#cecece"
+			        android:textSize="12sp" />
+
+			    <TextView
+			        android:id="@+id/tvOrderTitle"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_margin="3dp"
+			        android:singleLine="true"
+			        android:textColor="#cecece"
+			        android:textSize="12sp" />
+			</LinearLayout>
+           
+			<LinearLayout 
+			    android:layout_width="wrap_content"
+			    android:layout_height="60dp"
+			    android:layout_marginTop="10dp"
+			    android:orientation="horizontal"
+			    android:layout_marginLeft="6dp"
+			    >
+			    <ImageView 
+			        android:id="@+id/imgView"
+			        android:layout_width="50dp"
+			        android:layout_height="50dp"
+			        android:scaleType="fitXY"
+			        android:src="@drawable/default_image"
+					tools:ignore="ContentDescription" />
+			    <RelativeLayout 
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:layout_marginLeft="10dp"
+			        >
+			        <TextView 
+			            android:id="@+id/tvDesc"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_alignParentTop="true"
+			            android:textColor="@android:color/background_dark"
+			            android:maxLines="2"
+			            android:ellipsize="end"
+			            android:textSize="13sp"
+			            
+			            />
+			        <TextView 
+			            android:id="@+id/tvPrice"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_below="@id/tvDesc"
+			            android:layout_alignParentBottom="true"
+			            android:textColor="#cc3300"
+			            />
+			    </RelativeLayout>
+			    
+			</LinearLayout>
+
+			
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_userid"
+            style="@style/chat_text_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/iv_userhead"
+            android:layout_toLeftOf="@id/ly_chatcontent" />
+    </RelativeLayout>
+
+</LinearLayout>

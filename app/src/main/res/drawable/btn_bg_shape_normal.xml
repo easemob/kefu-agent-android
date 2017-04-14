@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+   <!-- 圆角 -->
+    <corners
+        android:radius="9dp"
+        android:topLeftRadius="6dp"
+        android:topRightRadius="6dp"
+        android:bottomLeftRadius="6dp"
+        android:bottomRightRadius="6dp"/><!-- 设置圆角半径 -->
+    
+    <!-- 大小 -->
+    <size
+        android:width="50dp"
+        android:height="40dp"/><!-- 宽度和高度 -->
+    
+    <!-- 填充 -->
+    <solid
+        android:color="@color/btn_bg_normal"/><!-- 填充的颜色 -->
+</shape>

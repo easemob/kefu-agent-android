@@ -1,0 +1,72 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+
+        minSdkVersion 14
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories{
+
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+allprojects{
+    repositories{
+        jcenter()
+        maven { url 'https://dl.bintray.com/liyuzhao/maven/'}
+    }
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+    //methodCount more than 65535, split dex
+    compile 'com.android.support:multidex:1.0.0'
+    // kefu agent sdk
+    compile 'com.hyphenate:kefu-agentsdk-android:1.0.1'
+    // http request library, sdk required
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    // http request library, sdk reqired
+    compile 'com.squareup.okhttp:okhttp:2.6.0'
+    // show picture library , ui required
+    compile 'com.github.bumptech.glide:glide:3.6.0'
+    // gson parse library, sdk required
+    compile 'com.google.code.gson:gson:2.2.4'
+    /*****************butterknife:8.4.0 start*****************/
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    /*****************butterknife:8.4.0 end******************/
+    // android 6.0 check permission
+    compile 'com.lovedise:permissiongen:0.0.6'
+    // bottom navigation bar
+    compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
+    // compatible low version android mobile
+    compile 'com.android.support:appcompat-v7:25.2.0'
+    // dependence library , emoticons and keyboard
+    compile project(':xhsemotionskeyboard')
+    // animation library
+    compile 'com.nineoldandroids:library:2.4.0'
+    // select file dialog
+    compile project(':filepicker')
+    compile project(':photopicker')
+}

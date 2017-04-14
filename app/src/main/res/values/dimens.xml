@@ -1,0 +1,63 @@
+<resources>
+
+    <dimen name="size_avatar">40dp</dimen>
+    <dimen name="margin_chat_activity">5dp</dimen>
+    <dimen name="listview_divider_height">1px</dimen>
+
+    <dimen name="magin_top_avatar">3.33dip</dimen>
+    <dimen name="magin_bottom_avatar">3.33dip</dimen>
+    <dimen name="msg_item_liear_padding_top">10dp</dimen>
+    <dimen name="more_image_height">60dip</dimen>
+
+
+    <!-- topbar start -->
+    <dimen name="top_title_height">44dip</dimen>
+    <dimen name="top_title_text_size">15sp</dimen>
+    <dimen name="top_title_icon_height">36dip</dimen>
+    <!-- topbar end-->
+
+
+	<!-- SlidingMenu start-->
+    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="list_padding">10dp</dimen>
+    <dimen name="shadow_width">15dp</dimen>
+
+    <integer name="num_cols">1</integer>
+    <!--SlidingMenu end -->
+
+
+
+    <!-- input icon item start -->
+    <dimen name="input_icon_width">36dp</dimen>
+    <!-- input icon item end -->
+
+
+    <!--iconfont start -->
+    <integer name="iconfont_incre">1</integer>
+    <!--iconfont end -->
+
+
+
+
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="dimension_50">50dp</dimen>
+
+    <dimen name="common_bar_height">@dimen/dimension_50</dimen>
+
+    <dimen name="margin_nomal">10dp</dimen>
+    <dimen name="margin_middle">15dp</dimen>
+
+    <dimen name="text_14">14sp</dimen>
+    <dimen name="text_17">17sp</dimen>
+    <dimen name="text_20">20sp</dimen>
+
+    <dimen name="text_nomal">@dimen/text_14</dimen>
+    <dimen name="text_big">@dimen/text_17</dimen>
+    <dimen name="item_emoticon_size_big">60dp</dimen>
+
+
+
+    <dimen name="bar_height_userdef">@dimen/dimension_50</dimen>
+    <dimen name="bar_icon_height_userdef">28dp</dimen>
+</resources>

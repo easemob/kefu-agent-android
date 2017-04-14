@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">AgentSDKDemo</string>
+
+    <!-- login activity -->
+    <string name="toast_account_notIsNull">账号不能为空！</string>
+    <string name="toast_pwd_notIsNull">密码不能为空！</string>
+    <string name="toast_network_isnot_available">网络不可用！</string>
+    <string name="loading_login">登录中&#8230;</string>
+    <string name="hint_loginAccount">客服账号</string>
+    <string name="hint_pwd">密码</string>
+    <string name="btn_login">登录</string>
+    <string name="error_loginfail">登录失败</string>
+    <string name="error_authentication_fail">账户或密码错误</string>
+    <string name="error_ok">确  定</string>
+
+
+    <!-- main activity -->
+    <string name="tip_loginInElsewhere">账号在其他地方登录！</string>
+
+    <!-- chat activity start -->
+    <string name="toast_op_fail_p_checknet">操作失败,请检查网络！</string>
+    <string name="tv_text_content">备注：%s</string>
+    <string name="txt_send">发送</string>
+    <string name="comfirm_send_eval_invit">确定发送满意度邀请吗?</string>
+    <string name="has_evaled">会话已评价</string>
+    <string name="info_sended_noresend">您已发送，不能重复发送</string>
+    <string name="comfirm_end_session">确认结束该会话吗？</string>
+    <string name="info_sending">发送中&#8230;</string>
+    <string name="toast_send_success">发送成功</string>
+    <string name="toast_send_fail">发送失败</string>
+    <string name="toast_file_no_exist">文件不存在！</string>
+    <string name="toast_file_nomore_count">文件不能超过10M!</string>
+    <string name="toast_transfer_fail">转接失败！</string>
+    <string name="toast_transfer_error">会话转接错误</string>
+    <string name="info_transfering">会话转接处理中&#8230;</string>
+    <string name="txt_custom_message">自定义消息！</string>
+    <string name="txt_style_error">消息格式不正确！</string>
+    <string name="txt_no_more_message">没有更多的消息</string>
+    <string name="txt_chat_from">会话来自:%s</string>
+
+
+    <!-- chat activity end -->
+
+    <string name="zero_precent">0%</string>
+
+    <string name="str_recorder_normal">按住录音</string>
+    <string name="str_recorder_recording">松开结束</string>
+    <string name="str_recorder_want_cancel">松开手指,取消录音</string>
+
+
+
+</resources>
