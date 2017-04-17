@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AgentSDKDemo.iml" filepath="$PROJECT_DIR$/AgentSDKDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/filepicker/filepicker.iml" filepath="$PROJECT_DIR$/filepicker/filepicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kefu-agent-android.iml" filepath="$PROJECT_DIR$/kefu-agent-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/kmpautotextview/kmpautotextview.iml" filepath="$PROJECT_DIR$/kmpautotextview/kmpautotextview.iml" />
       <module fileurl="file://$PROJECT_DIR$/photopicker/photopicker.iml" filepath="$PROJECT_DIR$/photopicker/photopicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/xhsemotionskeyboard/xhsemotionskeyboard.iml" filepath="$PROJECT_DIR$/xhsemotionskeyboard/xhsemotionskeyboard.iml" />

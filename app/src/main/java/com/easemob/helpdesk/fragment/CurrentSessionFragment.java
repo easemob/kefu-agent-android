@@ -411,8 +411,8 @@ public class CurrentSessionFragment extends Fragment implements OnRefreshViewLis
 
 			@Override
 			public void run() {
-				HDSession HDSession = CurrentSessionManager.getInstance().getSessionEntity(sSessionId);
-				if (HDSession != null) {
+				HDSession session = CurrentSessionManager.getInstance().getSessionEntity(sSessionId);
+				if (session != null) {
 					CurrentSessionManager.getInstance().remove(sSessionId);
 					query.getText().clear();
 					onRefreshView();
@@ -423,8 +423,8 @@ public class CurrentSessionFragment extends Fragment implements OnRefreshViewLis
 
 	@Override
 	public void closeSession(String sSessionId) {
-		HDSession HDSession = CurrentSessionManager.getInstance().getSessionEntity(sSessionId);
-		if (HDSession != null) {
+		HDSession session = CurrentSessionManager.getInstance().getSessionEntity(sSessionId);
+		if (session != null) {
 			CurrentSessionManager.getInstance().remove(sSessionId);
 			EMToast.makeStyleableToast(getActivity(), "会话超时已关闭！").show();
 			onRefreshView();

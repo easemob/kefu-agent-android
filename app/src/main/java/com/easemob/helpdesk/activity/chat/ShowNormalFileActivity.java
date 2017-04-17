@@ -24,15 +24,15 @@ public class ShowNormalFileActivity extends BaseActivity {
     private ProgressBar progressBar;
     private String localPath;
     private String remoteUrl;
-    private HDMessage HDMessage;
+    private HDMessage message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_file);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        HDMessage = getIntent().getParcelableExtra("message");
-        HDFileMessageBody messageBody = (HDFileMessageBody) HDMessage.getBody();
+        message = getIntent().getParcelableExtra("message");
+        HDFileMessageBody messageBody = (HDFileMessageBody) message.getBody();
         localPath = messageBody.getLocalPath();
         remoteUrl = messageBody.getRemoteUrl();
         String fileName = messageBody.getFileName();
@@ -57,7 +57,7 @@ public class ShowNormalFileActivity extends BaseActivity {
             FileUtils.openFile(file, this);
             return;
         }
-        HDMessage.setMessageCallback(new HDDataCallBack() {
+        message.setMessageCallback(new HDDataCallBack() {
             @Override
             public void onSuccess(Object value) {
                 runOnUiThread(new Runnable() {
@@ -95,7 +95,7 @@ public class ShowNormalFileActivity extends BaseActivity {
             }
         });
 
-        HDClient.getInstance().chatManager().downloadAttachment(HDMessage);
+        HDClient.getInstance().chatManager().downloadAttachment(message);
 
     }
 
