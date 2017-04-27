@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:background="#ffffff"
+        android:padding="5dip"
+        >
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:text="取消"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:textColor="@color/blue_color_2"
+            android:textSize="18sp"
+            />
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_toLeftOf="@id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableLeft="@drawable/search_bar_icon_normal"
+            android:drawablePadding="5dip"
+            android:layout_marginRight="5dip"
+            android:textColorHint="@color/input_hint_color"
+            android:textColor="@color/text_color_4c4c4c"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:hint="搜索">
+            <requestFocus/>
+        </EditText>
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:divider="@color/divider_list"
+        android:dividerHeight="0.5dip"
+        android:cacheColorHint="@android:color/transparent"
+        android:visibility="gone"
+      />
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#50000000"
+        />
+
+
+</LinearLayout>

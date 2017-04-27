@@ -43,7 +43,8 @@ dependencies {
     //methodCount more than 65535, split dex
     compile 'com.android.support:multidex:1.0.0'
     // kefu agent sdk
-    compile 'com.hyphenate:kefu-agentsdk-android:1.0.1'
+    compile(name:'kefu-agentsdk-android-debug',ext:'aar')
+//    compile 'com.hyphenate:kefu-agentsdk-android:1.0.1'
     // http request library, sdk required
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     // http request library, sdk reqired
@@ -69,4 +70,5 @@ dependencies {
     // select file dialog
     compile project(':filepicker')
     compile project(':photopicker')
+    compile project(':tagviewgroup')
 }

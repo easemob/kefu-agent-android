@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root"
+    android:fitsSystemWindows="true"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2" >
+
+        <ImageButton
+            android:id="@+id/left"
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_back_2"
+            android:visibility="gone"
+            android:layout_marginLeft="10dp"
+            tools:ignore="ContentDescription" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#FFFFFF"
+            android:text="选择会话标签"
+            android:textSize="@dimen/top_title_text_size" />
+
+        <TextView
+            android:id="@+id/right"
+            android:layout_width="60dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:singleLine="true"
+            android:gravity="center_vertical|right"
+            android:layout_marginRight="10dip"
+            android:textColor="#FFFFFF"
+            android:text="关闭"
+            android:textSize="@dimen/top_title_text_size"
+            android:ellipsize="middle"/>
+    </RelativeLayout>
+
+    <!--<include layout="@layout/layout_search_button"/>-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:background="#ffffff"
+        >
+        <RelativeLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="10dip"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circel_relative_search_bg"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <!-- icon 30dp * 30dp -->
+                <ImageView
+                    android:id="@+id/iv_search"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/search_bar_icon_normal"
+                    tools:ignore="ContentDescription" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="搜索"
+                    android:layout_marginLeft="4dp"
+                    android:textColor="#999999"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+    <View
+        style="@style/line_view"
+        android:layout_marginTop="2dip"/>
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/divider_list"
+        android:dividerHeight="0.5dp"
+        android:scrollbars="none"
+        android:cacheColorHint="@android:color/transparent"
+        />
+
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +22,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,20 +42,24 @@ import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.FaceConversionUtil;
 import com.easemob.helpdesk.widget.chatview.ChatEmoticonsKeyBoard;
+import com.easemob.helpdesk.widget.popupwindow.SessionCloseWindow;
 import com.github.angads25.filepicker.controller.DialogSelectionListener;
 import com.github.angads25.filepicker.model.DialogConfigs;
 import com.github.angads25.filepicker.model.DialogProperties;
 import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.hyphenate.kefusdk.HDChatListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.bean.HDCategorySummary;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDUser;
 import com.hyphenate.kefusdk.entity.HDMessageUser;
 import com.hyphenate.kefusdk.entity.HDTextMessageBody;
+import com.hyphenate.kefusdk.entity.HDUser;
 import com.hyphenate.kefusdk.manager.SessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.sj.emoji.EmojiBean;
+import com.zdxd.tagview.Tag;
+import com.zdxd.tagview.TagView;
 
 import org.json.JSONObject;
 
@@ -73,8 +79,6 @@ import sj.keyboard.interfaces.EmoticonClickListener;
 import sj.keyboard.utils.EmoticonsKeyboardUtils;
 import sj.keyboard.widget.EmoticonsAutoEditText;
 import sj.keyboard.widget.FuncLayout;
-
-import static com.easemob.helpdesk.fragment.CurrentSessionFragment.callback;
 
 
 /**
@@ -199,13 +203,19 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 	/**
 	 * title栏的更多按钮
 	 */
-	@BindView(R.id.iv_close)
-	protected View ivClose;
+	@BindView(R.id.ib_menu_more)
+	protected View ibMenuMore;
 
 	/**
 	 * 加载更多的View
 	 */
-	private SwipeRefreshLayout swipeRefreshLayout;
+	@BindView(R.id.chat_swipe_layout)
+	protected SwipeRefreshLayout swipeRefreshLayout;
+
+	/**
+	 * 会话关闭确认窗口
+	 */
+	private SessionCloseWindow closeWindow;
 
 	@BindView(R.id.ek_bar)
 	public ChatEmoticonsKeyBoard ekBar;
@@ -214,6 +224,46 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 
 	private SessionManager sessionManager;
 	private long chatGroupId;
+
+	/**
+	 * 标签显示收起按钮
+	 */
+	@BindView(R.id.btn_up)
+	protected ImageButton btnUp;
+
+	/**
+	 * 标签显示展开按钮
+	 */
+	@BindView(R.id.btn_down)
+	protected ImageButton btnDown;
+
+	/**
+	 * 标签显示整个布局
+	 */
+	@BindView(R.id.tag_layout)
+	protected LinearLayout tagLayout;
+
+	/**
+	 * 标签组布局
+	 */
+	@BindView(R.id.tagview)
+	protected TagView tagGroup;
+
+	/**
+	 * 标签备注信息View
+	 */
+	@BindView(R.id.tv_note)
+	protected TextView tvNote;
+	/**
+	 * 备注信息
+	 */
+	private String commentString;
+
+	/**
+	 * 标签整理父布局
+	 */
+	@BindView(R.id.tag_ll)
+	protected View tagLL;
 
 
 	@Override
@@ -274,6 +324,7 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 		initView();
 		initListener();
 		if (!TextUtils.isEmpty(sServiceId)) {
+			tagLL.setVisibility(View.VISIBLE);
 			//从服务器获取最新消息
 			/**
 			 * 异步获取访客和客服间消息from Server
@@ -311,10 +362,63 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 
 				}
 			});
+			//获取session信息，查询会话是否已经设置,Tag标签
+			sessionManager.getCategorySummarys(new HDDataCallBack<List<HDCategorySummary>>() {
+				@Override
+				public void onSuccess(final List<HDCategorySummary> hdCategorySummaries) {
+					if (isFinishing()) {
+						return;
+					}
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							setTagViews(hdCategorySummaries);
+						}
+					});
+				}
+
+				@Override
+				public void onError(int i, String s) {
+
+				}
+			});
+
+			//获取Note信息
+			sessionManager.getCommentsFromServer(new HDDataCallBack<String>() {
+				@Override
+				public void onSuccess(final String value) {
+					if (isFinishing()) {
+						return;
+					}
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if (TextUtils.isEmpty(value)) {
+								commentString = "";
+								tvNote.setText("");
+							} else {
+								commentString = value;
+								tvNote.setText(String.format(getString(R.string.tv_text_content), commentString));
+							}
+						}
+					});
+				}
+
+				@Override
+				public void onError(int error, String errorMsg) {
+
+				}
+			});
 
 			if (hasUnReadMessage) {
 				setMessageReadedMarkTag();
 			}
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					tagLayout.setVisibility(View.GONE);
+				}
+			}, 300);
 		}
 		if (!CommonUtils.isNetWorkConnected(this)) {
 			Toast.makeText(this, "当前无网络!", Toast.LENGTH_SHORT).show();
@@ -382,8 +486,6 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 			}
 		});
 
-
-
 	}
 
 
@@ -395,8 +497,10 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 	 * 注册View的监听
 	 */
 	private void initListener() {
+		btnUp.setOnClickListener(this);
+		btnDown.setOnClickListener(this);
 		rlBack.setOnClickListener(this);
-		ivClose.setOnClickListener(this);
+		ibMenuMore.setOnClickListener(this);
 		mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -431,11 +535,6 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 		mRecyclerView.setAdapter(mAdapter);
 		if (toUser != null && !TextUtils.isEmpty(toUser.getNicename())) {
 			tvTitle.setText(toUser.getNicename());
-		}
-		swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipe_layout);
-		if (swipeRefreshLayout == null) {
-			finish();
-			return;
 		}
 		HDUser loginUser = HDClient.getInstance().getCurrentUser();
 		if (loginUser == null){
@@ -722,20 +821,26 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.iv_close:
-				/**
-				 * 结束会话提示窗显示事件
-				 *
-				 * @param view
-				 */
-				startActivityForResult(new Intent(this, AlertDialog.class).putExtra("msg", getString(R.string.comfirm_end_session)),
-						REQUEST_CODE_STOP_DIALOG);
+			case R.id.ib_menu_more:
+				if (closeWindow == null) {
+					closeWindow = new SessionCloseWindow(this);
+				}
+				closeWindow.showPopupWindow(ibMenuMore);
 				break;
 			case R.id.rl_back:
 				startActivity(new Intent(this, MainActivity.class));
 				finish();
 				break;
-
+			case R.id.btn_up:
+				tagLayout.setVisibility(View.GONE);
+				btnUp.setVisibility(View.INVISIBLE);
+				btnDown.setVisibility(View.VISIBLE);
+				break;
+			case R.id.btn_down:
+				tagLayout.setVisibility(View.VISIBLE);
+				btnUp.setVisibility(View.VISIBLE);
+				btnDown.setVisibility(View.INVISIBLE);
+				break;
 			default:
 				break;
 		}
@@ -1002,6 +1107,94 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 		mAdapter.refreshSelectLast();
 	}
 
+	/**
+	 * 为TagGroup 添加数据源
+	 *
+	 * @param list
+	 */
+	private void setTagViews(List<HDCategorySummary> list) {
+
+
+		Tag tag;
+		if (list == null || list.size() == 0) {
+			tagGroup.addTags(new java.util.ArrayList<Tag>());
+			return;
+		}
+
+		ArrayList<Tag> tags = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			HDCategorySummary entty = list.get(i);
+			String rootName = (TextUtils.isEmpty(entty.rootName)) ? "" : entty.rootName + ">";
+			tag = new Tag(rootName + entty.name);
+			tag.id = entty.id;
+			tag.radius = 10f;
+			int color = (int) entty.color;
+			String strColor;
+			if (color == 0) {
+				strColor = "#000000";
+			} else if (color == 255) {
+				strColor = "#ffffff";
+			} else {
+				strColor = "#" + Integer.toHexString(color);
+				strColor = strColor.substring(0, 7);
+			}
+			tag.layoutColor = Color.parseColor(strColor);
+			tag.isDeletable = false;
+			tags.add(tag);
+		}
+		tagGroup.addTags(tags);
+	}
+
+
+	/**
+	 * 标签设置点击事件
+	 *
+	 * @param view
+	 */
+	public void lable_setting(View view) {
+		popupclose(null);
+		startActivityForResult(new Intent(ChatActivity.this, CategoryShowActivity.class)
+				.putExtra("sessionId", sServiceId)
+				.putExtra("summarys", sessionManager.getCategoryTreeValue()), REQUEST_CODE_CATEGORY_SHOW);
+	}
+
+	/**
+	 * 结束会话提示窗显示事件
+	 *
+	 * @param view
+	 */
+	public void chat_end(View view) {
+		popupclose(null);
+		if (HDClient.getInstance().isStopSessionNeedSummary && !sessionManager.categoryIsSet()) {
+			showCategoryTreeDialog();
+		} else {
+			startActivityForResult(new Intent(this, AlertDialog.class).putExtra("msg", getString(R.string.comfirm_end_session)),
+					REQUEST_CODE_STOP_DIALOG);
+		}
+	}
+
+
+	/**
+	 * 跳转会话标签展示添加界面
+	 */
+	private void showCategoryTreeDialog() {
+		startActivityForResult(new Intent(ChatActivity.this, CategoryShowActivity.class)
+				.putExtra("sessionId", sServiceId)
+				.putExtra("summarys", sessionManager.getCategoryTreeValue())
+				.putExtra("close", true), REQUEST_CODE_CATEGORY_SHOW);
+	}
+
+
+	/**
+	 * 当前页面的关闭弹出的关闭事件
+	 *
+	 * @param view
+	 */
+	public void popupclose(View view) {
+		if (closeWindow != null && closeWindow.isShowing()) {
+			closeWindow.dismiss();
+		}
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1068,7 +1261,23 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 				closeSessionAndUI();
 			} else if (requestCode == REQUEST_CODE_RESEND ) {
 				resendMessage();
-			}else if (requestCode == REQUEST_CODE_USER_DETAIL) {
+			} else if (requestCode == REQUEST_CODE_CATEGORY_SHOW) {
+				String newValue = data.getStringExtra("value");
+				String comment = data.getStringExtra("comment");
+				boolean isClose = data.getBooleanExtra("close", false);
+				List<HDCategorySummary> currentCategorySummarys = sessionManager.setCategorySummaryValue(newValue);
+				setTagViews(currentCategorySummarys);
+
+				if(comment != null){
+					commentString = comment;
+					tvNote.setText(String.format(getString(R.string.tv_text_content), commentString));
+				}
+
+				if (isClose) {
+					closeSessionAndUI();
+				}
+
+			} else if (requestCode == REQUEST_CODE_USER_DETAIL) {
 				String rNiceName = data.getStringExtra("nicename");
 				if (TextUtils.isEmpty(rNiceName)) {
 					return;
@@ -1077,8 +1286,8 @@ public class ChatActivity extends BaseActivity  implements View.OnClickListener,
 				if (sServiceId == null) {
 					return;
 				}
-				if (callback != null) {
-					callback.onFresh(null);
+				if (CurrentSessionFragment.callback != null) {
+					CurrentSessionFragment.callback.onFresh(null);
 				}
 
 			} else if (requestCode == REQUEST_CODE_SELECT_FILE) {//发送选择的文件

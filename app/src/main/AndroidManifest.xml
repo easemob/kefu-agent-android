@@ -117,7 +117,18 @@
         <activity
             android:name=".activity.chat.ShowNormalFileActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".activity.CategoryShowActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SelectCategoryTreeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AnimBottomIn" />
+        <activity
+            android:name=".activity.SearchCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Transparent"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
 
 
 
