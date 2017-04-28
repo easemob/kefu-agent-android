@@ -23,7 +23,6 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.widget.imageview.CircleDrawable;
 import com.hyphenate.kefusdk.bean.HDCategorySummary;
-import com.hyphenate.kefusdk.db.HDDBManager;
 import com.hyphenate.kefusdk.manager.CategorySummaryManager;
 
 import org.json.JSONArray;
@@ -117,7 +116,7 @@ public class SelectCategoryTreeActivity extends BaseActivity{
             @Override
             public void run() {
                 treeEntities.clear();
-                treeEntities.addAll(HDDBManager.getInstance().getCategoryTreeByParentId(0));
+                treeEntities.addAll(manager.getRootCategorySummarys());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
