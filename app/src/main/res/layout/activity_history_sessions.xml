@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:duplicateParentState="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_navbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2" >
+
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:id="@+id/left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            android:textSize="36sp"
+            android:text="{fon-arrow_left}"
+            />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="历史会话"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/top_title_text_size" />
+
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:id="@+id/right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:textSize="32sp"
+            android:textColor="@android:color/white"
+            android:text="{fon-shai}"
+
+            />
+
+    </RelativeLayout>
+
+
+    <include android:id="@+id/search_button" layout="@layout/layout_search_button" />
+
+    <View style="@style/line_view" />
+
+    <TextView
+        android:id="@+id/tv_label_total_count"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#e5e5e5"
+        android:gravity="center_vertical"
+        android:paddingLeft="12dp"
+        android:textColor="#1a1a1a"
+        android:textSize="12sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f5f7fa">
+
+        <com.jude.easyrecyclerview.EasyRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_empty="@layout/view_empty"
+            app:layout_progress="@layout/view_progress" />
+    </RelativeLayout>
+
+</LinearLayout>

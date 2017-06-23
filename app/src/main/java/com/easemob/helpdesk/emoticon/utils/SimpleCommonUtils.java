@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
 import com.easemob.helpdesk.emoticon.filter.EaseMobFilter;
 import com.easemob.helpdesk.emoticon.filter.WeBoFilter;
 import com.easemob.helpdesk.emoticon.filter.WeChatFilter;

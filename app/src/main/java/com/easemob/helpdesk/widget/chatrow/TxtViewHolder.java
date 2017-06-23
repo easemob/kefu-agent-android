@@ -7,8 +7,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
-import com.easemob.helpdesk.activity.ContextMenu;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
+import com.easemob.helpdesk.widget.ContextMenu;
 import com.easemob.helpdesk.adapter.ChatAdapter;
 import com.easemob.helpdesk.emoticon.utils.SimpleCommonUtils;
 import com.easemob.helpdesk.utils.CommonUtils;

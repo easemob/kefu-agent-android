@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2">
+
+        <include layout="@layout/top_bar_avatar_layout" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="待接入"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/top_title_text_size" />
+
+
+        <!--<com.zdxd.iconfont.IconFontView-->
+            <!--android:id="@+id/right"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--app:iconSize="16sp"-->
+            <!--app:iconColor="@android:color/white"-->
+            <!--app:iconName="@string/if_shai"-->
+            <!--/>-->
+        <com.mikepenz.iconics.view.IconicsTextView
+            android:id="@+id/right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:textSize="32sp"
+            android:textColor="@android:color/white"
+            android:text="{fon-shai}"
+            />
+
+        <!--<ImageButton-->
+            <!--android:id="@+id/right"-->
+            <!--android:layout_width="32dip"-->
+            <!--android:layout_height="32dip"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:src="@drawable/icon_screening" />-->
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#fff"
+        >
+
+        <!--<include layout="@layout/search_bar" />-->
+        <include  android:id="@+id/search_layout" layout="@layout/layout_search_button" />
+        <!--<View style="@style/line_view" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#e5e5e5"
+            android:gravity="left|center_vertical">
+
+            <TextView
+                android:id="@+id/tv_label_total_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:textColor="#1a1a1a"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <com.jude.easyrecyclerview.EasyRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_empty="@layout/view_empty"
+            app:layout_progress="@layout/view_progress"
+            />
+    </LinearLayout>
+
+</LinearLayout>
+

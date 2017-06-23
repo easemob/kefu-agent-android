@@ -10,9 +10,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
-import com.easemob.helpdesk.activity.ContextMenu;
-import com.easemob.helpdesk.activity.chat.ShowBigImage;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
+import com.easemob.helpdesk.widget.ContextMenu;
+import com.easemob.helpdesk.activity.chat.ShowBigImageActivity;
 import com.easemob.helpdesk.adapter.ChatAdapter;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.widget.BubbleImageView;
@@ -76,7 +76,7 @@ public class ImageViewHolder extends BaseViewHolder {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent();
-				intent.setClass(activity, ShowBigImage.class);
+				intent.setClass(activity, ShowBigImageActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.putExtra("message", message);
 				activity.startActivity(intent);

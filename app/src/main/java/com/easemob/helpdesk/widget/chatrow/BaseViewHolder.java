@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.AlertDialog;
-import com.easemob.helpdesk.activity.ChatActivity;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
 import com.easemob.helpdesk.adapter.ChatAdapter;
-import com.easemob.helpdesk.fragment.CurrentSessionFragment;
+import com.easemob.helpdesk.fragment.main.CurrentSessionFragment;
 import com.easemob.helpdesk.utils.DateUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.entity.HDMessage;

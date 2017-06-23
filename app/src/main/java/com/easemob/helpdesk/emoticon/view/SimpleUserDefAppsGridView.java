@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.widget.GridView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
 import com.easemob.helpdesk.emoticon.adapter.ChattingAppsAdapter;
 import com.easemob.helpdesk.emoticon.data.AppBean;
 

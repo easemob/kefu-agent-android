@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AgentSDKDemo</string>
+    <string name="app_name">环信客服demo</string>
 
     <!-- login activity -->
     <string name="toast_account_notIsNull">账号不能为空！</string>
@@ -47,6 +47,29 @@
     <string name="str_recorder_recording">松开结束</string>
     <string name="str_recorder_want_cancel">松开手指,取消录音</string>
 
+    <!-- agents fragment -->
+    <string name="hint_search">搜索</string>
+    <string name="error_getAgentUserListFail">获取客服与客服列表失败！</string>
 
+    <!-- multi reference start-->
+    <string name="info_saveing">保存中&#8230;</string>
+    <string name="info_loading">加载中&#8230;</string>
+    <string name="info_recalling">撤回中&#8230;</string>
+	<!-- multi reference end -->
+
+    <!-- history chat activity -->
+    <string name="loading_getdata">获取中&#8230;</string>
+
+    <!-- logout -->
+    <string name="info_logouting">退出中&#8230;</string>
+
+    <!--agnetprofile start-->
+
+    <string name="toast_getdata_fail">数据获取失败！</string>
+    <string name="toast_getdata_success">数据保存成功！</string>
+    <string name="toast_save_fail_p_check_net">保存失败，请检查网络！</string>
+    <string name="info_avatar_uploding">头像上传中&#8230;</string>
+    <string name="toast_pic_upload_fail">图片上传失败</string>
+    <!-- agent profile end -->
 
 </resources>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="expandlistview_parent_layout"/>
+    <item type="id" name="expandlistview_children_layout"/>
+    <item type="id" name="expandlistview_parent_position_tag"/>
+    <item type="id" name="expandlistview_child_position_tag"/>
+    <item type="id" name="expandlistview_children_layout_holder_tag"/>
+
+    <!--MainActivity start -->
+    <item type="id" name="slidingmenu_homeItem"/>
+    <item type="id" name="slidingmenu_historyItem"/>
+    <item type="id" name="slidingmenu_settingItem"/>
+    <item type="id" name="slidingmenu_updateVersionItem"/>
+    <item type="id" name="slidingmenu_screenoptize"/>
+    <item type="id" name="tabbar_icon_ongoing"/>
+    <item type="id" name="tabbar_icon_waiter"/>
+    <item type="id" name="tabbar_icon_notice"/>
+    <item type="id" name="tabbar_icon_ticket"/>
+    <!--MainActivity end -->
+
+    <!--AgentProfileActivity start -->
+    <item type="id" name="agentprofile_logout"/>
+
+    <!--AgentProfileActivity end -->
+
+
+
+</resources>

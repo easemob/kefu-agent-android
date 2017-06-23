@@ -31,6 +31,28 @@
             android:background="@drawable/popup_more_text_bg"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/ll_chat_transfer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:onClick="chat_transfer"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/expand_icon_transfer"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="会话转接"
+                    android:textColor="#4d4d4d" />
+            </LinearLayout>
+
+            <View style="@style/line_view" />
 
             <LinearLayout
                 android:id="@+id/ll_label_setting"

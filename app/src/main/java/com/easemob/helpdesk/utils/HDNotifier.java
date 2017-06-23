@@ -16,8 +16,8 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
 import com.easemob.helpdesk.HDApplication;
-import com.easemob.helpdesk.activity.ChatActivity;
-import com.easemob.helpdesk.activity.MainActivity;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
+import com.easemob.helpdesk.activity.main.MainActivity;
 import com.hyphenate.kefusdk.bean.HDSession;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.manager.CurrentSessionManager;

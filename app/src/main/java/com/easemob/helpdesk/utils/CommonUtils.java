@@ -19,7 +19,11 @@ import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.easemob.helpdesk.R;
+import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.PathUtil;
 
 import java.io.File;
@@ -29,7 +33,7 @@ import java.util.List;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
 public class CommonUtils {
-
+	private static final String TAG = CommonUtils.class.getSimpleName();
 	/**
 	 * 检测网络是否可用
 	 * 
@@ -62,6 +66,16 @@ public class CommonUtils {
 		return (int) (dip * scale + 0.5f * (dip >= 0 ? 1 : -1));
 	}
 
+	public static int convertDip2Px(Context context, float dip) {
+		float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (dip * scale + 0.5f * (dip >= 0 ? 1 : -1));
+	}
+
+	// 转换px为dip
+	public static int convertPx2Dip(Context context, int px) {
+		float scale = context.getResources().getDisplayMetrics().density;
+		return (int) (px / scale + 0.5f * (px >= 0 ? 1 : -1));
+	}
 
 	public static String getFilePath(String remoteUrl, String fileName) {
 		String filePath = remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length());
@@ -186,6 +200,69 @@ public class CommonUtils {
 
 	}
 
+	public static int getAgentStatus(String status){
+		int intState = 0;
+		if (TextUtils.isEmpty(status)){
+			return intState;
+		}else if (status.equals("Offline")){
+			intState = 4;
+		}else if (status.equals("Leave")){
+			intState = 3;
+		}else if (status.equals("Busy")){
+			intState = 2;
+		}else if (status.equals("Hidden")){
+			intState = 1;
+		}else if (status.equals("Online")){
+			intState = 0;
+		}
+		return intState;
+	}
+
+	public static void setAgentStatusView(ImageView imageView, String status){
+		if (imageView == null){
+			return;
+		}
+		if (TextUtils.isEmpty(status) || status.equals("Hidden")){
+			imageView.setImageResource(R.drawable.hiding);
+		}else if (status.equals("Online")){
+			imageView.setImageResource(R.drawable.free);
+		}else if (status.equals("Busy")){
+			imageView.setImageResource(R.drawable.busy);
+		}else if (status.equals("Leave")){
+			imageView.setImageResource(R.drawable.leave);
+		}else if(status.equals("Offline")){
+			imageView.setImageResource(R.drawable.state_gray);
+		}else {
+			imageView.setImageResource(R.drawable.hiding);
+		}
+	}
+
+	public static void setAgentStatusTextView(TextView textView, String status){
+		if (textView == null){
+			return;
+		}
+		if (TextUtils.isEmpty(status) || status.equals("Hidden")){
+			textView.setText("隐身");
+		}else if (status.equals("Online")){
+			textView.setText("空闲");
+		}else if (status.equals("Busy")){
+			textView.setText("忙碌");
+		}else if (status.equals("Leave")){
+			textView.setText("离开");
+		}else if(status.equals("Offline")){
+			textView.setText("离线");
+		}else{
+			textView.setText("隐身");
+		}
+	}
+
+	public static String getAvatarPath(String remoteUrl) {
+		String avatarImageName= remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length());
+		String path =PathUtil.getInstance().getAvatarPath()+"/"+avatarImageName;
+		path = path.replace(":","-").replace("?","-").replace("|","");
+		HDLog.d(TAG, " avatar image path:" + path);
+		return path;
+	}
 }
 
 

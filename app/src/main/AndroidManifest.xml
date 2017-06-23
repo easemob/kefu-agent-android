@@ -60,10 +60,11 @@
 
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:name=".HDApplication"
-        android:label="@string/app_name"
+        android:allowBackup="true"
+        android:icon="${APP_ICON_VALUE}"
+        android:label="${APP_LABLE_VALUE}"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name="com.easemob.helpdesk.activity.SplashActivity">
@@ -73,26 +74,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"
+        <activity android:name=".activity.main.LoginActivity"
             android:configChanges="screenSize|orientation"
             android:windowSoftInputMode="stateVisible|adjustResize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".activity.MainActivity"
+        <activity android:name=".activity.main.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing"
             />
         <activity
-            android:name=".activity.ChatActivity"
+            android:name=".activity.chat.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenLayout"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".activity.chat.ShowBigImage"
+            android:name=".activity.chat.ShowBigImageActivity"
             android:screenOrientation="portrait"/>
 
         <!-- photopicker start-->
@@ -110,7 +111,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"/>
         <activity
-            android:name="com.easemob.helpdesk.activity.ContextMenu"
+            android:name="com.easemob.helpdesk.widget.ContextMenu"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle"/>
 
@@ -118,20 +119,41 @@
             android:name=".activity.chat.ShowNormalFileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.CategoryShowActivity"
+            android:name=".activity.category.CategoryShowActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SelectCategoryTreeActivity"
+            android:name=".activity.category.SelectCategoryTreeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AnimBottomIn" />
         <activity
-            android:name=".activity.SearchCategoryActivity"
+            android:name=".activity.category.SearchCategoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Transparent"
             android:windowSoftInputMode="adjustResize|stateVisible" />
-
-
-
+        <activity
+            android:name=".activity.transfer.TransferActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.history.HistorySessionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.ModifyActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.ScreeningActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.history.SearchHistorySessionActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.history.HistoryChatActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.visitor.CustomerDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.agent.AgentProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.main.SearchWaitAccessActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.main.NoticeDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.main.SearchNoticeActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

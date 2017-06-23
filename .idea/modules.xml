@@ -3,10 +3,17 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/badgeutil/badgeutil.iml" filepath="$PROJECT_DIR$/badgeutil/badgeutil.iml" />
+      <module fileurl="file://$PROJECT_DIR$/easyrecycleview/easyrecycleview.iml" filepath="$PROJECT_DIR$/easyrecycleview/easyrecycleview.iml" />
       <module fileurl="file://$PROJECT_DIR$/filepicker/filepicker.iml" filepath="$PROJECT_DIR$/filepicker/filepicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flowlayout/flowlayout.iml" filepath="$PROJECT_DIR$/flowlayout/flowlayout.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flycotablayout_lib/flycotablayout_lib.iml" filepath="$PROJECT_DIR$/flycotablayout_lib/flycotablayout_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/kefu-agent-android.iml" filepath="$PROJECT_DIR$/kefu-agent-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/kmpautotextview/kmpautotextview.iml" filepath="$PROJECT_DIR$/kmpautotextview/kmpautotextview.iml" />
       <module fileurl="file://$PROJECT_DIR$/photopicker/photopicker.iml" filepath="$PROJECT_DIR$/photopicker/photopicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pickview/pickview.iml" filepath="$PROJECT_DIR$/pickview/pickview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/slidingmenu/slidingmenu.iml" filepath="$PROJECT_DIR$/slidingmenu/slidingmenu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/switchbutton/switchbutton.iml" filepath="$PROJECT_DIR$/switchbutton/switchbutton.iml" />
       <module fileurl="file://$PROJECT_DIR$/tagviewgroup/tagviewgroup.iml" filepath="$PROJECT_DIR$/tagviewgroup/tagviewgroup.iml" />
       <module fileurl="file://$PROJECT_DIR$/xhsemotionskeyboard/xhsemotionskeyboard.iml" filepath="$PROJECT_DIR$/xhsemotionskeyboard/xhsemotionskeyboard.iml" />
     </modules>

@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
 import com.easemob.helpdesk.widget.chatrow.BaseViewHolder;
 import com.easemob.helpdesk.widget.chatrow.FileViewHolder;
 import com.easemob.helpdesk.widget.chatrow.ImageViewHolder;

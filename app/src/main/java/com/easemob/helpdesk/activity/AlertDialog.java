@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
 
 /**
  * 自定义AlerDialog

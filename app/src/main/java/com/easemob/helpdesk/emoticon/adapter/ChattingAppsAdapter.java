@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
+import com.easemob.helpdesk.activity.chat.ChatActivity;
 import com.easemob.helpdesk.emoticon.data.AppBean;
 
 import java.util.ArrayList;

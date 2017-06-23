@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.easemob.helpdesk.R;
+import com.easemob.helpdesk.activity.main.LoginActivity;
+import com.easemob.helpdesk.activity.main.MainActivity;
 import com.hyphenate.kefusdk.chat.HDClient;
 
 

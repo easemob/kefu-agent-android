@@ -7,22 +7,14 @@
         android:id="@+id/rl_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_title_height"
-        android:background="@android:color/white">
+        android:background="@color/bg_top_bar_2">
+
+        <include layout="@layout/top_bar_avatar_layout" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            android:src="@drawable/tab_contact_unselect"
-            android:layout_centerVertical="true"
-        />
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/iv_setting"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:padding="5dp"
@@ -33,13 +25,24 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:id="@+id/fl_searchlayout"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="110dp"
             >
             <include layout="@layout/search_bar"
                 />
         </FrameLayout>
 
+        <TextView
+            android:id="@+id/tv_session_count"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            android:layout_toLeftOf="@id/iv_setting"
+            />
 
     </RelativeLayout>
     <android.support.v4.widget.SwipeRefreshLayout
