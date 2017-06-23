@@ -10,10 +10,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.bean.HDCategorySummary;
-import com.hyphenate.kefusdk.manager.CategorySummaryManager;
+import com.hyphenate.kefusdk.manager.main.CategorySummaryManager;
 import com.zdxd.tagview.OnTagDeleteListener;
 import com.zdxd.tagview.Tag;
 import com.zdxd.tagview.TagView;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 
 public class CategoryShowActivity extends BaseActivity {
 
@@ -39,6 +41,7 @@ public class CategoryShowActivity extends BaseActivity {
 
     private ProgressDialog pd;
     private boolean isClose;
+    private int position;
 
     private CategorySummaryManager manager;
 
@@ -46,12 +49,14 @@ public class CategoryShowActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_category_show);
         ButterKnife.bind(this);
         Intent intent = getIntent();
         String sessionId = intent.getStringExtra("sessionId");
         String value = intent.getStringExtra("summarys");
         isClose = intent.getBooleanExtra("close", false);
+        position = intent.getIntExtra("position", -1);
         manager = new CategorySummaryManager(sessionId);
         initView();
         loadData(value);
@@ -124,7 +129,7 @@ public class CategoryShowActivity extends BaseActivity {
             return;
         }
         String rootName = (TextUtils.isEmpty(entty.rootName)) ? "" : entty.rootName + ">";
-        Tag tag = new Tag(rootName + entty.name);
+       Tag tag = new Tag(rootName + entty.name);
         tag.id = entty.id;
         tag.radius = 10f;
         int color = (int)entty.color;
@@ -179,7 +184,7 @@ public class CategoryShowActivity extends BaseActivity {
                                 closeDialog();
                                 Toast.makeText(CategoryShowActivity.this, "保存成功！", Toast.LENGTH_SHORT).show();
                                 if (isClose) {
-                                    setResult(RESULT_OK, new Intent().putExtra("close", true));
+                                    setResult(RESULT_OK, new Intent().putExtra("close", true).putExtra("position", position));
                                     finish();
                                 }
 
@@ -270,7 +275,8 @@ public class CategoryShowActivity extends BaseActivity {
 
     public void add(View view){
         startActivityForResult(new Intent(this, SelectCategoryTreeActivity.class)
-                        .putExtra("ids", manager.getUnsavedCategorySummaryIds().toString())
+                .putExtra("sessionId", manager.getSessionId())
+                .putExtra("ids", manager.getUnsavedCategorySummaryIds().toString())
                 , REQUEST_CODE_ADD_CATEGORY);
         overridePendingTransition(R.anim.activity_open, 0);
     }
@@ -296,6 +302,5 @@ public class CategoryShowActivity extends BaseActivity {
             pd.dismiss();
         }
     }
-
 
 }

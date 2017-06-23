@@ -57,7 +57,6 @@
 
     <!-- copy from color-->
     <color name="color_copy_from">#1ba8ed</color>
-    <color name="color_copy_from_99">#969696</color>
 
 
     <!--slidingmenu item bg color start -->
@@ -86,5 +85,16 @@
     <color name="today_message_text_color">#1fa0ed</color>
     <!-- manager today data end -->
 
+	<!-- mangager realtime start -->
+	<color name="list_index_bg_color">#FFCC00</color>
+	<!-- mangager realtime end -->
+
+	<!-- ticket start-->
+	<color name="ticket_action_btn_enable">#FF28A2EF</color>
+	<color name="ticket_action_btn_disable">#FF9B9B9B</color>
+	<!-- ticket end-->
+
+	<color name="grid_state_pressed">#1Affffff</color>
+	<color name="grid_state_focused">#80000000</color>
 
 </resources>

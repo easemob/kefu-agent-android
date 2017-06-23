@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.easemob.helpdesk.R;
+import com.easemob.helpdesk.mvp.ChatActivity;
 
 /**
  * 右键菜单，文本菜单

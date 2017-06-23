@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:id="@+id/rl_shortcut_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2" >
+        <ImageButton
+            android:id="@+id/ib_to_back"
+            android:layout_width="@dimen/top_title_icon_height"
+            android:layout_height="@dimen/top_title_icon_height"
+            android:layout_centerVertical="true"
+            android:onClick="back"
+            android:src="@drawable/icon_button_back"
+            android:background="@android:color/transparent"
+            tools:ignore="ContentDescription" />
+
+        <Button
+            android:id="@+id/btn_viewend"
+            android:layout_toRightOf="@id/ib_to_back"
+            android:layout_width="60dip"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:text="关闭"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:onClick="viewend"
+            />
+
+
+        <Button
+            android:id="@+id/btn_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:onClick="refresh"
+            android:text="刷新"
+            android:textColor="@color/blue_color_2"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toLeftOf="@id/btn_refresh"
+            android:layout_toRightOf="@id/btn_viewend"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/top_title_text_size" />
+
+    </RelativeLayout>
+
+    <!-- webview 演示web调用Java -->
+    <com.easemob.jsbridge.BridgeWebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+</LinearLayout>

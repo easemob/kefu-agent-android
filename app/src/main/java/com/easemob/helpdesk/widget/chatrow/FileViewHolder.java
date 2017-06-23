@@ -9,10 +9,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
 import com.easemob.helpdesk.activity.ContextMenu;
 import com.easemob.helpdesk.activity.chat.ShowNormalFileActivity;
 import com.easemob.helpdesk.adapter.ChatAdapter;
+import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.utils.FileUtils;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.entity.HDNormalFileMessageBody;
@@ -52,10 +52,10 @@ public class FileViewHolder extends BaseViewHolder {
 
 	@Override
 	public void handleViewMessage(final HDMessage message, final int position) {
-		final HDNormalFileMessageBody HDFileMessageBody = (HDNormalFileMessageBody) message.getBody();
-		final String filePath = HDFileMessageBody.getLocalPath();
-		tvFileName.setText(HDFileMessageBody.getFileName());
-		long fileSize = HDFileMessageBody.getFileSize();
+		final HDNormalFileMessageBody fileMessageBody = (HDNormalFileMessageBody) message.getBody();
+		final String filePath = fileMessageBody.getLocalPath();
+		tvFileName.setText(fileMessageBody.getFileName());
+		long fileSize = fileMessageBody.getFileSize();
 		if (fileSize > 0) {
 			tvFileSize.setText(TextFormater.getDataSize(fileSize));
 		}
@@ -130,6 +130,13 @@ public class FileViewHolder extends BaseViewHolder {
 				}
 				tvPercentage.setVisibility(View.VISIBLE);
 				tvPercentage.setText(String.format(Locale.getDefault(), "%d%%", message.getProgress()));
+				break;
+			case CREATE:
+				if (pb != null) {
+					pb.setVisibility(View.INVISIBLE);
+				}
+				tvPercentage.setVisibility(View.INVISIBLE);
+				ivStatus.setVisibility(View.VISIBLE);
 				break;
 		}
 

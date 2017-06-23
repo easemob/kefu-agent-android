@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1a1a1a">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <!--android:background="@color/top_bar_normal_bg"-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.easemob.helpdesk.widget.CircleImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/default_agent_avatar" />
+
+            <ImageView
+                android:id="@+id/iv_status"
+                android:layout_width="14dip"
+                android:layout_height="14dip"
+                android:layout_alignBottom="@id/iv_avatar"
+                android:layout_alignRight="@id/iv_avatar"
+                tools:ignore="ContentDescription" />
+
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/iv_avatar"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:textColor="#fff"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:onClick="showStatus">
+
+
+
+                <ImageView
+                    android:id="@+id/icon_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/arrow_status_black_right"/>
+
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/icon_arrow"
+                    android:text=""
+                    android:textColor="#fff"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="#00000000"
+            android:listSelector="@android:color/transparent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/model_change_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="15dp"
+        android:gravity="left|center_vertical"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_icon_agent_mode"
+            android:layout_margin="5dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="管理员模式"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

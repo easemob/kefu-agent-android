@@ -19,11 +19,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.widget.imageview.CircleDrawable;
 import com.hyphenate.kefusdk.bean.HDCategorySummary;
-import com.hyphenate.kefusdk.manager.CategorySummaryManager;
+import com.hyphenate.kefusdk.manager.main.CategorySummaryManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +38,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SelectCategoryTreeActivity extends BaseActivity{
+/**
+ * Created by lyuzhao on 2016/1/4.
+ */
+public class SelectCategoryTreeActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_SEARCH = 0x01;
 
@@ -72,6 +76,7 @@ public class SelectCategoryTreeActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_select_categorytree);
         ButterKnife.bind(this);
         Intent intent = getIntent();

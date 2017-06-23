@@ -20,10 +20,11 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.widget.imageview.CircleDrawable;
 import com.hyphenate.kefusdk.bean.HDCategorySummary;
-import com.hyphenate.kefusdk.manager.CategorySummaryManager;
+import com.hyphenate.kefusdk.manager.main.CategorySummaryManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +41,7 @@ import butterknife.ButterKnife;
  * Created by lyuzhao on 2016/1/6.
  */
 public class SearchCategoryActivity extends BaseActivity implements TextWatcher, TextView.OnEditorActionListener, AdapterView.OnItemClickListener {
+
 
     @BindView(R.id.btn_cancel)
     protected Button btnCancel;
@@ -65,6 +67,7 @@ public class SearchCategoryActivity extends BaseActivity implements TextWatcher,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_search_category);
         ButterKnife.bind(this);
         Intent intent = getIntent();
@@ -144,13 +147,13 @@ public class SearchCategoryActivity extends BaseActivity implements TextWatcher,
 
     @Override
     public void afterTextChanged(Editable s) {
-        if(s.length() == 0){
-            categoryTreeEntities.clear();
-            mAdapter.notifyDataSetChanged();
-        }else{
-            String str = s.toString();
-            searchContent(str);
-        }
+            if(s.length() == 0){
+                categoryTreeEntities.clear();
+                mAdapter.notifyDataSetChanged();
+            }else{
+                String str = s.toString();
+                searchContent(str);
+            }
     }
 
 
@@ -239,7 +242,7 @@ public class SearchCategoryActivity extends BaseActivity implements TextWatcher,
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final HDCategorySummary entty = (HDCategorySummary) parent.getItemAtPosition(position);
+     final HDCategorySummary entty = (HDCategorySummary) parent.getItemAtPosition(position);
         setResult(RESULT_OK, new Intent().putExtra("tree", entty));
         finish();
     }

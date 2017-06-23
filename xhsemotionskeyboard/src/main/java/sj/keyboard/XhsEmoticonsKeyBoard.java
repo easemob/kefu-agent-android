@@ -51,6 +51,8 @@ public class XhsEmoticonsKeyBoard extends AutoHeightLayout implements View.OnCli
 
     protected boolean mDispatchKeyEventPreImeLock = false;
 
+    protected int appNum = -1;
+
     public XhsEmoticonsKeyBoard(Context context, AttributeSet attrs) {
         super(context, attrs);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -144,6 +146,11 @@ public class XhsEmoticonsKeyBoard extends AutoHeightLayout implements View.OnCli
             }
         }
         mEmoticonsFuncView.setAdapter(pageSetAdapter);
+    }
+
+    public void addFuncView(View view, int appNum) {
+        this.appNum = appNum;
+        mLyKvml.addFuncView(FUNC_TYPE_APPPS, view);
     }
 
     public void addFuncView(View view) {

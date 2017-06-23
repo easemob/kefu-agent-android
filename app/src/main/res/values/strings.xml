@@ -1,5 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AgentSDKDemo</string>
+
+    <string name="app_name">环信客服</string>
+    <string name="app_name_99">楚楚街客服</string>
+    <string name="app_name_langyan">在线客服</string>
+    <string name="app_name_peanutplan">花生计划</string>
+    <string name="text_ack_msg">read</string>
+    <string name="text_delivered_msg">delivered</string>
 
     <!-- login activity -->
     <string name="toast_account_notIsNull">账号不能为空！</string>
@@ -12,10 +19,90 @@
     <string name="error_loginfail">登录失败</string>
     <string name="error_authentication_fail">账户或密码错误</string>
     <string name="error_ok">确  定</string>
+	
+	<!-- main activity -->
+	<string name="tip_loginInElsewhere">账号在其他地方登录！</string>
+	
+	<!-- agents fragment -->
+	<string name="hint_search">搜索</string>
+	<string name="error_getAgentUserListFail">获取客服与客服列表失败！</string>
+	
+    <!-- chat_activiy -->
+    <string name="pop_stopsession">结束会话</string>
+    <string name="pop_history_messages">历史记录</string>
+    
+    <!-- shutcut activity -->
+    <string name="desc_shrinkup">收起</string>
+    <string name="desc_spread">展开</string>
+    <string name="quick_reply">快捷回复</string>
+    <string name="edit_quick_reply">编辑快捷回复</string>
+    <string name="add_quick_reply">添加快捷回复</string>
+    <string name="pd_adding">添加中&#8230;</string>
+    <string name="pd_updating">修改中&#8230;</string>
+    <!-- add shortcut activity -->
+    <string name="error_requestFail">请求失败！</string>
+    <string name="error_updateFail">修改失败!</string>
+    <!-- splash activity -->
+    <string name="copy_from">&#169;&#160;2016&#160;Easemob</string>
+
+    
+<string name="title_activity_history_chat">HistoryChatActivity</string>
+    <string name="title_activity_login_fail">LoginFailActivity</string>
+    <!-- history chat activity -->
+    <string name="loading_getdata">获取中&#8230;</string>
+    
+   	<!-- pull to refresh -->
+   	<string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>
+    <string name="pull_to_refresh_release_label">Release to refresh&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh&#8230;</string>
+    <string name="ok">确定</string>
+    <string name="update_new_version">更新新版本</string>
+    <string name="zero_precent">0%</string>
+    <string name="delivery">送达</string>
 
 
-    <!-- main activity -->
-    <string name="tip_loginInElsewhere">账号在其他地方登录！</string>
+
+    <!-- recyclerview-->
+    <string name="load_more">load more&#8230;</string>
+    <string name="last_page">last_page</string>
+
+
+
+    <!-- iconfont -->
+    <string name="iconfont_circel_category">&#xe601;</string>
+
+
+
+
+    <!-- agentInfo start -->
+
+    <string name="toast_closed_autoin">已关闭自动接入</string>
+    <string name="toast_save_success">保存成功！</string>
+    <string name="toast_save_fail">保存失败！</string>
+    <!-- agentInfo end-->
+
+    <!--agnetprofile start-->
+
+    <string name="toast_getdata_fail">数据获取失败！</string>
+    <string name="toast_getdata_success">数据保存成功！</string>
+    <string name="toast_save_fail_p_check_net">保存失败，请检查网络！</string>
+    <string name="info_avatar_uploding">头像上传中&#8230;</string>
+    <string name="toast_pic_upload_fail">图片上传失败</string>
+    <!-- agent profile end -->
+
+    <!-- agentUserList start -->
+    <string name="confirm_transfer_session">确定转接该会话？</string>
+    <!-- agentUserList end -->
+
+    <!-- addshortcut start -->
+    <string name="title_edit_phrase">编辑常用语</string>
+    <string name="title_add_phrase">添加常用语</string>
+    <string name="title_add_phrase_category">添加分类</string>
+    <string name="toast_content_no_empty">内容不能为空！</string>
+    <string name="text_save">保存</string>
+
+    <!-- addshortcut end -->
 
     <!-- chat activity start -->
     <string name="toast_op_fail_p_checknet">操作失败,请检查网络！</string>
@@ -41,12 +128,17 @@
 
     <!-- chat activity end -->
 
-    <string name="zero_precent">0%</string>
-
     <string name="str_recorder_normal">按住录音</string>
     <string name="str_recorder_recording">松开结束</string>
     <string name="str_recorder_want_cancel">松开手指,取消录音</string>
 
+    <!-- multi reference start-->
+    <string name="info_saveing">保存中&#8230;</string>
+    <string name="info_loading">加载中&#8230;</string>
+    <string name="info_recalling">撤回中&#8230;</string>
+    <!-- multi reference end -->
 
-
+    <!-- logout -->
+    <string name="info_logouting">退出中&#8230;</string>
+	<string name="is_down_please_wait">Downloading video, please try again later</string>
 </resources>

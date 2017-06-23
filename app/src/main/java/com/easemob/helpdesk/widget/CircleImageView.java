@@ -19,7 +19,7 @@ import android.widget.ImageView;
 
 import com.easemob.helpdesk.R;
 
-public class CircleImageView extends ImageView {
+public class CircleImageView extends ImageView{
 
 	private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 	

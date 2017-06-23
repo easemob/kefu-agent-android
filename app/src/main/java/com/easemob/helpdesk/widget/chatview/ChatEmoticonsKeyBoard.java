@@ -9,11 +9,11 @@ import com.easemob.helpdesk.R;
 import sj.keyboard.XhsEmoticonsKeyBoard;
 import sj.keyboard.utils.EmoticonsKeyboardUtils;
 
-
-
 public class ChatEmoticonsKeyBoard extends XhsEmoticonsKeyBoard {
 
-    public final int APPS_HEIGHT = 120;
+    public final int APPS_HEIGHT_PER_LINE = 120;
+
+    private final int APPS_PER_LINE = 4;
 
     public ChatEmoticonsKeyBoard(Context context, AttributeSet attrs){
         super(context, attrs);
@@ -113,9 +113,9 @@ public class ChatEmoticonsKeyBoard extends XhsEmoticonsKeyBoard {
             toggleFuncView(FUNC_TYPE_EMOTION);
         }else if (i == sj.keyboard.R.id.btn_multimedia){
             toggleFuncView(FUNC_TYPE_APPPS);
-            setFuncViewHeight(EmoticonsKeyboardUtils.dip2px(getContext(), APPS_HEIGHT));
+            setFuncViewHeight(EmoticonsKeyboardUtils.dip2px(getContext(),
+                    (appNum / APPS_PER_LINE + (appNum % APPS_PER_LINE > 0 ? 1 : 0)) * APPS_HEIGHT_PER_LINE));
         }
-
 
     }
 }

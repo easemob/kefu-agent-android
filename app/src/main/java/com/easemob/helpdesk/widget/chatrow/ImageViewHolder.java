@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
 import com.easemob.helpdesk.activity.ContextMenu;
 import com.easemob.helpdesk.activity.chat.ShowBigImage;
 import com.easemob.helpdesk.adapter.ChatAdapter;
+import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.widget.BubbleImageView;
 import com.hyphenate.kefusdk.entity.HDImageMessageBody;
@@ -21,6 +21,8 @@ import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.util.Locale;
+
+
 
 /**
  * Created by liyuzhao on 10/04/2017.
@@ -68,7 +70,7 @@ public class ImageViewHolder extends BaseViewHolder {
 				} else {
 					return false;
 				}
-				activity.startActivityForResult(intent, ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+				activity.startActivityForResult(intent, BaseChatActivity.REQUEST_CODE_CONTEXT_MENU);
 				return true;
 			}
 		});
@@ -118,6 +120,12 @@ public class ImageViewHolder extends BaseViewHolder {
 				pb.setVisibility(View.VISIBLE);
 				tvPercentage.setVisibility(View.VISIBLE);
 				tvPercentage.setText(String.format(Locale.getDefault(), "%d%%", message.getProgress()));
+				break;
+			case CREATE:
+				pb.setVisibility(View.GONE);
+				tvPercentage.setVisibility(View.GONE);
+				if (ivStatus != null)
+					ivStatus.setVisibility(View.VISIBLE);
 				break;
 			default:
 		}

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EFEFF4"
+    android:orientation="vertical">
+
+    <com.easemob.helpdesk.widget.relative.ViewPagerContainerLayout
+        android:id="@+id/myLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:id="@+id/rl_actionbar"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/top_title_height"
+            android:background="@color/bg_top_bar_2">
+
+             <include layout="@layout/top_bar_avatar_layout"/>
+
+            <com.flyco.tablayout.SegmentTabLayout
+                android:id="@+id/tablayout"
+                android:layout_width="158dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                tl:tl_bar_color="#000"
+                tl:tl_indicator_color="#fff"
+                tl:tl_indicator_corner_radius="4dp"
+                tl:tl_tab_padding="10dp"
+                tl:tl_tab_space_equal="true"
+                tl:tl_textSelectColor="#000"
+                tl:tl_textUnselectColor="#fff"
+                tl:tl_textBold="false"
+                tl:tl_textsize="12sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ib_setting"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/icon_setting_limit"
+                />
+
+            <TextView
+                android:id="@+id/tv_session_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                android:layout_toRightOf="@id/tablayout"
+                android:layout_toLeftOf="@id/ib_setting"
+                />
+
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@id/rl_actionbar" />
+    </com.easemob.helpdesk.widget.relative.ViewPagerContainerLayout>
+</RelativeLayout>

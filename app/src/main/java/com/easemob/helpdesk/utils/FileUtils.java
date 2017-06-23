@@ -16,6 +16,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,7 +41,7 @@ public class FileUtils {
 	public static List<String> getEmojiFile(Context context) {
 		try {
 			List<String> list = new ArrayList<String>();
-			InputStream in = context.getResources().getAssets().open("com/sj/emoji");//
+			InputStream in = context.getResources().getAssets().open("emoji");//
 			BufferedReader br = new BufferedReader(new InputStreamReader(in,
 					"UTF-8"));
 			String str;
@@ -76,7 +77,7 @@ public class FileUtils {
 	 * @param f
 	 * @param context
 	 */
-	public static void openFile(File f, Activity context) {
+	public static void openFile(File f,Activity context) {
 		Intent intent = new Intent();
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.setAction(android.content.Intent.ACTION_VIEW);
@@ -92,157 +93,6 @@ public class FileUtils {
 			Toast.makeText(context, "没有找到打开此类文件的程序", Toast.LENGTH_SHORT).show();
 		}
 	}
-
-
-
-	public static void asyncformUpload(final String urlStr, final Map<String, String> textMap, final Map<String, String> fileMap, final HDDataCallBack callBack){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				formUpload(urlStr,textMap,fileMap,callBack);
-			}
-		}).start();
-	}
-
-
-
-
-	/**
-	 * 上传图片
-	 * @param urlStr
-	 * @param textMap
-	 * @param fileMap
-	 * @return
-	 */
-	public static void formUpload(String urlStr, Map<String, String> textMap, Map<String, String> fileMap, HDDataCallBack callBack) {
-		String res;
-		HttpURLConnection conn = null;
-//		String BOUNDARY = "---------------------------123821742118716"; //boundary就是request头和上传文件内容的分隔符
-		String BOUNDARY = UUID.randomUUID().toString();
-		String PREFIX = "--",LINED = "\r\n";
-		try {
-			URL url = new URL(urlStr);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(5000);
-			conn.setReadTimeout(30000);
-			conn.setDoOutput(true);
-			conn.setDoInput(true);
-			conn.setUseCaches(false);
-			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Connection", "Keep-Alive");
-			conn.setRequestProperty("Charset","UTF-8");
-			conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
-
-			OutputStream out = new DataOutputStream(conn.getOutputStream());
-			// text
-			if (textMap != null) {
-				StringBuilder strBuf = new StringBuilder();
-				for (Map.Entry<String, String> entry : textMap.entrySet()) {
-					String inputName = entry.getKey();
-					String inputValue = entry.getValue();
-					if (inputValue == null) {
-						continue;
-					}
-					strBuf.append(PREFIX).append(BOUNDARY).append(LINED);
-					strBuf.append("Content-Disposition: form-data; name=\"").append(inputName).append("\"").append(LINED);
-//					strBuf.append("Content-Type:text/plain; charset=utf-8" + LINED);
-//					strBuf.append("Content-Transfer-Encoding:binary" + LINED);
-					strBuf.append(LINED);
-					strBuf.append(inputValue);
-					strBuf.append(LINED);
-				}
-				out.write(strBuf.toString().getBytes());
-			}
-
-			// file
-			if (fileMap != null) {
-				for (Map.Entry<String, String> entry : fileMap.entrySet()) {
-					String inputName = entry.getKey();
-					String inputValue = entry.getValue();
-					if (inputValue == null) {
-						continue;
-					}
-					File file = new File(inputValue);
-					String filename = file.getName();
-//					MagicMatch match = Magic.getMagicMatch(file, false, true);
-//					String contentType = match.getMimeType();
-//					String contentType="image/jpeg";
-
-					String strBuf = PREFIX + BOUNDARY + LINED +
-							"Content-Disposition: form-data; name=\"" + inputName + "\"; filename=\"" + filename + "\"" + LINED +
-							"Content-Type: " + guessMimeType(file.getPath()) + LINED +
-							LINED;
-//					strBuf.append(LINED);
-					out.write(strBuf.getBytes());
-
-					DataInputStream in = new DataInputStream(new FileInputStream(file));
-					int bytes;
-					byte[] bufferOut = new byte[1024];
-					while ((bytes = in.read(bufferOut)) != -1) {
-						out.write(bufferOut, 0, bytes);
-					}
-					in.close();
-				}
-			}
-
-			byte[] endData = (LINED + PREFIX + BOUNDARY + PREFIX + LINED).getBytes();
-			out.write(endData);
-			out.flush();
-			out.close();
-			int responseCode = conn.getResponseCode();
-			HDLog.d(TAG, "responseCode:" + responseCode);
-			InputStream inputStream;
-			if(responseCode >= 200 && responseCode <= 204){
-				inputStream = conn.getInputStream();
-			}else{
-				inputStream = conn.getErrorStream();
-			}
-
-			// 读取返回数据
-			StringBuilder strBuf = new StringBuilder();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				strBuf.append(line).append("\n");
-			}
-			res = strBuf.toString();
-			HDLog.d(TAG,"res:" + res);
-			reader.close();
-
-			if(responseCode == 200){
-				if(callBack != null){
-					callBack.onSuccess(res);
-				}
-			}else{
-				if(callBack != null){
-					callBack.onError(responseCode, res);
-				}
-			}
-
-
-		} catch (Exception e) {
-			HDLog.e(TAG,"发送POST请求出错。" + urlStr);
-			e.printStackTrace();
-			if(callBack != null){
-				callBack.onError(-1,e.getMessage());
-			}
-		} finally {
-			if (conn != null) {
-				conn.disconnect();
-			}
-		}
-	}
-
-
-	public static String guessMimeType(String path) {
-		FileNameMap fileNameMap = URLConnection.getFileNameMap();
-		String contentTypeFor = fileNameMap.getContentTypeFor(path);
-		if (contentTypeFor == null) {
-			contentTypeFor = "application/octet-stream";
-		}
-		return contentTypeFor;
-	}
-
 
 	public static String getPath(Context context, Uri uri) {
 
@@ -270,6 +120,46 @@ public class FileUtils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 复制单个文件
+	 * @param oldPath String 原文件路径
+	 * @param newPath String 复制后路径
+	 * @param fileName String 文件名
+	 * @return boolean
+	 */
+	public static Boolean copyFile(String oldPath, String newPath, String fileName) {
+		try {
+			int bytesum = 0;
+			int byteread = 0;
+			File oldfile = new File(oldPath);
+			if (oldfile.exists()) { //文件存在时
+				File newFile = new File(newPath);
+
+				if (!newFile.exists()) {
+					newFile.mkdirs();
+				}
+				InputStream inStream = new FileInputStream(oldPath); //读入原文件
+				newFile = new File(newPath + fileName);
+				if (!newFile.exists()) {
+					newFile.createNewFile();
+				}
+				FileOutputStream fs = new FileOutputStream(newFile);
+				byte[] buffer = new byte[1444];
+				while ( (byteread = inStream.read(buffer)) != -1) {
+					bytesum += byteread; //字节数 文件大小
+					fs.write(buffer, 0, byteread);
+				}
+				inStream.close();
+			}
+		}
+		catch (Exception e) {
+			System.out.println("Copy file failed.");
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ly_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="#333333">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_2"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="通知详情"
+            android:textColor="@android:color/white"
+            android:textSize="17sp"
+            android:layout_centerInParent="true"
+            />
+
+
+
+
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f4f4f2"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@android:color/white"
+                >
+
+                <com.easemob.helpdesk.widget.CircleImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/default_agent_avatar" />
+
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_toLeftOf="@id/iv_avatar"
+                     android:orientation="vertical"
+                     >
+
+                     <TextView
+                         android:id="@+id/tv_nicename"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="Notice"
+                         android:textColor="@android:color/black"
+                         android:textSize="18sp"
+                         />
+                     <TextView
+                         android:id="@+id/tv_date"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:text="Date: 2017-02-08 11:16"
+                         android:layout_marginTop="5dp"
+                         android:textColor="#9b9b9b"
+                         android:textSize="12sp"
+                         />
+                 </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_visitor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:layout_marginTop="5dp"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/btn_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/button_blue2"
+                    android:text="查看详情"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+
+                <TextView
+                    android:id="@+id/tv_visitor_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/btn_detail"
+                    android:text="ID: webim-visitor-XW7CX787F644EEBJJX9K"
+                    android:textColor="#9b9b9b"
+                    android:textSize="12sp" />
+
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="内容："
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                />
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="14sp"
+                android:textColor="#9b9b9b"
+                />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

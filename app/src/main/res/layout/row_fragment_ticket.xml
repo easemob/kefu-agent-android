@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="horizontal"
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <CheckBox
+            android:id="@+id/check"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="2016-01-29 17:20:00"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+
+            <TextView
+                android:id="@+id/notice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/timestamp"
+                android:text="Notice"
+                android:ellipsize="end"
+                android:layout_marginRight="5dp"
+                android:singleLine="true"
+                android:textColor="#1a1a1a"
+                android:textSize="17sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/subjectId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:text="SubjectId"
+                android:textColor="#999999"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="#999999"
+                android:text="status"
+                android:textSize="14sp" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:maxLines="1"
+                android:textSize="14dp"
+                android:textColor="#1a1a1a"
+                android:text="Nickname:"
+                />
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:layout_marginLeft="3dp"
+                android:ellipsize="end"
+                android:text="Visitor's Question information"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

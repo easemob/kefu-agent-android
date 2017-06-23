@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
-              android:orientation="vertical"
-              android:paddingTop="13dp" >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="13dp" >
 
     <TextView
         android:id="@+id/timestamp"
@@ -53,7 +53,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/id_recorder_length"
             android:gravity="center" />
-
+        
         <ImageView
             android:id="@+id/msg_status"
             android:layout_width="wrap_content"
@@ -64,13 +64,13 @@
             android:src="@drawable/msg_state_failed_resend"
             android:visibility="gone"
             tools:ignore="ContentDescription" />
-
-        <ProgressBar
+        
+          <ProgressBar
             android:visibility="visible"
             android:id="@+id/pb_sending"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_centerVertical="true"
+              android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/tv_length"
             />
     </RelativeLayout>

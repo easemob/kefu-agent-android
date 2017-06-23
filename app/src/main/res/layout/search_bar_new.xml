@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="44dip"
+    android:background="#fff"
+    android:paddingBottom="6dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="6dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"  
+        android:focusableInTouchMode="true"
+        android:background="@drawable/bg_searchbar" >
+
+        <ImageView
+            android:id="@+id/leftimg"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:focusable="false"
+            android:scaleType="fitCenter"
+            android:src="@drawable/search_bar_icon_normal"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/search_clear"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_input_delete_2"
+            android:visibility="visible"
+            tools:ignore="ContentDescription" />
+
+        <EditText
+            android:id="@+id/query"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/search_clear"
+            android:layout_toRightOf="@id/leftimg"
+            android:background="@null"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:textColor="#000"
+            android:textColorHint="#b3b3b3"
+            android:textSize="14sp" >
+        </EditText>
+    </RelativeLayout>
+
+</RelativeLayout>

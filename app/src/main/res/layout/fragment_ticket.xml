@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_2"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/handleAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:text="全选"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="留言"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            />
+
+
+        <ImageView
+            android:id="@+id/iv_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/icon_screening"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/top_title_height"
+        android:layout_marginBottom="53dp"
+        android:background="#fff"
+        android:orientation="vertical"
+        >
+
+        <!--<include layout="@layout/search_bar" />-->
+        <!--<include  android:id="@+id/search_layout" layout="@layout/layout_search_button"-->
+        <!--/>-->
+        <!--<View style="@style/line_view" />-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#e5e5e5"
+            >
+
+            <TextView
+                android:id="@+id/tv_label_total_count"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginLeft="12dp"
+                android:gravity="left|center_vertical"
+                android:textColor="#1a1a1a"
+                android:textSize="12sp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <com.jude.easyrecyclerview.EasyRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_empty="@layout/view_empty"
+            app:layout_progress="@layout/view_progress"
+            />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/left_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:textColor="@color/ticket_action_btn_enable"
+            android:textSize="17sp"
+            android:text="选择"
+            />
+        <TextView
+            android:id="@+id/right_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="12dp"
+            android:textColor="@color/ticket_action_btn_disable"
+            android:textSize="17sp"
+            android:text="分配"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+</RelativeLayout>
+

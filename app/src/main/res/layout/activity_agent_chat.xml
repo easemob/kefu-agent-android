@@ -1,0 +1,113 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+
+    >
+    <com.easemob.helpdesk.widget.chatview.ChatEmoticonsKeyBoard
+        android:id="@+id/ek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg_content_2">
+
+
+            <RelativeLayout
+                android:id="@+id/rl_session_details"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/top_title_height"
+                android:background="@color/bg_top_bar_2">
+
+                <RelativeLayout
+                    android:id="@+id/rl_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/icon_back_2"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/ll_title_click"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:gravity="center_vertical"
+                            android:maxLength="20"
+                            android:textColor="#fff"
+                            android:textSize="18sp" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/rl_session_details">
+
+                <ProgressBar
+                    android:id="@+id/pb_load_more"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_centerHorizontal="true"
+                    android:visibility="gone" />
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/chat_swipe_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/pb_load_more"
+                        android:cacheColorHint="#00000000"
+                        android:listSelector="#00000000"
+                        android:scrollbarStyle="outsideOverlay"
+                        android:scrollbars="vertical"
+                        android:paddingBottom="5dp"
+                        android:transcriptMode="normal" />
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </com.easemob.helpdesk.widget.chatview.ChatEmoticonsKeyBoard>
+</FrameLayout>

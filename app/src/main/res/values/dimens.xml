@@ -60,4 +60,18 @@
 
     <dimen name="bar_height_userdef">@dimen/dimension_50</dimen>
     <dimen name="bar_icon_height_userdef">28dp</dimen>
+
+    <!-- mangager realtime start -->
+    <dimen name="list_text_size">18sp</dimen>
+    <dimen name="list_divide_space">10dp</dimen>
+    <dimen name="default_margin_size">15dp</dimen>
+    <!-- mangager realtime end -->
+
+	<!-- chat video start -->
+    <dimen name="title_back_btn_layout_width">39dp</dimen>
+	<dimen name="height_top_bar">56dp</dimen>
+	<dimen name="title_back_btn_size">16dp</dimen>
+	<dimen name="image_thumbnail_size">100dp</dimen>
+	<dimen name="image_thumbnail_spacing">1dp</dimen>
+	<!-- chat video end -->
 </resources>

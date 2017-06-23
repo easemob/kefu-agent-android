@@ -1,21 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.ashokvarma.bottomnavigation.BottomNavigationBar
-        android:id="@+id/bottom_navbar"
+    android:fitsSystemWindows="true" >
+    <LinearLayout
+        android:id="@+id/main_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        />
+        android:background="#fff"
+        android:gravity="center_vertical"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+        <com.flyco.tablayout.CommonTabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="#ffffff"
+            tl:tl_iconHeight="40dp"
+            tl:tl_iconWidth="40dp"
+            tl:tl_iconMargin="-2dp"
+            tl:tl_indicator_color="#2C97DE"
+            tl:tl_indicator_height="0dp"
+            tl:tl_textSelectColor="#2C97DE"
+            tl:tl_textUnselectColor="#66000000"
+            tl:tl_textsize="10sp"
+            tl:tl_underline_color="#DDDDDD"
+            tl:tl_underline_height="2dp"
+            />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:layout_above="@id/main_bottom"
+        android:background="#c4c4c4" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navbar" />
+        android:layout_above="@id/line">
+
+    </android.support.v4.view.ViewPager>
 </RelativeLayout>

@@ -9,8 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.ChatActivity;
 import com.easemob.helpdesk.emoticon.data.AppBean;
+import com.easemob.helpdesk.mvp.BaseChatActivity;
+import com.easemob.helpdesk.mvp.ChatActivity;
 
 import java.util.ArrayList;
 
@@ -66,13 +67,28 @@ public class ChattingAppsAdapter extends BaseAdapter {
                     final int id = appBean.getId();
                     switch (id) {
                         case 1:
-                            if (mContext instanceof ChatActivity){
-                                ((ChatActivity)mContext).selectPicFromLocal();
+                            if (mContext instanceof BaseChatActivity){
+                                ((BaseChatActivity)mContext).selectPicFromLocal();
                             }
                             break;
                         case 2:
+                            if (mContext instanceof BaseChatActivity){
+                                ((BaseChatActivity)mContext).selectVideoFromLocal();
+                            }
+                            break;
+                        case 3:
+                            if (mContext instanceof BaseChatActivity){
+                                ((BaseChatActivity)mContext).selectFileFromLocal();
+                            }
+                            break;
+                        case 4:
                             if (mContext instanceof ChatActivity){
-                                ((ChatActivity)mContext).selectFileFromLocal();
+                                ((ChatActivity)mContext).toPhraseUI();
+                            }
+                            break;
+                        case 5:
+                            if (mContext instanceof ChatActivity){
+                                ((ChatActivity)mContext).toCustomWebView();
                             }
                             break;
                     }
