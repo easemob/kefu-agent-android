@@ -7,7 +7,7 @@
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
     >
-    <com.mikepenz.iconics.view.IconicsTextView
+    <ImageView
         android:id="@+id/icon_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,8 +15,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:textSize="40sp"
-        android:textColor="@android:color/white"
+        android:padding="5dp"
         />
 
     <TextView

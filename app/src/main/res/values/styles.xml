@@ -1,5 +1,9 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--
             Theme customizations available in newer API levels can go in
@@ -19,40 +23,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <style name="progress_dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item>
-        <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:background">@null</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:backgroundDimEnabled">false</item>
-    </style>
-    <style name="chat_text_date_style">
-        <item name="android:padding">2dp</item>
-        <item name="android:paddingTop">2dip</item>
-        <item name="android:paddingBottom">2dip</item>
-        <item name="android:paddingLeft">12dip</item>
-        <item name="android:paddingRight">12dip</item>
-        <item name="android:layout_marginTop">5dip</item>
-        <item name="android:layout_marginBottom">5dip</item>
-        <item name="android:textColor">#999</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="chat_message_text_style">
-        <item name="android:autoLink">web</item>
-        <item name="android:textSize">17sp</item>
-        <item name="android:lineSpacingExtra">2dp</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-    </style>
-
-    <style name="chat_text_name_style">
-        <item name="android:textColor">#999999</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:gravity">center</item>
-    </style>
 
     <style name="MyDialogStyle" parent="Theme.AppCompat.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -64,7 +34,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
-    <style name="MyOrderDialog" >
+	<style name="MyOrderDialog" >
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -93,7 +63,7 @@
         <item name="android:backgroundDimEnabled">true</item>
         <!-- 模糊 -->
     </style>
-    <style name="AnimFade" parent="@android:style/Animation.Activity">
+ <style name="AnimFade" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/fade_in</item>
         <item name="android:activityOpenExitAnimation">@anim/hold</item>
         <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
@@ -137,7 +107,7 @@
     <style name="horizontal_slide" parent="android:Theme.NoTitleBar">
         <item name="android:windowAnimationStyle">@style/AnimFade2</item>
     </style>
-
+    
     <style name="nornal_style" parent="android:Theme.NoTitleBar"/>
     <style name="MyDialogStyleTop" parent="android:Theme.Dialog">
         <item name="android:windowAnimationStyle">@style/AnimTop2</item>
@@ -154,13 +124,81 @@
         <item name="android:backgroundDimEnabled">false</item>
         <!-- 模糊 -->
     </style>
+
+    <style name="HeadScale" parent="android:Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/AnimHead</item>
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <!-- 模糊 -->
+    </style>
+    <style name="chat_text_date_style">
+        <item name="android:padding">2dp</item>
+        <item name="android:paddingTop">2dip</item>
+        <item name="android:paddingBottom">2dip</item>
+        <item name="android:paddingLeft">12dip</item>
+        <item name="android:paddingRight">12dip</item>
+        <item name="android:layout_marginTop">5dip</item>
+        <item name="android:layout_marginBottom">5dip</item>
+        <item name="android:textColor">#999</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="chat_message_text_style">
+        <item name="android:autoLink">web</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+    
+    <style name="chat_text_name_style">
+        <item name="android:textColor">#999999</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="progress_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Transparent" parent="Theme.AppCompat.NoActionBar.Translucent">
+        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>-->
+        <item name="android:windowAnimationStyle">@style/search_category_activity_style</item>
+    </style>
+
+
+    <style name="search_category_activity_style">
+        <item name="android:activityOpenEnterAnimation">@anim/search_category_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/search_category_close</item>
+    </style>
+
     <style name="Theme.AppCompat.NoActionBar.Translucent">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
-    <style name="search_category_activity_style">
-        <item name="android:activityOpenEnterAnimation">@anim/search_category_enter</item>
-        <item name="android:activityCloseExitAnimation">@anim/search_category_close</item>
+
+    <style name="AnimBottomIn" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
+
+
 </resources>

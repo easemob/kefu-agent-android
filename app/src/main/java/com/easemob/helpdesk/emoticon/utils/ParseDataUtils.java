@@ -2,7 +2,6 @@ package com.easemob.helpdesk.emoticon.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

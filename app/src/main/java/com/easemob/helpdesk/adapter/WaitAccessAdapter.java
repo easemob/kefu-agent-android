@@ -6,14 +6,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.main.MainActivity;
-import com.easemob.helpdesk.activity.main.SearchWaitAccessActivity;
+import com.easemob.helpdesk.activity.SearchWaitAccessActivity;
+import com.easemob.helpdesk.mvp.MainActivity;
 import com.hyphenate.kefusdk.gsonmodel.main.WaitQueueResponse;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
-import com.mikepenz.iconics.view.IconicsTextView;
 
 /**
  * Created by liyuzhao on 16/3/7.
@@ -34,18 +33,18 @@ public class WaitAccessAdapter extends RecyclerArrayAdapter<WaitQueueResponse.It
         private TextView tvName;
         private TextView tvTime;
         private TextView tvVip;
-        private IconicsTextView tvJieRu;
-        private IconicsTextView tvTransfer;
-        private IconicsTextView tvClose;
+        private View jieRu;
+        private View transfer;
+        private View close;
 
         public WaitAccessHolder(ViewGroup parent) {
             super(parent, R.layout.row_waiting_access);
             tvName = $(R.id.tv_name);
             tvTime = $(R.id.tv_time);
             tvVip = $(R.id.tv_vip);
-            tvJieRu = $(R.id.tv_jieru);
-            tvTransfer = $(R.id.tv_transfer);
-            tvClose = $(R.id.tv_close);
+            jieRu = $(R.id.rl_jieru);
+            transfer = $(R.id.rl_transfer);
+            close = $(R.id.rl_close);
 
         }
 
@@ -63,16 +62,16 @@ public class WaitAccessAdapter extends RecyclerArrayAdapter<WaitQueueResponse.It
             if (emUser != null && emUser.getRoles() != null){
                 String roles = emUser.getRoles();
                 if (roles.contains("admin")){
-                    tvTransfer.setVisibility(View.VISIBLE);
-                    tvClose.setVisibility(View.VISIBLE);
+                    transfer.setVisibility(View.VISIBLE);
+                    close.setVisibility(View.VISIBLE);
                 }else{
-                    tvTransfer.setVisibility(View.INVISIBLE);
-                    tvClose.setVisibility(View.INVISIBLE);
+                    transfer.setVisibility(View.INVISIBLE);
+                    close.setVisibility(View.INVISIBLE);
                 }
 
             }
 
-            tvJieRu.setOnClickListener(new View.OnClickListener() {
+            jieRu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(getContext() instanceof MainActivity){
@@ -84,7 +83,7 @@ public class WaitAccessAdapter extends RecyclerArrayAdapter<WaitQueueResponse.It
             });
 
 
-            tvTransfer.setOnClickListener(new View.OnClickListener(){
+            transfer.setOnClickListener(new View.OnClickListener(){
 
                 @Override
                 public void onClick(View v) {
@@ -96,7 +95,7 @@ public class WaitAccessAdapter extends RecyclerArrayAdapter<WaitQueueResponse.It
                 }
             });
 
-            tvClose.setOnClickListener(new View.OnClickListener(){
+            close.setOnClickListener(new View.OnClickListener(){
 
                 @Override
                 public void onClick(View v) {

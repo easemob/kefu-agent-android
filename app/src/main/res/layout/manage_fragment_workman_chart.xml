@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/layout_workman_agent" />
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="满意度分布"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/satisfaction_pie_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white" />
+            </LinearLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="有效人工会话占比"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/effective_session_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="会话数分布（按首次响应时长维度）"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/first_res_time_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white" />
+            </LinearLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="会话数分布（按响应时长维度）"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/avg_res_time_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+
+            <View style="@style/line_view_1dp" />
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>

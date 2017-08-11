@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+			  android:orientation="vertical">
+	<RelativeLayout
+		android:layout_height="70dp"
+		android:layout_width="wrap_content">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="新进会话数"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingLeft="15dp"
+			android:textSize="16sp" />
+		<TextView
+			android:id="@+id/new_sessions_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:text="0条"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingRight="15dp"
+			android:textSize="16sp" />
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_height="70dp"
+		android:layout_width="wrap_content">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="进行中有效会话数"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingLeft="15dp"
+			android:textSize="16sp" />
+		<TextView
+			android:id="@+id/valid_sessions_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:text="0条"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingRight="15dp"
+			android:textSize="16sp" />
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_height="70dp"
+		android:layout_width="wrap_content">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="进行中无效会话数"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingLeft="15dp"
+			android:textSize="16sp" />
+		<TextView
+			android:id="@+id/invalid_sessions_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:text="0条"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingRight="15dp"
+			android:textSize="16sp" />
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_height="70dp"
+		android:layout_width="wrap_content">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="结束会话数"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingLeft="15dp"
+			android:textSize="16sp" />
+		<TextView
+			android:id="@+id/ended_sessions_total"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:text="0条"
+			android:textColor="@color/manager_label_text_color"
+			android:layout_centerVertical="true"
+			android:paddingRight="15dp"
+			android:textSize="16sp" />
+	</RelativeLayout>
+</LinearLayout>

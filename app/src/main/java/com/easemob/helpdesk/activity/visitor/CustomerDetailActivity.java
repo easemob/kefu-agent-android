@@ -12,19 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
-import com.easemob.helpdesk.fragment.visitor.CustomerInfoFragment;
-import com.easemob.helpdesk.fragment.visitor.VisitorTagsFragment;
+import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.bean.HDSession;
-import com.hyphenate.kefusdk.manager.VisitorManager;
+import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.util.ArrayList;
@@ -65,6 +64,7 @@ public class CustomerDetailActivity extends BaseActivity implements OnTabSelectL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_visitor_detail);
         unbinder = ButterKnife.bind(this);
         Intent intent = getIntent();
@@ -116,7 +116,7 @@ public class CustomerDetailActivity extends BaseActivity implements OnTabSelectL
     public void onClickByBtnContact() {
         dialog = DialogUtils.getLoadingDialog(this, R.string.info_loading);
         dialog.show();
-        VisitorManager.getInstance().getCreateSessionService(visitorId, new HDDataCallBack<HDSession>() {
+        HDClient.getInstance().visitorManager().getCreateSessionService(visitorId, new HDDataCallBack<HDSession>() {
             @Override
             public void onSuccess(final HDSession sessionEntty) {
                 if (isFinishing()) {

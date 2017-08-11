@@ -15,8 +15,6 @@ import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
 
-
-
 /**
  * Created by liyuzhao on 16/9/18.
  */

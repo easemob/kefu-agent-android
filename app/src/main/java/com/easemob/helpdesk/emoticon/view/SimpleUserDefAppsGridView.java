@@ -7,9 +7,9 @@ import android.util.AttributeSet;
 import android.widget.GridView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
 import com.easemob.helpdesk.emoticon.adapter.ChattingAppsAdapter;
 import com.easemob.helpdesk.emoticon.data.AppBean;
+import com.easemob.helpdesk.mvp.BaseChatActivity;
 
 import java.util.ArrayList;
 
@@ -29,8 +29,8 @@ public class SimpleUserDefAppsGridView extends SimpleAppsGridView {
         gv_apps.setSelector(new ColorDrawable(Color.TRANSPARENT));
 //        gv_apps.setNumColumns(2);
         ArrayList<AppBean> mAppBeanList = new ArrayList<>();
-        if (getContext() instanceof ChatActivity){
-            mAppBeanList.addAll(((ChatActivity)getContext()).getAppBeanList());
+        if (getContext() instanceof BaseChatActivity){
+            mAppBeanList.addAll(((BaseChatActivity)getContext()).getExtendAppBeans());
         }
         ChattingAppsAdapter adapter = new ChattingAppsAdapter(getContext(), mAppBeanList);
         gv_apps.setAdapter(adapter);

@@ -18,7 +18,7 @@ public interface ImageHandle {
      * @param showTaskPhotoItem 是否有拍照选项
      * @return
      */
-    Intent pickSingleImage(Context context, boolean showTaskPhotoItem);
+    Intent  pickSingleImage(Context context, boolean showTaskPhotoItem);
 
     /**
      *  选择多张图片

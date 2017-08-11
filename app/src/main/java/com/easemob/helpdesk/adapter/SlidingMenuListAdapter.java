@@ -6,13 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.entity.SlidingMenuItemEntity;
 import com.flyco.roundview.RoundTextView;
-import com.mikepenz.iconics.view.IconicsTextView;
 
 import java.util.List;
 
@@ -45,6 +45,10 @@ public class SlidingMenuListAdapter extends BaseAdapter {
         return 0;
     }
 
+    public void updateListItem(List<SlidingMenuItemEntity> list) {
+        this.mList = list;
+        notifyDataSetChanged();
+    }
 
     @SuppressLint("InflateParams")
     @Override
@@ -54,7 +58,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_slidingmenu, null);
             holder.itemView = (RelativeLayout) convertView.findViewById(R.id.item_view);
-            holder.iconicsTextView = (IconicsTextView) convertView.findViewById(R.id.icon_left);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.icon_left);
             holder.txtName = (TextView) convertView.findViewById(R.id.title_name);
 //            holder.countTextView = (RoundTextView) convertView.findViewById(R.id.tv_count);
             holder.tvCount = (TextView) convertView.findViewById(R.id.tv_count);
@@ -69,8 +73,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
         }catch (Exception ignored){}
 
         try{
-           holder.iconicsTextView.setText(entty.iconName);
-//            holder.iconicsTextView.setText("{fon-nav_session_normal}");
+            holder.imageView.setImageDrawable(entty.icon);
         }catch (Exception ignored){}
 
         holder.txtName.setText(entty.title);
@@ -91,8 +94,7 @@ public class SlidingMenuListAdapter extends BaseAdapter {
 
     class ViewHolder {
         RelativeLayout itemView;
-//        IconFontView iconFontView;
-        IconicsTextView iconicsTextView;
+        ImageView imageView;
         TextView txtName;
         TextView tvCount;
         RoundTextView countTextView;

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/top_bar_normal_bg">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_2"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="公司注册"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_personal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:text="个人"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+        <EditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:hint="邮箱"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textColorHint="#999999"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/reg_bg_editext" />
+
+        <EditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:hint="密码"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColorHint="#999999"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/reg_bg_editext" />
+
+        <EditText
+            android:id="@+id/et_confirm_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:hint="重复输入密码"
+            android:inputType="textPassword"
+            android:singleLine="true"
+            android:textColorHint="#999999"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/reg_bg_editext" />
+
+        <EditText
+            android:id="@+id/et_company"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:hint="公司名称"
+            android:singleLine="true"
+            android:textColorHint="#999999"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/reg_bg_editext" />
+        <EditText
+            android:id="@+id/et_phone"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@android:color/transparent"
+            android:hint="手机号"
+            android:singleLine="true"
+            android:inputType="phone"
+            android:textColorHint="#999999"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/reg_bg_editext" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+
+
+            <ImageView
+                android:id="@+id/iv_code"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/et_code"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_toLeftOf="@id/iv_code"
+                android:background="@android:color/transparent"
+                android:hint="请输入右侧验证码"
+                android:singleLine="true"
+                android:textColorHint="#999999"
+                android:textSize="18sp" />
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/reg_bg_editext" />
+
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:text="提交"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_login_button"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

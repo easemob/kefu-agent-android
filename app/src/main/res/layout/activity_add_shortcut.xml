@@ -1,0 +1,94 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content_2"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/rl_shortcut_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_2"
+                />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/top_title_text_size" />
+
+        <Button
+            android:id="@+id/btn_sure"
+            android:layout_width="@dimen/top_title_icon_height"
+            android:layout_height="@dimen/top_title_icon_height"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:text="@string/text_save"
+            android:textColor="@color/blue_color_2"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/rl_shortcut_title"
+        android:layout_marginTop="20dip"
+        android:background="@color/line_color_2" />
+
+    <EditText
+        android:id="@+id/et_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line1"
+        android:background="#FFFFFF"
+        android:gravity="top|left"
+        android:maxLength="400"
+        android:minHeight="80dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="15dp"
+        android:textColor="@color/input_text_color"
+        android:textColorHint="@color/input_hint_color"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/txtCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_add"
+        android:background="#FFFFFF"
+        android:gravity="end"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:text="400"
+        android:textColor="#999"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/txtCount"
+        android:background="@color/line_color_2" />
+
+</RelativeLayout>

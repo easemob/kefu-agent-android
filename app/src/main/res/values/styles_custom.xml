@@ -96,15 +96,6 @@
         <item name="android:windowEnterAnimation">@anim/pop_enter_anim</item>
         <item name="android:windowExitAnimation">@anim/pop_exit_anim</item>
     </style>
-    <style name="AnimBottomIn" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
-        <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation</item>
-    </style>
-    <style name="Transparent" parent="Theme.AppCompat.NoActionBar.Translucent">
-        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>-->
-        <item name="android:windowAnimationStyle">@style/search_category_activity_style</item>
-    </style>
+
+
 </resources>

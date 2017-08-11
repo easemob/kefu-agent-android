@@ -7,13 +7,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
-import com.easemob.helpdesk.widget.ContextMenu;
+import com.easemob.helpdesk.activity.ContextMenu;
 import com.easemob.helpdesk.adapter.ChatAdapter;
 import com.easemob.helpdesk.emoticon.utils.SimpleCommonUtils;
+import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.entity.HDTextMessageBody;
+import com.hyphenate.kefusdk.utils.HDLog;
+
+
 
 /**
  * Created by liyuzhao on 10/04/2017.
@@ -22,7 +25,6 @@ import com.hyphenate.kefusdk.entity.HDTextMessageBody;
 public class TxtViewHolder extends BaseViewHolder {
 	public ProgressBar pb;
 	public TextView tv;
-	public ChatAdapter adapter;
 
 	public TxtViewHolder(Activity activity, ChatAdapter chatAdapter, View itemView) {
 		super(activity, chatAdapter, itemView);
@@ -36,6 +38,11 @@ public class TxtViewHolder extends BaseViewHolder {
 
 	@Override
 	public void handleViewMessage(final HDMessage message, final int position) {
+		if (message.getType() != HDMessage.Type.TXT){
+			HDLog.e(TAG, "message is not txt view");
+			return;
+		}
+
 		SimpleCommonUtils.spannableEmoticonFilter(tv, CommonUtils.convertStringByMessageText(((HDTextMessageBody) message.getBody()).getMessage()));
 
 		tv.setOnLongClickListener(new View.OnLongClickListener() {
@@ -52,7 +59,7 @@ public class TxtViewHolder extends BaseViewHolder {
 				} else {
 					intent.putExtra("type", ContextMenu.TYPE_CONTEXT_MENU_TXT);
 				}
-				((Activity) context).startActivityForResult(intent, ChatActivity.REQUEST_CODE_CONTEXT_MENU);
+				((Activity) context).startActivityForResult(intent, BaseChatActivity.REQUEST_CODE_CONTEXT_MENU);
 
 
 				return true;
@@ -73,6 +80,10 @@ public class TxtViewHolder extends BaseViewHolder {
 				case INPROGRESS: // 发送中
 					pb.setVisibility(View.VISIBLE);
 					ivStatus.setVisibility(View.GONE);
+					break;
+				case CREATE:
+					pb.setVisibility(View.GONE);
+					ivStatus.setVisibility(View.VISIBLE);
 					break;
 			}
 		}

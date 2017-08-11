@@ -15,15 +15,21 @@
         android:layout_height="@dimen/top_title_height"
         android:background="@color/bg_top_bar_2" >
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/left"
+        <RelativeLayout
+            android:id="@+id/rl_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:textColor="@android:color/white"
-            android:textSize="36sp"
-            android:text="{fon-arrow_left}"
-            />
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_2"
+                />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/title"
@@ -34,17 +40,14 @@
             android:textColor="#FFFFFF"
             android:textSize="@dimen/top_title_text_size" />
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/right"
+        <ImageView
+            android:id="@+id/iv_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:textSize="32sp"
-            android:textColor="@android:color/white"
-            android:text="{fon-shai}"
-
+            android:background="@drawable/icon_screening"
             />
 
     </RelativeLayout>

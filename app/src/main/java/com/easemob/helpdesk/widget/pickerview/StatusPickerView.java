@@ -11,15 +11,13 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.adapter.ArrayWheelAdapter;
 import com.bigkoo.pickerview.lib.WheelView;
 import com.bigkoo.pickerview.view.BasePickerView;
-import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.main.MainActivity;
+import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.EMToast;
-import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.manager.AgentManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +47,6 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
         Collections.addAll(values, statuStrings);
         wv.setCyclic(false);
         wv.setAdapter(new ArrayWheelAdapter(values));
-//        wv.setOnItemSelectedListener(new MyItemSelectedListener());
     }
 
     @Override
@@ -72,8 +69,6 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
     private void refreshUI(String status) {
         if (mContext instanceof MainActivity) {
             ((MainActivity) mContext).agentStatusUpdated(status);
-//        } else if (mContext instanceof ManagerHomeActivity) {
-//            ((ManagerHomeActivity) mContext).agentStatusUpdated(status);
         }
     }
 
@@ -83,7 +78,7 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
         if (loginUser == null){
             return;
         }
-        AgentManager.getInstance().setStatusByServer(status, new HDDataCallBack<String>() {
+        HDClient.getInstance().agentManager().setStatusByServer(status, new HDDataCallBack<String>() {
 
             @Override
             public void onSuccess(String value) {
@@ -130,20 +125,6 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
 
             }
 
-            @Override
-            public void onAuthenticationException() {
-                if (((Activity) mContext).isFinishing()) {
-                    return;
-                }
-                ((Activity) mContext).runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        closeDialog();
-                        HDApplication.getInstance().logout();
-                    }
-                });
-            }
         });
 
 

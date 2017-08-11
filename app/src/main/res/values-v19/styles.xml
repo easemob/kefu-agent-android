@@ -1,0 +1,16 @@
+<resources>
+
+    <!--
+        Base application theme for API 19+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 19+ devices.
+    -->    
+    <!-- <style name="FullBleedTheme" parent="android:Theme.Holo.Light.NoActionBar.TranslucentDecor">
+        API 19 theme customizations can go here.
+    </style> -->
+
+    <style name="AppTheme" parent="@style/AppBaseTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+    <!-- <item name="android:windowTranslucentNavigation">true</item>-->
+</resources>

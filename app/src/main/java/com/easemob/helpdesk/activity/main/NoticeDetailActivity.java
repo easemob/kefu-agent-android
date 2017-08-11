@@ -15,20 +15,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.activity.visitor.CustomerDetailActivity;
-import com.hyphenate.kefusdk.gsonmodel.main.NoticesResponse;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.PreferenceUtils;
 import com.easemob.helpdesk.widget.popupwindow.SelectChannelPopupWindow;
-import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.bean.OptionEntity;
 import com.hyphenate.kefusdk.bean.TechChannel;
+import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.manager.AgentManager;
-import com.hyphenate.kefusdk.manager.VisitorManager;
+import com.hyphenate.kefusdk.gsonmodel.main.NoticesResponse;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.JsonUtils;
 
@@ -42,6 +42,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 
 /**
  * Created by liyuzhao on 20/03/2017.
@@ -80,6 +81,7 @@ public class NoticeDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_notice_detail);
         ButterKnife.bind(this);
         loginUser = HDClient.getInstance().getCurrentUser();
@@ -105,8 +107,16 @@ public class NoticeDetailActivity extends BaseActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        OptionEntity centerVisible = HDClient.getInstance().agentManager().getOptionEntity("agentVisitorCenterVisible");
+        Boolean customersVisible = false;
+
+        if (centerVisible != null && centerVisible.getOptionValue() != null && centerVisible.getOptionValue().equals("true")) {
+            customersVisible = true;
+        }
+
         List<NoticesResponse.EntitiesBean.ObjectBean.RedirectInfoBean> infoBeans =  noticeEntity.getObject().getRedirectInfo();
-        if (infoBeans != null && !infoBeans.isEmpty()){
+        if (infoBeans != null && !infoBeans.isEmpty() && customersVisible){
             NoticesResponse.EntitiesBean.ObjectBean.RedirectInfoBean infoBean = infoBeans.get(0);
             rlVisitor.setVisibility(View.VISIBLE);
             final String nickname = infoBean.getVisitorNickname();
@@ -170,7 +180,7 @@ public class NoticeDetailActivity extends BaseActivity {
         dialog.setCancelable(false);
         dialog.show();
 
-        VisitorManager.getInstance().createVisitor(imAccount, nickname, techChannel, new HDDataCallBack<String>() {
+        HDClient.getInstance().visitorManager().createVisitor(imAccount, nickname, techChannel, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(final String value) {
                 runOnUiThread(new Runnable() {
@@ -227,7 +237,7 @@ public class NoticeDetailActivity extends BaseActivity {
         if (!dialog.isShowing()){
             dialog.show();
         }
-        AgentManager.getInstance().postAgentLinks(visitorId, new HDDataCallBack<String>() {
+        HDClient.getInstance().agentManager().postAgentLinks(visitorId, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 runOnUiThread(new Runnable() {
@@ -246,16 +256,6 @@ public class NoticeDetailActivity extends BaseActivity {
                     public void run() {
                         closeDialog();
                         Toast.makeText(NoticeDetailActivity.this, "联系失败！", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onAuthenticationException() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeDialog();
                     }
                 });
             }
@@ -293,7 +293,7 @@ public class NoticeDetailActivity extends BaseActivity {
         closeDialog();
     }
 
-    @OnClick(R.id.left)
+    @OnClick(R.id.rl_back)
     public void onClickByLeft(){
         finish();
     }

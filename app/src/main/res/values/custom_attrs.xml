@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="Navbar2">
+        <attr name="txtTitle" format="string|reference" />
+        <attr name="leftOnClick" format="string" />
+        <attr name="leftBackground" format="reference"/>
+        <attr name="rightOnClick" format="string" />
+        <attr name="rightTextOnClick" format="string" />
+        <attr name="rightBackground" format="integer|reference"/>
+        <attr name="rightText" format="string|reference"/>
+        <attr name="rightTextColor" format="color|reference"/>
+        <attr name="rightTextSize" format="dimension"/>
+        <attr name="rightState" >
+            <enum name="stateHidden" value="0"/>
+            <enum name="stateImageButton" value="1"/>
+            <enum name="stateTextView" value="2"/>
+        </attr>
+    </declare-styleable>
+
     <declare-styleable name="LinkClickTextView">
         <attr name="textColorLinkClick" format="color" />
     </declare-styleable>

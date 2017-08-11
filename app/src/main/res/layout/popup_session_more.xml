@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:onClick="popupclose"/>
+        android:onClick="popupclose" />
 
 
     <RelativeLayout
@@ -22,7 +23,7 @@
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
-            android:background="@drawable/popup_triangle"/>
+            android:background="@drawable/popup_triangle" />
 
         <LinearLayout
             android:layout_width="130dip"
@@ -40,15 +41,67 @@
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">
 
+                <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:src="@drawable/expand_icon_transfer" />-->
+
+                <!--<com.zdxd.iconfont.IconFontView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:iconName="@string/if_icon_transfer"-->
+                <!--app:iconSize="15sp"-->
+                <!--app:iconColor="#4d4d4d"-->
+                <!--/>-->
+
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/expand_icon_transfer"/>
+                    android:src="@drawable/expand_icon_transfer"
+                    tools:ignore="ContentDescription" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="会话转接"
+                    android:textColor="#4d4d4d" />
+            </LinearLayout>
+
+            <View style="@style/line_view" />
+
+            <LinearLayout
+                android:id="@+id/ll_eval_send"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:onClick="eval_send"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:src="@drawable/expand_icon_vote" />-->
+                <!--<com.zdxd.iconfont.IconFontView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:iconName="@string/if_icon_flower"-->
+                <!--app:iconSize="15sp"-->
+                <!--app:iconColor="#4d4d4d"-->
+                <!--/>-->
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/expand_icon_vote"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:text="满意度评价"
                     android:textColor="#4d4d4d" />
             </LinearLayout>
 
@@ -63,10 +116,22 @@
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">
 
+                <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:src="@drawable/expand_icon_sessiontag" />-->
+                <!--<com.zdxd.iconfont.IconFontView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:iconName="@string/if_icon_sessiontag"-->
+                <!--app:iconSize="15sp"-->
+                <!--app:iconColor="#4d4d4d"-->
+                <!--/>-->
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/expand_icon_sessiontag"/>
+                    android:src="@drawable/expand_icon_sessiontag"
+                    tools:ignore="ContentDescription" />
 
 
                 <TextView
@@ -74,10 +139,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="会话标签"
-                    android:textColor="#4d4d4d"/>
+                    android:textColor="#4d4d4d" />
             </LinearLayout>
 
-            <View style="@style/line_view"/>
+            <View style="@style/line_view" />
 
             <LinearLayout
                 android:id="@+id/ll_chat_end"
@@ -88,17 +153,30 @@
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp">
 
+                <!--<com.zdxd.iconfont.IconFontView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:iconName="@string/if_icon_exit"-->
+                <!--app:iconSize="15sp"-->
+                <!--app:iconColor="#4d4d4d"-->
+                <!--/>-->
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/expand_icon_sessionend"/>
+                    android:src="@drawable/expand_icon_sessionend"
+                    tools:ignore="ContentDescription" />
+
+                <!--<ImageView-->
+                <!--android:layout_width="30dp"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:src="@drawable/expand_icon_sessionend" />-->
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="结束会话"
-                    android:textColor="#4d4d4d"/>
+                    android:textColor="#4d4d4d" />
             </LinearLayout>
 
         </LinearLayout>

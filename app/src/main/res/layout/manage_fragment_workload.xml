@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tl="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content_2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2">
+
+        <include layout="@layout/top_bar_avatar_layout" />
+
+        <com.flyco.tablayout.SegmentTabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="158dp"
+            android:layout_height="28dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            tl:tl_bar_color="@color/bg_top_bar_2"
+            tl:tl_indicator_color="#fff"
+            tl:tl_indicator_corner_radius="4dp"
+            tl:tl_tab_padding="10dp"
+            tl:tl_tab_space_equal="true"
+            tl:tl_textBold="false"
+            tl:tl_textSelectColor="#000"
+            tl:tl_textUnselectColor="#fff"
+            tl:tl_textsize="12sp" />
+
+        <ImageView
+            android:id="@+id/iv_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/icon_screening"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/top_title_text_size"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

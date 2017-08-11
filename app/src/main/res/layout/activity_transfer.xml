@@ -21,8 +21,9 @@
             <!--app:iconColor="@android:color/white"-->
             <!--app:iconName="@string/if_arrow_left"-->
             <!--app:iconSize="18sp" />-->
+
         <RelativeLayout
-            android:id="@+id/left"
+            android:id="@+id/rl_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"

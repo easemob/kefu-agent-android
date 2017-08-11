@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.adapter.NoticeListAdapter;
@@ -35,6 +36,7 @@ public class SearchNoticeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_search_history_session);
         initView();
         ArrayList<NoticeEntity> list = getIntent().getParcelableArrayListExtra("list");

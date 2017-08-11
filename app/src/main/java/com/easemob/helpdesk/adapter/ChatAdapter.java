@@ -3,17 +3,15 @@ package com.easemob.helpdesk.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
+import com.easemob.helpdesk.mvp.ChatActivity;
+import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.widget.chatrow.BaseViewHolder;
 import com.easemob.helpdesk.widget.chatrow.FileViewHolder;
 import com.easemob.helpdesk.widget.chatrow.ImageViewHolder;
@@ -21,11 +19,12 @@ import com.easemob.helpdesk.widget.chatrow.OrderOrTrackViewHolder;
 import com.easemob.helpdesk.widget.chatrow.RecallViewHolder;
 import com.easemob.helpdesk.widget.chatrow.RobotMenuViewHolder;
 import com.easemob.helpdesk.widget.chatrow.TxtViewHolder;
+import com.easemob.helpdesk.widget.chatrow.VideoViewHolder;
 import com.easemob.helpdesk.widget.chatrow.VoiceViewHolder;
-import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.manager.SessionManager;
+import com.hyphenate.kefusdk.manager.session.SessionManager;
 import com.hyphenate.kefusdk.utils.MessageUtils;
+
 
 import java.util.List;
 
@@ -34,8 +33,6 @@ import java.util.List;
  * Created by lyuzhao on 2015/12/15.
  */
 public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
-
-	private final String TAG = getClass().getSimpleName();
 
 	private static final int MESSAGE_TYPE_SENT_TXT = 0;
 	private static final int MESSAGE_TYPE_RECV_TXT = 1;
@@ -50,6 +47,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 	private static final int MESSAGE_TYPE_SENT_ROBOTMENU = 10;
 	private static final int MESSAGE_TYPE_RECV_ROBOTMENU = 11;
 	private static final int MESSAGE_TYPE_RECALL_MESSAGE = 12;
+	private static final int MESSAGE_TYPE_SENT_VIDEO = 13;
+	private static final int MESSAGE_TYPE_RECV_VIDEO = 14;
 
 	private LayoutInflater inflater;
 	private Activity mActivity;
@@ -57,15 +56,18 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 	public int mMaxItemWidth;
 
 	public View animView;
+	public int animStatus = -1; // -1 not play; 0 sent play; 1 received play
 	public boolean isAppChannel;
 	private SessionManager sessionManager;
 	private List<HDMessage> messageList;
 	private RecyclerView mRecyclerView;
 
+
 	public ChatAdapter(Activity activity, SessionManager sessionManager, RecyclerView recyclerView) {
 		this.mActivity = activity;
 		this.sessionManager = sessionManager;
 		this.mRecyclerView = recyclerView;
+		animStatus = -1;
 		messageList = sessionManager.getAllMessages();
 		inflater = LayoutInflater.from(mActivity);
 		WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
@@ -162,6 +164,14 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 				convertView = inflater.inflate(R.layout.row_received_file, parent, false);
 				holder = new FileViewHolder(mActivity, this, convertView);
 				break;
+			case MESSAGE_TYPE_SENT_VIDEO:
+				convertView = inflater.inflate(R.layout.row_sent_video, parent, false);
+				holder = new VideoViewHolder(mActivity, this, convertView);
+				break;
+			case MESSAGE_TYPE_RECV_VIDEO:
+				convertView = inflater.inflate(R.layout.row_received_video, parent, false);
+				holder = new VideoViewHolder(mActivity, this, convertView);
+				break;
 		}
 		//noinspection ConstantConditions
 		convertView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -169,40 +179,56 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
 	}
 
-
 	@Override
 	public void onBindViewHolder(BaseViewHolder holder, final int position) {
 		if (position > messageList.size()) {
 			return;
 		}
 		final HDMessage message = messageList.get(position);
-		if (message.direct() == HDMessage.Direct.RECEIVE) {
-			if (sessionManager.isAgentChat()) {
-				holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
-			} else {
-				holder.ivAvatar.setImageResource(R.drawable.default_customer_avatar);
-			}
-
-		} else {
-			if (message.getFromUser().isSelf()) {
-				String avatarUrl = HDClient.getInstance().getCurrentUser().getAvatar();
-				if (TextUtils.isEmpty(avatarUrl)) {
+		if (holder == null){
+			return;
+		}
+		if (holder.ivAvatar != null && !AvatarManager.getInstance(mActivity).asyncGetMessageAvatar(message, mActivity, holder.ivAvatar)) {
+			if (message.direct() == HDMessage.Direct.RECEIVE) {
+				if (sessionManager.isAgentChat()) {
 					holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
 				} else {
-					if (!avatarUrl.startsWith("http")) {
-						avatarUrl = "http:" + avatarUrl;
-					}
-					Glide.with(mActivity).load(avatarUrl).asBitmap()
-							.diskCacheStrategy(DiskCacheStrategy.SOURCE).placeholder(R.drawable.default_agent_avatar).error(R.drawable.default_agent_avatar)
-							.into(holder.ivAvatar);
+					holder.ivAvatar.setImageResource(R.drawable.default_customer_avatar);
 				}
-
 			} else {
-				if (holder.ivAvatar != null)
+				if (message.getFromUser().isSelf()) {
+					AvatarManager.getInstance(mActivity).refreshAgentAvatar(mActivity, holder.ivAvatar);
+				} else {
 					holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
+				}
 			}
 		}
+
+//        holder.ivAvatar.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                if (isSend) {
+//                    return;
+//                }
+//                if (message.fromUser.userType.equals("Agent")) {
+//                    return;
+//                }
+//                //单击头像
+//                Intent intent = new Intent();
+//                intent.putExtra("visitorId", visitorId);
+//                intent.putExtra("user", message.fromUser);
+//                intent.setClass(mActivity, UserDetailsActivity.class);
+//                if(mActivity instanceof ChatActivity){
+//                    ((ChatActivity)mActivity).startActivityForResult(intent, ChatActivity.REQUEST_CODE_USER_DETAIL);
+//                }else{
+//                    mActivity.startActivity(intent);
+//                }
+//            }
+//        });
+
 		holder.handleMessage(message, position);
+
 	}
 
 	public HDMessage getItem(int position) {
@@ -247,6 +273,12 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 			} else {
 				return MESSAGE_TYPE_RECV_IMAGE;
 			}
+		} else if (message.getType() == HDMessage.Type.VIDEO) {
+			if (isSend) {
+				return MESSAGE_TYPE_SENT_VIDEO;
+			} else {
+				return MESSAGE_TYPE_RECV_VIDEO;
+			}
 		} else if (message.getType() == HDMessage.Type.TXT) {
 			if (MessageUtils.isRobotMenuMessage(message)) {
 				if (isSend) {
@@ -270,4 +302,5 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 		}
 		return super.getItemViewType(position);
 	}
+
 }

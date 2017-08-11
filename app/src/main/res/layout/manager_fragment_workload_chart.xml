@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_content_2"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/manage_agent_detail"/>
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="趋势图"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/trend_chart_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:gravity="right|center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingRight="20dp"
+                    android:visibility="gone">
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/trend_chart_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white" />
+            </LinearLayout>
+
+
+            <View style="@style/line_view_1dp" />
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:background="@android:color/white">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginLeft="15dp"-->
+                    <!--android:text="进线量(均值)"-->
+                    <!--android:textColor="@color/manager_label_text_color"-->
+                    <!--android:textSize="14sp" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<View style="@style/line_view_1dp" />-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="223dp"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:orientation="vertical">-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/into_line_container"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="35dp"-->
+                    <!--android:gravity="right|center_vertical"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingRight="20dp"-->
+                    <!--android:visibility="gone">-->
+
+                <!--</LinearLayout>-->
+
+                <!--<FrameLayout-->
+                    <!--android:id="@+id/into_line_chart_layout"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@android:color/white"/>-->
+            <!--</LinearLayout>-->
+
+            <!--<View style="@style/line_view_1dp" />-->
+
+            <!--<View-->
+                <!--style="@style/line_view_1dp"-->
+                <!--android:layout_marginTop="15dp" />-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="会话标签"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="228dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/session_tag_chart_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="会话数分布(按会话消息数维度)"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/sessionbymessage_chart_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <View
+                style="@style/line_view_1dp"
+                android:layout_marginTop="15dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="会话数分布(按会话时长维度)"
+                    android:textColor="@color/manager_label_text_color"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <View style="@style/line_view_1dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="223dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/sessionbytime_chart_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+
+            <View style="@style/line_view_1dp" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

@@ -1,159 +1,376 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.easemob.helpdesk">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.easemob.helpdesk">
 
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <!--<uses-permission android:name="android.permission.REORDER_TASKS"/>-->
-    <!--<uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />-->
-    <!-- 在sdcard中创建/删除文件的权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <!-- AndroidL以下版本 获取最近task list需要此权限 -->
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <!-- Android L 需要用户给予下面的权限才可以查看最近的任务 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- 往sdcard中写入数据的权限 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
-    <!--<uses-permission android:name="android.permission.CALL_PHONE" />-->
-    <!--  唤醒服务 -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- 在sdcard中创建/删除文件的权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <!-- AndroidL以下版本 获取最近task list需要此权限 -->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!-- Android L 需要用户给予下面的权限才可以查看最近的任务 -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <!-- 往sdcard中写入数据的权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- 唤醒服务 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"/>
+
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
+    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-
-
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
     <permission
         android:name="com.easemob.helpdesk.permission.MIPUSH_RECEIVE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"/>
 
-    <uses-permission android:name="com.easemob.helpdesk.permission.MIPUSH_RECEIVE" />
-
-
+    <uses-permission android:name="com.easemob.helpdesk.permission.MIPUSH_RECEIVE"/>
     <application
         android:name=".HDApplication"
-        android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="${APP_ICON_VALUE}"
         android:label="${APP_LABLE_VALUE}"
         android:largeHeap="true"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name="com.easemob.helpdesk.activity.SplashActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:theme="@style/AppTheme"
+        tools:replace="android:label"
+        >
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activity.main.LoginActivity"
-            android:configChanges="screenSize|orientation"
-            android:windowSoftInputMode="stateVisible|adjustResize"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".activity.main.MainActivity"
+        <activity
+            android:name=".mvp.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"
-            />
+            android:windowSoftInputMode="adjustNothing">
+        </activity>
         <activity
-            android:name=".activity.chat.ChatActivity"
+            android:name=".mvp.ChatActivity"
+            android:configChanges="keyboardHidden|orientation|screenLayout"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity
+            android:name=".mvp.AgentChatActivity"
             android:configChanges="keyboardHidden|orientation|screenLayout"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
         <activity
-            android:name=".activity.chat.ShowBigImageActivity"
+            android:name=".mvp.LoginActivity"
+            android:configChanges="screenSize|orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+
+        <activity
+            android:name=".activity.SplashActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="easemob"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.BaseActivity"/>
+        <activity
+            android:name=".activity.test.CommonTabActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.test.SegmentTabActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.ScreeningActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.main.SearchNoticeActivity"
             android:screenOrientation="portrait"/>
-
-        <!-- photopicker start-->
         <activity
-            android:name="me.iwf.photopicker.PhotoPickerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
+            android:name=".activity.visitor.VisitorDetailActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="me.iwf.photopicker.PhotoPagerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <!-- photo picker end-->
-
+            android:name=".activity.visitor.CustomerDetailActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.easemob.helpdesk.activity.AlertDialog"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle"/>
+            android:name=".activity.chat.PhraseItemActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name="com.easemob.helpdesk.widget.ContextMenu"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyDialogStyle"/>
-
+            android:name=".activity.SearchWaitAccessActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.chat.ShowNormalFileActivity"
-            android:screenOrientation="portrait" />
+            android:name=".activity.SearchHistorySessionActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.category.CategoryShowActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.category.SelectCategoryTreeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AnimBottomIn" />
-        <activity
-            android:name=".activity.category.SearchCategoryActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Transparent"
-            android:windowSoftInputMode="adjustResize|stateVisible" />
+            android:name=".activity.chat.PhraseActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.transfer.TransferActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.agent.AgentProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.chat.AddShortCutActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.visitor.UserDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.history.HistoryChatActivity"
+            android:label="@string/title_activity_history_chat"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.chat.ShowBigImage"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.history.HistorySessionActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.ModifyActivity"
+        <activity
+            android:name=".activity.ModifyActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.ScreeningActivity"
+        <activity
+            android:name=".activity.visitor.UserProfileActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.history.SearchHistorySessionActivity"
+        <activity
+            android:name=".activity.chat.SkillGroupsActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.history.HistoryChatActivity"
+        <activity
+            android:name=".activity.visitor.CustomerUpdateActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.visitor.CustomerDetailActivity"
+
+        <!-- photopicker start -->
+        <activity
+            android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <!-- photo picker end -->
+
+        <activity
+            android:name=".activity.visitor.CustomersCenterActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.agent.AgentProfileActivity"
+
+
+        <activity
+            android:name=".activity.AlertDialog"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle"/>
+        <activity
+            android:name=".activity.ContextMenu"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyDialogStyle"/>
+        <activity
+            android:name=".activity.CategoryShowActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.main.SearchWaitAccessActivity"
+        <activity
+            android:name=".activity.SelectCategoryTreeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AnimBottomIn"/>
+        <activity
+            android:name=".activity.SearchCategoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Transparent"
+            android:windowSoftInputMode="adjustResize|stateVisible"/>
+        <activity
+            android:name=".activity.history.HistorySessionDetailActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.main.NoticeDetailActivity"
+        <activity
+            android:name=".activity.chat.ShowNormalFileActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.main.SearchNoticeActivity"
+        <activity
+            android:name=".activity.chat.CustomWebViewActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.TicketDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.FileDownloadActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.PhoneVerifyActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mvp.RegisterPersonalActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ForgetPwdActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.ResetPwdActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.NoticeDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.LeaveMessageActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.main.TicketsScreeningActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.chat.ShowVideoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.chat.ImageGridActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.chat.RecorderVideoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.visitor.CustomersScreeningActivity"
+            android:screenOrientation="portrait"/>
+
+        <!-- 声明SDK所需的service SDK核心功能 -->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true"/>
+        <!-- 声明SDK所需的receiver -->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- huawei push 第三方相关:接收Push消息 -->
+        <receiver
+            android:name="com.hyphenate.chat.EMHuaweiPushReceiver"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- 必须,用于接收token -->
+                <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
+                <!-- 必须,用于接收消息 -->
+                <action android:name="com.huawei.android.push.intent.RECEIVE"/>
+            </intent-filter>
+            />
+            <meta-data
+                android:name="CS_cloud_ablitity"
+                android:value="successRateAnalytics"/>
+        </receiver>
+
+        <!-- PushSDK:PushSDK接收外部请求事件入口 -->
+        <receiver
+            android:name="com.huawei.android.pushagent.PushEventReceiver"
+            android:exported="true"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.huawei.android.push.intent.REFRESH_PUSH_CHANNEL"/>
+                <action android:name="com.huawei.intent.action.PUSH"/>
+                <action android:name="com.huawei.intent.action.PUSH_ON"/>
+                <action android:name="com.huawei.android.push.PLUGIN"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- PushSDK:Push服务 -->
+        <service
+            android:name="com.huawei.android.pushagent.PushService"
+            android:process=":pushservice">
+        </service>
+
+        <!-- huawei push end -->
+
+
+        <!-- xiaomi push start，不需要删除即可 -->
+        <service
+            android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+            android:enabled="true"/>
+
+        <receiver
+            android:name="com.hyphenate.chat.EMMipushReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.xiaomi.mipush.ERROR"/>
+            </intent-filter>
+        </receiver>
+        <!-- xiaomi push end -->
+
+        <receiver
+            android:name=".receiver.WakeUpReceiver"
+            android:process=":watch">
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                <action android:name="com.easemob.helpdesk.CANCEL_JOB_ALARM_SUB"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receiver.WakeUpReceiver$WakeUpAutoStartReceiver"
+            android:process=":watch">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.WorkService"/>
+        <service android:name=".service.WorkService$WorkNotificationService"/>
+        <service
+            android:name=".service.JobSchedulerService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":watch"/>
+        <service
+            android:name=".service.WatchDogService"
+            android:process=":watch"/>
+        <service
+            android:name=".service.WatchDogService$WatchDogNotificationService"
+            android:process=":watch"/>
     </application>
 
 </manifest>

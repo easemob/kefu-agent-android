@@ -13,14 +13,21 @@
         android:layout_height="@dimen/top_title_height"
         android:background="#333333">
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/left"
+        <RelativeLayout
+            android:id="@+id/rl_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:text="{fon-arrow_left}"
-            android:textColor="@android:color/white"
-            android:textSize="36sp" />
+            android:background="@android:color/transparent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_2"
+                />
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"

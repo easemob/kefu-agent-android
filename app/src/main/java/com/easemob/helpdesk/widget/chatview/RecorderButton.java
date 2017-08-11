@@ -114,7 +114,7 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
     private WeakHandler mHandler;
 
 
-    private static class WeakHandler extends Handler {
+    private static class WeakHandler extends Handler{
         WeakReference<RecorderButton> weakReference;
 
         public WeakHandler(RecorderButton button){
@@ -295,4 +295,9 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
         mHandler.sendEmptyMessage(MSG_AUDIO_REPARED);
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        mAudioManager.setOnAudioStateListener(null);
+        super.onDetachedFromWindow();
+    }
 }

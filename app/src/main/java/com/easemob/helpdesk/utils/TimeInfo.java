@@ -2,7 +2,7 @@ package com.easemob.helpdesk.utils;
 
 import java.io.Serializable;
 
-public class TimeInfo implements Serializable {
+public class TimeInfo implements Serializable{
 
 	private long startTime;
 	private long endTime;

@@ -17,12 +17,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
-import com.easemob.helpdesk.activity.category.CategoryShowActivity;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
+import com.easemob.helpdesk.activity.CategoryShowActivity;
 import com.easemob.helpdesk.activity.visitor.CustomerDetailActivity;
 import com.easemob.helpdesk.adapter.ChatAdapter;
+import com.easemob.helpdesk.mvp.ChatActivity;
+import com.easemob.helpdesk.recorder.MediaManager;
 import com.easemob.helpdesk.widget.popupwindow.HistorySessionMore;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.bean.HDCategorySummary;
@@ -31,7 +33,7 @@ import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.entity.HDUser;
 import com.hyphenate.kefusdk.entity.HDVisitorUser;
-import com.hyphenate.kefusdk.manager.SessionManager;
+import com.hyphenate.kefusdk.manager.session.SessionManager;
 import com.zdxd.tagview.Tag;
 import com.zdxd.tagview.TagView;
 
@@ -92,6 +94,9 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 	@BindView(R.id.ib_menu_more)
 	protected ImageButton ibMenuMore;
 
+	@BindView(R.id.seesion_extra_info)
+	protected TextView sessionExtraInfo;
+
 	/**
 	 * 加载更多的View
 	 */
@@ -123,6 +128,7 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		AppConfig.setFitWindowMode(this);
 		setContentView(R.layout.activity_history_chat);
 		ButterKnife.bind(this);
 		Intent intent = getIntent();
@@ -138,6 +144,7 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 		//获取tagsView
 		getTagsFromRemote();
 		getCommentsFromRemote();
+		getSessionExtraInfo();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -153,7 +160,7 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 		btnCallback.setOnClickListener(this);
 	}
 
-	@OnClick(R.id.btn_back_historylist)
+	@OnClick(R.id.rl_back)
 	public void onClickByBack(){
 		finish();
 	}
@@ -510,5 +517,30 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 		}
 
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		MediaManager.release();
+	}
+
+	private void getSessionExtraInfo() {
+		sessionManager.getSessionExtraInfo(new HDDataCallBack<String>() {
+			@Override
+			public void onSuccess(final String value) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						sessionExtraInfo.setText(value);
+					}
+				});
+			}
+
+			@Override
+			public void onError(int error, String errorMsg) {
+
+			}
+		});
 	}
 }

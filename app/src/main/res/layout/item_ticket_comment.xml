@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:padding="10dp">
+
+    <com.easemob.helpdesk.widget.CircleImageView
+        android:id="@+id/avatar"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:src="@drawable/default_customer_avatar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/avatar"
+        android:paddingLeft="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#1a1a1a"
+                android:layout_toLeftOf="@id/timestamp"
+                android:textSize="17sp"
+                />
+
+
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comment on the full visible"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+        <com.wefika.flowlayout.FlowLayout
+            android:id="@+id/flowLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"/>
+    </LinearLayout>
+</RelativeLayout>

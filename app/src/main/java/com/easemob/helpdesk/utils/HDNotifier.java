@@ -15,13 +15,14 @@ import android.os.Build;
 import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 
+import com.easemob.helpdesk.ChannelConfig;
 import com.easemob.helpdesk.HDApplication;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
-import com.easemob.helpdesk.activity.main.MainActivity;
+import com.easemob.helpdesk.mvp.ChatActivity;
 import com.hyphenate.kefusdk.bean.HDSession;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.manager.CurrentSessionManager;
+import com.hyphenate.kefusdk.manager.session.CurrentSessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;
+import com.liyuzhao.badger.BadgeUtil;
 
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -38,7 +39,9 @@ public class HDNotifier {
 	private final static String msg_ch = "您收到了消息!";
 	
 	public static int notifyID = 1314;//start notification id
-	
+
+//	public static int hotFixNoti = 10000;
+
 	private NotificationManager notificationManager = null;
 	
 	private int notificationNum = 0;
@@ -82,7 +85,7 @@ public class HDNotifier {
 		
 	}
 	
-	public static HDNotifier getInstance(){
+	public static  HDNotifier getInstance(){
 		if(instance == null){
 			synchronized (HDNotifier.class){
 				if(instance == null){
@@ -100,7 +103,34 @@ public class HDNotifier {
 			ringtone = null;
 		}
 	}
-	
+
+//	public void sendHotFixNotiAction(String info) {
+//		PackageManager packageManager = appContext.getPackageManager();
+//
+//		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext);
+//		mBuilder.setSmallIcon(ChannelConfig.getInstance().getNotificationSmallIcon());
+//		mBuilder.setWhen(System.currentTimeMillis());
+//		mBuilder.setAutoCancel(true);
+//
+//		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+//			mBuilder.setColor(Color.GRAY);
+//		} else {
+//			mBuilder.setColor(Color.TRANSPARENT);
+//		}
+//
+//		mBuilder.setContentTitle("紧急修复");
+//		mBuilder.setTicker(info);
+//		mBuilder.setContentText(info);
+//		Notification notification = mBuilder.build();
+//
+//		try {
+//			notificationManager.cancel(hotFixNoti);
+//		} catch (Exception ignored) {
+//		}
+//
+//		notificationManager.notify(hotFixNoti, notification);
+//	}
+
 
 	private void sendNotifaction(HDMessage message){
 		PackageManager packageManager = appContext.getPackageManager();
@@ -109,7 +139,9 @@ public class HDNotifier {
 
 		//create and send notification
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(appContext);
-		mBuilder.setSmallIcon(appContext.getApplicationInfo().icon);
+//		mBuilder.setSmallIcon(appContext.getApplicationInfo().icon);
+		mBuilder.setSmallIcon(ChannelConfig.getInstance().getNotificationSmallIcon());
+//		mBuilder.setSmallIcon(R.drawable.icon_launcher2);
 //		mBuilder.setLargeIcon(BitmapFactory.decodeResource(appContext.getResources(), R.drawable.icon_launcher2));
 		mBuilder.setWhen(System.currentTimeMillis());
 		mBuilder.setAutoCancel(true);
@@ -134,14 +166,15 @@ public class HDNotifier {
 			msgIntent.putExtra("visitorid", message.getSessionServiceId());
 			HDSession session = CurrentSessionManager.getInstance()
 					.getSessionEntity(message.getSessionServiceId());
-			if (session != null && MainActivity.instance != null) {
+			if (session != null && !HDApplication.getInstance().isNoActivity()) {
 				msgIntent.setClass(appContext, ChatActivity.class);
-				System.out.println("HDSession is " + session.getUser().getNicename());
+//				System.out.println("HDSession is " + session.getUser().getNicename());
 				msgIntent.putExtra("user", session.getUser());
-				msgIntent.putExtra("originType",session.getOriginType());
-				msgIntent.putExtra("techChannelName",session.getTechChannelName());
+				msgIntent.putExtra("originType", session.getOriginType());
+				msgIntent.putExtra("techChannelName", session.getTechChannelName());
+				msgIntent.putExtra("chatGroupId", session.getChatGroupId());
 			} else {
-				System.out.println("HDSession is null");
+//				System.out.println("HDSession is null");
 				msgIntent.putExtra("user", message.getFromUser());
 			}
 		}
@@ -165,9 +198,20 @@ public class HDNotifier {
 			notificationManager.cancel(notifyID);
 		} catch (Exception ignored) {
 		}
+		int count = HDApplication.getInstance().getUnReadMsgCount();
+		try{
+			BadgeUtil.sendBadgeNotification(notification, notifyID, appContext, count, count);
+		}catch (Exception e){
+			HDLog.e(TAG, "send notification error" + e.getMessage());
+		}
+//		notificationManager.notify(notifyID, notification);
 	}
 	
 	public synchronized void notifiChatMsg(HDMessage message){
+		if (!HDApplication.getInstance().isNewMsgNotiStatus()) {
+			return;
+		}
+
 		if(!CommonUtils.isAppRunningForeground(appContext)){
 			sendNotifaction(message);
 		}
@@ -183,8 +227,14 @@ public class HDNotifier {
 				HDLog.e(TAG, "in slient mode now");
 				return;
 			}
-			long[] pattern = new long[] { 0, 180, 80, 120 };
-			vibrator.vibrate(pattern, -1);
+			if (HDApplication.getInstance().isNotiAlertVibrateStatus()) {
+				long[] pattern = new long[] { 0, 180, 80, 120 };
+				vibrator.vibrate(pattern, -1);
+			}
+
+			if (!HDApplication.getInstance().isNotiAlertSoundStatus()) {
+				return;
+			}
 
 			String vendor = Build.MANUFACTURER;
 			if (ringtone == null) {

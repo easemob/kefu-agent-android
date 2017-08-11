@@ -77,38 +77,47 @@
         android:layout_height="wrap_content"
         android:padding="5dp">
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/tv_jieru"
+        <RelativeLayout
+            android:id="@+id/rl_jieru"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_weight="1"
-            android:text="{fon_icon_jieru}"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/black"
-            android:textSize="36sp" />
+            android:padding="10dp"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_jieru"
+                />
+        </RelativeLayout>
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/tv_transfer"
+        <RelativeLayout
+            android:id="@+id/rl_transfer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_weight="1"
-            android:text="{fon_icon_transfer}"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/black"
-            android:textSize="36sp" />
+            android:padding="10dp"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_transfer"
+                />
+        </RelativeLayout>
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/tv_close"
+        <RelativeLayout
+            android:id="@+id/rl_close"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_weight="1"
-            android:text="{fon_icon_exit}"
-            android:gravity="center_horizontal"
-            android:textColor="@android:color/black"
-            android:textSize="36sp" />
+            android:padding="10dp"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_session_close"
+                />
+        </RelativeLayout>
 
     </LinearLayout>
 

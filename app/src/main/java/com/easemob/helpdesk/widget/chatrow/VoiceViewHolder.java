@@ -13,9 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
-import com.easemob.helpdesk.widget.ContextMenu;
+import com.easemob.helpdesk.activity.ContextMenu;
 import com.easemob.helpdesk.adapter.ChatAdapter;
+import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.recorder.MediaManager;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
@@ -59,24 +59,21 @@ public class VoiceViewHolder extends BaseViewHolder {
 			return;
 		}
 		int len = voiceBody.getVoiceLength();
+
+		if(len < 0 || len == 100) {
+			len = 0;
+		}
+
 		if (len > 0) {
 			tvLength.setText(len + "\"");
-			if (len == 100) {
-				tvLength.setVisibility(View.INVISIBLE);
-			} else {
-				tvLength.setVisibility(View.VISIBLE);
-			}
+			tvLength.setVisibility(View.VISIBLE);
 		} else {
 			tvLength.setVisibility(View.INVISIBLE);
 		}
 
-		if (len != 100) {
-			ViewGroup.LayoutParams layoutParams = lengthView.getLayoutParams();
-			layoutParams.width = (int) (adapter.mMinItemWidth + Math.min(adapter.mMaxItemWidth / 60f * len, adapter.mMaxItemWidth));
-		} else {
-			ViewGroup.LayoutParams layoutParams = lengthView.getLayoutParams();
-			layoutParams.width = (int) (adapter.mMinItemWidth + Math.min(adapter.mMaxItemWidth / 60f * len, adapter.mMaxItemWidth));
-		}
+		ViewGroup.LayoutParams layoutParams = lengthView.getLayoutParams();
+		layoutParams.width = (int) (adapter.mMinItemWidth + Math.min(adapter.mMaxItemWidth / 60f * len, adapter.mMaxItemWidth));
+
 
 		lengthView.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -126,7 +123,10 @@ public class VoiceViewHolder extends BaseViewHolder {
 
 		if (isSend) {
 			setMessageSendCallback(message);
+		}else{
+			setMessageReceiveCallback(message);
 		}
+
 		switch (message.getStatus()) {
 			case SUCCESS:
 				pb.setVisibility(View.GONE);
@@ -145,6 +145,14 @@ public class VoiceViewHolder extends BaseViewHolder {
 			case INPROGRESS:
 				if (pb != null) {
 					pb.setVisibility(View.VISIBLE);
+				}
+				break;
+			case CREATE:
+				if (pb != null){
+					pb.setVisibility(View.GONE);
+				}
+				if (ivStatus != null){
+					ivStatus.setVisibility(View.VISIBLE);
 				}
 				break;
 		}
@@ -228,21 +236,32 @@ public class VoiceViewHolder extends BaseViewHolder {
 
 
 	private void playVoiceItem(View v, final boolean isSend, HDMessage message, HDVoiceMessageBody voiceBody) {
+		View animView = v.findViewById(R.id.id_recorder_anim);
+
 		//播放动画
 		if (adapter.animView != null) {
-			if (isSend) {
+			if (adapter.animStatus == 0) {
 				adapter.animView.setBackgroundResource(R.drawable.icon_audio_blue_3);
-			} else {
+			} else if (adapter.animStatus == 1){
 				adapter.animView.setBackgroundResource(R.drawable.icon_audio_white_3);
+			} else {
+				HDLog.e(TAG, "anim play abnormal");
 			}
-			adapter.animView = null;
+			if (animView == adapter.animView) {
+				MediaManager.release();
+				adapter.animView = null;
+				adapter.animStatus = -1;
+				return;
+			}
 		}
 
-		adapter.animView = v.findViewById(R.id.id_recorder_anim);
+		adapter.animView = animView;
 		if (isSend) {
 			adapter.animView.setBackgroundResource(R.drawable.voice_to_icon);
+			adapter.animStatus = 0;
 		} else {
 			adapter.animView.setBackgroundResource(R.drawable.voice_from_icon);
+			adapter.animStatus = 1;
 			if (!message.isListened()) {
 				ivReadStatus.setVisibility(View.GONE);
 				message.setListened(true);
@@ -250,7 +269,7 @@ public class VoiceViewHolder extends BaseViewHolder {
 
 			}
 		}
-		AnimationDrawable anim = (AnimationDrawable) adapter.animView.getBackground();
+		final AnimationDrawable anim = (AnimationDrawable) adapter.animView.getBackground();
 		anim.start();
 
 		//播放音频
@@ -262,6 +281,7 @@ public class VoiceViewHolder extends BaseViewHolder {
 				} else {
 					adapter.animView.setBackgroundResource(R.drawable.icon_audio_white_3);
 				}
+				adapter.animStatus = -1;
 			}
 		});
 

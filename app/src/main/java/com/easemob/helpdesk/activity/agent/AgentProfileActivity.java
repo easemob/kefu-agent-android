@@ -10,25 +10,24 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
-import com.easemob.helpdesk.activity.main.LoginActivity;
 import com.easemob.helpdesk.activity.ModifyActivity;
-import com.hyphenate.kefusdk.entity.OSSConfig;
 import com.easemob.helpdesk.image.ImageHandleUtils;
-import com.easemob.helpdesk.utils.AvatarUtils;
+import com.easemob.helpdesk.mvp.LoginActivity;
+import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.ImageTools;
-import com.easemob.helpdesk.utils.PreferenceUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.manager.AgentManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.JsonUtils;
 import com.hyphenate.kefusdk.utils.PathUtil;
@@ -41,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,6 +100,17 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
     @BindView(R.id.st_broadcast_unreadcount)
     protected SwitchButton stBroadcastUnreadcount;
+    @BindView(R.id.st_new_msg_noti)
+    protected SwitchButton stNewMsgNoti;
+    @BindView(R.id.st_noti_alert_sound)
+    protected SwitchButton stNotiAlertSound;
+    @BindView(R.id.st_noti_alert_vibrate)
+    protected SwitchButton stNotiAlertVibrate;
+    @BindView(R.id.ll_noti_alert_sound)
+    protected LinearLayout llNotiAlertSound;
+    @BindView(R.id.ll_noti_alert_vibrate)
+    protected LinearLayout llNotiAlertVibrate;
+
 
     private Dialog dialog;
     private Map<String, Object> tempUserInfo = Collections.synchronizedMap(new HashMap<String, Object>());
@@ -111,12 +120,25 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     private String oldWelcomeContent;
 
     String cropOutputPath = null;
-    @BindView(R.id.left)
+    @BindView(R.id.rl_back)
     protected View viewBack;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (HDApplication.getInstance().isNewMsgNotiStatus()) {
+            llNotiAlertSound.setVisibility(View.VISIBLE);
+            llNotiAlertVibrate.setVisibility(View.VISIBLE);
+        } else {
+            llNotiAlertSound.setVisibility(View.INVISIBLE);
+            llNotiAlertVibrate.setVisibility(View.INVISIBLE);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_agent_profile);
         ButterKnife.bind(this);
         loginUser = HDClient.getInstance().getCurrentUser();
@@ -127,10 +149,13 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getAgentGreetingEnable(){
-        AgentManager.getInstance().getAgentGreetingEnable(new HDDataCallBack<Boolean>() {
+        HDClient.getInstance().agentManager().getAgentGreetingEnable(new HDDataCallBack<Boolean>() {
             @Override
             public void onSuccess(final Boolean value) {
                 HDLog.d(TAG, "getGreetingMsgAgentEnable -> :" + value);
+                if (isFinishing()){
+                    return;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -147,10 +172,11 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void getAgentGreetingContent(){
-        AgentManager.getInstance().getAgentGreetingContent(new HDDataCallBack<String>() {
+        HDClient.getInstance().agentManager().getAgentGreetingContent(new HDDataCallBack<String>() {
             @Override
             public void onSuccess(final String optionValue) {
                 HDLog.d(TAG, "getGreetingMsgAgentContent -> :" + optionValue);
+                if (isFinishing()){return;}
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -165,11 +191,6 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(int error, String errorMsg) {
-
-            }
-
-            @Override
-            public void onAuthenticationException() {
 
             }
         });
@@ -208,6 +229,15 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
         stBroadcastUnreadcount.setChecked(HDApplication.getInstance().isBroadcastUnreadCount());
         stBroadcastUnreadcount.setOnCheckedChangeListener(broadcastUnreadcountListener);
+
+        stNewMsgNoti.setChecked(HDApplication.getInstance().isNewMsgNotiStatus());
+        stNewMsgNoti.setOnCheckedChangeListener(newMsgNotiListener);
+
+        stNotiAlertSound.setChecked(HDApplication.getInstance().isNotiAlertSoundStatus());
+        stNotiAlertSound.setOnCheckedChangeListener(notiAlertSoundListener);
+
+        stNotiAlertVibrate.setChecked(HDApplication.getInstance().isNotiAlertVibrateStatus());
+        stNotiAlertVibrate.setOnCheckedChangeListener(notiAlertVibrateListener);
     }
 
     CompoundButton.OnCheckedChangeListener broadcastUnreadcountListener = new CompoundButton.OnCheckedChangeListener() {
@@ -217,12 +247,39 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
+    CompoundButton.OnCheckedChangeListener newMsgNotiListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            HDApplication.getInstance().setNewMsgNotiStatus(isChecked);
+            if (isChecked) {
+                llNotiAlertSound.setVisibility(View.VISIBLE);
+                llNotiAlertVibrate.setVisibility(View.VISIBLE);
+            } else {
+                llNotiAlertSound.setVisibility(View.INVISIBLE);
+                llNotiAlertVibrate.setVisibility(View.INVISIBLE);
+            }
+        }
+    };
+
+    CompoundButton.OnCheckedChangeListener notiAlertSoundListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            HDApplication.getInstance().setNotiAlertSoundStatus(isChecked);
+        }
+    };
+
+    CompoundButton.OnCheckedChangeListener notiAlertVibrateListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            HDApplication.getInstance().setNotiAlertVibrateStatus(isChecked);
+        }
+    };
 
 
 
 
     private void setAgentWelcomeMsgEnable(boolean enable) {
-        AgentManager.getInstance().setAgentWelcomeMsgEnable(enable, new HDDataCallBack<String>() {
+        HDClient.getInstance().agentManager().setAgentWelcomeMsgEnable(enable, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
 
@@ -230,11 +287,6 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(int error, String errorMsg) {
-
-            }
-
-            @Override
-            public void onAuthenticationException() {
 
             }
         });
@@ -256,7 +308,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     private void getAgentInfo() {
         dialog = DialogUtils.getLoadingDialog(this, R.string.info_loading);
         dialog.show();
-        AgentManager.getInstance().getAgentInfo(new HDDataCallBack<Map<String, Object>>() {
+        HDClient.getInstance().agentManager().getAgentInfo(new HDDataCallBack<Map<String, Object>>() {
             @Override
             public void onSuccess(final Map<String, Object> result) {
                 HDLog.d(TAG, "value:" + result);
@@ -370,14 +422,14 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
             if(remoteUrl.contains("/images/uikit/")){
                 return;
             }
-            AvatarUtils.asyncGetAndSetAvatar(remoteUrl, this, ivAvatar);
+            AvatarManager.getInstance(this).asyncGetAvatar(ivAvatar, remoteUrl, this);
         }
 
     }
 
 
     private void saveUserProfile(int requestCode, Map<String, Object> postBody) {
-        AgentManager.getInstance().saveUserProfile(postBody, new HDDataCallBack<String>() {
+        HDClient.getInstance().agentManager().saveUserProfile(postBody, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {
@@ -408,14 +460,6 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                         Toast.makeText(mContext, getString(R.string.toast_save_fail_p_check_net), Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-
-            @Override
-            public void onAuthenticationException() {
-                if (isFinishing()) {
-                    return;
-                }
-                closeDialog();
             }
         });
     }
@@ -480,7 +524,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
     private void asyncUpdateAgentWelcontent(final String content) {
         tvWelcomeContent.setText(content);
-        AgentManager.getInstance().asyncUpdateAgentWelcontent(content, new HDDataCallBack<String>() {
+        HDClient.getInstance().agentManager().asyncUpdateAgentWelcontent(content, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
 
@@ -488,6 +532,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
             @Override
             public void onError(int error, String errorMsg) {
+                if (isFinishing()){return;}
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -495,10 +540,6 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                     }
                 });
 
-            }
-
-            @Override
-            public void onAuthenticationException() {
             }
         });
     }
@@ -513,38 +554,24 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
             return;
         }
         try {
-            String jsonConfigStr = PreferenceUtils.getInstance().getInitData();
-            final OSSConfig config = JsonUtils.getOSSConfig(jsonConfigStr);
-            if (config == null) {
-                return;
-            }
-            HDUser loginUser = HDClient.getInstance().getCurrentUser();
-
-            if (loginUser == null) {
-                return;
-            }
-
-            final String baseUrl = AgentManager.getInstance().getRemoteOSSBaseUrl(config);
-            final String uniqueKey = "avatar/" + loginUser.getTenantId() + "/" + UUID.randomUUID();
-            HDLog.d(TAG, "baseUrl: " + baseUrl + "uniqueKey:" + uniqueKey);
-            AgentManager.getInstance().uploadAvatarToServer(baseUrl, cropOutputPath, config, uniqueKey, new HDDataCallBack() {
+            HDClient.getInstance().agentManager().uploadAvatarToServer(cropOutputPath, new HDDataCallBack<String>() {
                 @Override
-                public void onSuccess(Object value) {
+                public void onSuccess(final String value) {
+                    if (isFinishing()){return;}
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             closeDialog();
-                            String avatarRemote = AgentManager.getInstance().getCropRemoteUrl(config, uniqueKey);
-                            avatarRemote = avatarRemote.substring(avatarRemote.indexOf("ossimages")).replaceFirst("ossimages", "/");
                             HDApplication.getInstance().avatarBitmap = null;
                             HDApplication.getInstance().avatarIsUpdate = true;
-                            parseActivityResult(REQUEST_CODE_AVATAR_UPLOAD, avatarRemote);
+                            parseActivityResult(REQUEST_CODE_AVATAR_UPLOAD, value);
                         }
                     });
                 }
 
                 @Override
                 public void onError(int error, String errorMsg) {
+                    if (isFinishing()){return;}
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -552,11 +579,6 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                             Toast.makeText(mContext, getString(R.string.toast_pic_upload_fail), Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
-
-                @Override
-                public void onAuthenticationException() {
-
                 }
             });
 
@@ -627,7 +649,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         String content;
         switch (v.getId()) {
-            case R.id.left:
+            case R.id.rl_back:
                 finish();
                 break;
 

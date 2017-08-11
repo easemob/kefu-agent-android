@@ -11,16 +11,21 @@
         android:layout_height="@dimen/top_title_height"
         android:background="@color/bg_top_bar_2">
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textColor="@android:color/white"
-            android:textSize="36sp"
-            android:text="{fon-arrow_left}"
-            />
+	    <RelativeLayout
+		    android:id="@+id/rl_back"
+		    android:layout_width="wrap_content"
+		    android:layout_height="match_parent"
+		    android:layout_centerVertical="true"
+		    android:background="@android:color/transparent">
 
+		    <ImageView
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_marginLeft="10dp"
+			    android:layout_centerVertical="true"
+			    android:src="@drawable/icon_back_2"
+			    />
+	    </RelativeLayout>
 
         <TextView
             android:id="@+id/title"
@@ -76,16 +81,13 @@
                     android:textColor="#1a1a1a"
                     android:textSize="18sp" />
 
-                <com.mikepenz.iconics.view.IconicsTextView
-                    android:id="@+id/iv_icon_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:textSize="30sp"
-                    android:textColor="#666666"
-                    android:text="{fon-arrow_right}"
-                    />
+   	            <ImageView
+		            android:id="@+id/iv_icon_right"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+		            android:layout_centerVertical="true"
+		            android:background="@drawable/arrow_status_black_right"/>
 
                 <TextView
                     android:id="@+id/tv_time_text"
@@ -203,16 +205,14 @@
                     android:textColor="#1a1a1a"
                     android:textSize="18sp" />
 
-                <com.mikepenz.iconics.view.IconicsTextView
-                    android:id="@+id/icon_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:textSize="30sp"
-                    android:textColor="#666666"
-                    android:text="{fon-arrow_right}"
-                    />
+	            <ImageView
+		            android:id="@+id/icon_right"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+		            android:layout_centerVertical="true"
+		            android:background="@drawable/arrow_status_black_right"/>
+
                 <TextView
                     android:id="@+id/tv_channel_text"
                     android:layout_width="wrap_content"
@@ -257,16 +257,13 @@
                     <!--app:iconName="@string/if_arrow_right"-->
                     <!--app:iconSize="15sp" />-->
 
-                <com.mikepenz.iconics.view.IconicsTextView
-                    android:id="@+id/tc_icon_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:textSize="30sp"
-                    android:textColor="#666666"
-                    android:text="{fon-arrow_right}"
-                    />
+	            <ImageView
+		            android:id="@+id/tc_icon_right"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+		            android:layout_centerVertical="true"
+		            android:background="@drawable/arrow_status_black_right"/>
 
                 <!--<ImageView-->
                 <!--android:id="@+id/tc_icon_right"-->
@@ -321,16 +318,13 @@
                     <!--app:iconName="@string/if_arrow_right"-->
                     <!--app:iconSize="15sp" />-->
 
-                <com.mikepenz.iconics.view.IconicsTextView
-                    android:id="@+id/st_icon_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:textSize="30sp"
-                    android:textColor="#666666"
-                    android:text="{fon-arrow_right}"
-                    />
+	            <ImageView
+		            android:id="@+id/st_icon_right"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+		            android:layout_centerVertical="true"
+		            android:background="@drawable/arrow_status_black_right"/>
 
                 <!--<ImageView-->
                 <!--android:id="@+id/st_icon_right"-->
@@ -376,15 +370,12 @@
                     android:textColor="#999999"
                     android:textSize="18sp" />
 
-                <com.mikepenz.iconics.view.IconicsTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:textSize="30sp"
-                    android:textColor="#666666"
-                    android:text="{fon-arrow_right}"
-                    />
+	            <ImageView
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentRight="true"
+		            android:layout_centerVertical="true"
+		            android:background="@drawable/arrow_status_black_right"/>
 
             </RelativeLayout>
 
@@ -432,16 +423,13 @@
 			        android:textSize="18sp" />
 
 
-		        <com.mikepenz.iconics.view.IconicsTextView
+		        <ImageView
 			        android:id="@+id/vn_icon_right"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:layout_alignParentRight="true"
 			        android:layout_centerVertical="true"
-			        android:textSize="30sp"
-			        android:textColor="#666666"
-			        android:text="{fon-arrow_right}"
-			        />
+			        android:background="@drawable/arrow_status_black_right"/>
 
 		        <TextView
 			        android:id="@+id/tv_visitorname_text"

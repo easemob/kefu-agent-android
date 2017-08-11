@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <com.easemob.helpdesk.widget.photoview.PhotoView
+    <com.easemob.helpdesk.widget.PhotoView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,6 +19,16 @@
         android:layout_height="36dp"
         android:layout_centerInParent="true"
         android:visibility="gone" />
-
+    <ImageButton
+        android:id="@+id/btn_image_save"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="14dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="14dp"
+        android:clickable="true"
+        android:background="@drawable/save_download_image"
+        tools:ignore="RtlHardcoded"/>
 
 </RelativeLayout>

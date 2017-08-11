@@ -9,6 +9,7 @@
     <!--MainActivity start -->
     <item type="id" name="slidingmenu_homeItem"/>
     <item type="id" name="slidingmenu_historyItem"/>
+    <item type="id" name="slidingmenu_customerCenterItem"/>
     <item type="id" name="slidingmenu_settingItem"/>
     <item type="id" name="slidingmenu_updateVersionItem"/>
     <item type="id" name="slidingmenu_screenoptize"/>

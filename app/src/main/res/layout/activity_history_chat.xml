@@ -13,16 +13,21 @@
         android:background="@color/bg_top_bar_2">
 
 
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/btn_back_historylist"
+        <RelativeLayout
+            android:id="@+id/rl_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:text="{fon-arrow_left}"
-            android:textColor="@android:color/white"
-            android:textSize="36sp"
+            android:background="@android:color/transparent">
 
-            />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_back_2"
+                />
+        </RelativeLayout>
 
 
         <LinearLayout
@@ -53,7 +58,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/ll_more"
-            android:layout_toRightOf="@id/btn_back_historylist"
+            android:layout_toRightOf="@id/rl_back"
             android:gravity="center"
             android:orientation="vertical">
 

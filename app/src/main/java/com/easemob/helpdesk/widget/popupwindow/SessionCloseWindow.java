@@ -36,7 +36,7 @@ public class SessionCloseWindow extends BasePopupWindow {
     public void showPopupWindow(View parent) {
         if (!this.isShowing()) {
             try{
-                this.showAsDropDown(parent, CommonUtils.convertDip2Px(mContext, -10), CommonUtils.convertDip2Px(mContext, -10));
+                this.showAsDropDown(parent, CommonUtils.convertDip2Px(mContext, -10),CommonUtils.convertDip2Px(mContext, -10));
             }catch (IllegalStateException e){
                 this.dismiss();
             }

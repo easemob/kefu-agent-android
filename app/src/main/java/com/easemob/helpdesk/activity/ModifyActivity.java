@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 
 import java.util.regex.Pattern;
@@ -57,6 +58,7 @@ public class ModifyActivity extends BaseActivity implements OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_modify);
         Intent intent = getIntent();
         index = intent.getIntExtra(IndexExtra, 0);

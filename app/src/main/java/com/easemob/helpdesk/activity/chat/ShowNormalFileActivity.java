@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
@@ -29,6 +30,7 @@ public class ShowNormalFileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_show_file);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         message = getIntent().getParcelableExtra("message");

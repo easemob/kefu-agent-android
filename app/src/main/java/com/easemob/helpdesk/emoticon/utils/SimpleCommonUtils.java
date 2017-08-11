@@ -12,10 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
 import com.easemob.helpdesk.emoticon.filter.EaseMobFilter;
 import com.easemob.helpdesk.emoticon.filter.WeBoFilter;
 import com.easemob.helpdesk.emoticon.filter.WeChatFilter;
+import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.moticons.DefEaseEmoticons;
 import com.easemob.moticons.DefWeChatEmoticons;
 import com.easemob.moticons.DefWeiBoEmoticons;
@@ -45,8 +45,6 @@ import sj.keyboard.widget.EmoticonsAutoEditText;
 public class SimpleCommonUtils {
 
     public static void initEmoticonsEditText(EmoticonsAutoEditText etContent){
-//        etContent.addEmoticonFilter(new EmojiFilter());
-//        etContent.addEmoticonFilter(new XhsFilter());
         etContent.addEmoticonFilter(new EaseMobFilter());
         etContent.addEmoticonFilter(new WeChatFilter());
         etContent.addEmoticonFilter(new WeBoFilter());
@@ -92,32 +90,18 @@ public class SimpleCommonUtils {
 
         PageSetAdapter pageSetAdapter = new PageSetAdapter();
 
-        if (context instanceof ChatActivity){
-            String originType = ((ChatActivity)context).getOriginType();
+        if (context instanceof BaseChatActivity){
+            String originType = ((BaseChatActivity)context).getOriginType();
             if (originType == null){
                 addEasemobPageSetEntity(pageSetAdapter, context, emoticonClickListener);
-//                addWeChatPageSetEntity(pageSetAdapter, context, emoticonClickListener);
-//                addWeBoPageSetEntity(pageSetAdapter, context, emoticonClickListener);
             }else if (originType.equals("weibo")){
                 addWeBoPageSetEntity(pageSetAdapter, context, emoticonClickListener);
             }else if (originType.equals("weixin")){
-//                addEmojiPageSetEntity(pageSetAdapter, context, emoticonClickListener);
                 addWeChatPageSetEntity(pageSetAdapter, context, emoticonClickListener);
             }else{
                 addEasemobPageSetEntity(pageSetAdapter, context, emoticonClickListener);
-//                addWeChatPageSetEntity(pageSetAdapter, context, emoticonClickListener);
-//                addWeBoPageSetEntity(pageSetAdapter, context, emoticonClickListener);
             }
         }
-
-//        addWechatPageSetEntity(pageSetAdapter, context, emoticonClickListener);
-//
-//        addGoodGoodStudyPageSetEntity(pageSetAdapter, context, emoticonClickListener);
-//
-//        addKaomojiPageSetEntity(pageSetAdapter, context, emoticonClickListener);
-//
-//        addTestPageSetEntity(pageSetAdapter, context);
-
         return pageSetAdapter;
     }
 
@@ -319,11 +303,6 @@ public class SimpleCommonUtils {
                 content,
                 EmoticonsKeyboardUtils.getFontHeight(tv_content));
 
-//        spannable = XhsFilter.spannableFilter(tv_content.getContext(),
-//                spannable,
-//                content,
-//                EmoticonsKeyboardUtils.getFontHeight(tv_content),
-//                null);
         spannable = EaseMobFilter.spannableFilter(tv_content.getContext(),
                 spannable,
                 content,

@@ -9,4 +9,11 @@
         <attr name="type" format="integer" />
         <attr name="borderRadius" format="dimension"/>
     </declare-styleable>
+	<declare-styleable name="cute_bar_view">
+        <attr name="orientation">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+        <attr name="pillar_width" format="dimension"/>
+    </declare-styleable>
 </resources>

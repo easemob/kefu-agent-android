@@ -3,215 +3,245 @@ package com.easemob.helpdesk;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 
-import com.easemob.helpdesk.activity.main.LoginActivity;
-import com.easemob.helpdesk.activity.main.MainActivity;
-import com.easemob.helpdesk.typeface.CustomFont;
-import com.easemob.helpdesk.utils.HDNotifier;
+import com.easemob.helpdesk.mvp.LoginActivity;
+import com.easemob.helpdesk.service.WorkService;
 import com.easemob.helpdesk.utils.PreferenceUtils;
-import com.hyphenate.kefusdk.HDEventListener;
-import com.hyphenate.kefusdk.HDNotifierEvent;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.mikepenz.iconics.Iconics;
+import com.hyphenate.kefusdk.manager.session.CurrentSessionManager;
+import com.liyuzhao.badger.BadgeUtil;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by liyuzhao on 05/04/2017.
- */
-
 public class HDApplication extends Application {
-	private static HDApplication instance;
-	public Bitmap avatarBitmap = null;
-	private final List<Activity> activityList = Collections.synchronizedList(new LinkedList<Activity>());
-	public boolean avatarIsUpdate;
-	private boolean isBroadcastUnreadCount;
-	public static long AgentLastUpdateTime = 0;
-	/**
-	 * HDEventListener
-	 */
-	private HDEventListener eventListener;
+    private static final String TAG = HDApplication.class.getSimpleName();
+    private final List<Activity> activityList = Collections.synchronizedList(new LinkedList<Activity>());
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		instance = this;
-		HDClient.getInstance().init(this);
-        HDClient.getInstance().setDebugMode(true);
-		registerEventListener();
-		PreferenceUtils.getInstance().init(this);
-		registerActivityListener();
-		//only required if you add a custom or generic font on your own
-		Iconics.init(getApplicationContext());
+    public static long AgentLastUpdateTime = 0;
+    public Bitmap avatarBitmap = null;
+    public boolean avatarIsUpdate;
 
-		//register custom fonts like this (or also provide a font definition file)
-		Iconics.registerFont(new CustomFont());
+    private static HDApplication instance;
 
-		isBroadcastUnreadCount = PreferenceUtils.getInstance().getBroadcastUnReadCount();
-	}
+    private Handler mHandler = new Handler();
 
-	/**
-	 * 当App无界面时，提示来了一条消息
-	 */
-	protected void registerEventListener() {
-		if (eventListener == null){
-			eventListener = new HDEventListener() {
-				@Override
-				public void onEvent(HDNotifierEvent event) {
-					switch (event.getEvent()){
-						case EventNewMessage:
-						case EventNewSession:
-							if (MainActivity.instance == null){
-								HDNotifier.getInstance().notifiChatMsg(null);
-							}
-							break;
-					}
-				}
-			};
-			HDClient.getInstance().chatManager().addEventListener(eventListener, new HDNotifierEvent.Event[]{HDNotifierEvent.Event.EventNewMessage, HDNotifierEvent.Event.EventNewSession});
-		}
+    private boolean isBroadcastUnreadCount;
 
-	}
+    private boolean newMsgNotiStatus;
+    private boolean notiAlertSoundStatus;
+    private boolean notiAlertVibrateStatus;
 
-	/**
-	 * Class Instance Object
-	 *
-	 * @return HDApplication
-	 */
-	public static HDApplication getInstance() {
-		return instance;
-	}
 
-	/**
-	 * Save Activity to existing lists
-	 *
-	 * @param activity
-	 */
-	public void pushActivity(Activity activity) {
-		synchronized (activityList){
-			if (!activityList.contains(activity)) {
-				activityList.add(activity);
-			}
-		}
-	}
+    @Override
+    public void onCreate() {
+        super.onCreate();
+	    instance = this;
+        HDClient.getInstance().init(this);
+        PreferenceUtils.getInstance().init(this);
+        registerActivityListener();
+        IMHelper.getInstance().setGlobalListener();
 
-	public void popActivity(Activity activity) {
-		synchronized (activityList){
-			if (activityList.contains(activity)) {
-				activityList.remove(activity);
-			}
-		}
-	}
+        if (HDClient.getInstance().isLoggedInBefore()){
+            // 我们现在需要服务运行，将标志位重置为 false;
+            WorkService.sShouldStopService = false;
+            startService(new Intent(this, WorkService.class));
+        }
 
-	/**
-	 * 获取当前最顶部的activity的实例
-	 * @return
-	 */
-	public Activity getTopActivity(){
-		Activity mBaseActivity;
-		synchronized (activityList){
-			final int size = activityList.size() - 1;
-			if(size < 0){
-				return null;
-			}
-			mBaseActivity = activityList.get(size);
-		}
-		return mBaseActivity;
-	}
+        isBroadcastUnreadCount = PreferenceUtils.getInstance().getBroadcastUnReadCount();
 
-	@Override
-	protected void attachBaseContext(Context base) {
-		super.attachBaseContext(base);
-		MultiDex.install(this);
-	}
+        newMsgNotiStatus = PreferenceUtils.getInstance().getNewMsgNotiStatus();
+        notiAlertSoundStatus = PreferenceUtils.getInstance().getNotiAlertSoundStatus();
+        notiAlertVibrateStatus = PreferenceUtils.getInstance().getNotiAlertVibrateStatus();
+    }
 
-	public synchronized void logout() {
-		new Handler().post(new Runnable() {
-			@Override
-			public void run() {
-				PreferenceUtils.getInstance().removeAgentAll();
-			}
-		});
-	}
 
-	/**
-	 * 结束所有的Activity
-	 */
-	public void finishAllActivity() {
-		synchronized (activityList){
-			for (Activity activity : activityList) {
-				if (activity != null) {
-					if (!activity.isFinishing()) {
-						activity.finish();
-					}
-				}
-			}
-		}
-	}
+    public void setBroadcastUnreadCount(boolean enable){
+        isBroadcastUnreadCount = enable;
+        PreferenceUtils.getInstance().setBroadcastUnReadCount(enable);
+    }
 
-	private void registerActivityListener(){
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH){
-			registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
-				@Override
-				public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-					/**
-					 * 监听 activity 创建事件 将该activity 加入list
-					 */
-					if(!(activity instanceof LoginActivity)){
-						pushActivity(activity);
-					}
+    public boolean isBroadcastUnreadCount(){
+        return isBroadcastUnreadCount;
+    }
 
-				}
+    public void setNewMsgNotiStatus(boolean newMsgNotiStatus) {
+        this.newMsgNotiStatus = newMsgNotiStatus;
+        PreferenceUtils.getInstance().setNewMsgNotiStatus(newMsgNotiStatus);
+    }
 
-				@Override
-				public void onActivityStarted(Activity activity) {
+    public void setNotiAlertSoundStatus(boolean notiAlertSoundStatus) {
+        this.notiAlertSoundStatus = notiAlertSoundStatus;
+        PreferenceUtils.getInstance().setNotiAlertSoundStatus(notiAlertSoundStatus);
+    }
 
-				}
+    public void setNotiAlertVibrateStatus(boolean notiAlertVibrateStatus) {
+        this.notiAlertVibrateStatus = notiAlertVibrateStatus;
+        PreferenceUtils.getInstance().setNotiAlertVibrateStatus(notiAlertVibrateStatus);
+    }
 
-				@Override
-				public void onActivityResumed(Activity activity) {
+    public boolean isNewMsgNotiStatus() {
+        return newMsgNotiStatus;
+    }
 
-				}
+    public boolean isNotiAlertSoundStatus() {
+        return notiAlertSoundStatus;
+    }
 
-				@Override
-				public void onActivityPaused(Activity activity) {
+    public boolean isNotiAlertVibrateStatus() {
+        return notiAlertVibrateStatus;
+    }
 
-				}
+    public synchronized int getUnReadMsgCount() {
+        return CurrentSessionManager.getInstance().getTotalUnReadCount();
+    }
 
-				@Override
-				public void onActivityStopped(Activity activity) {
+    /**
+     * Class Instance Object
+     *
+     * @return HDApplication
+     */
+    public static HDApplication getInstance() {
+        return instance;
+    }
 
-				}
+    /**
+     * Save Activity to existing lists
+     *
+     * @param activity
+     */
+    public void pushActivity(Activity activity) {
+        synchronized (activityList){
+            if (!activityList.contains(activity)) {
+                activityList.add(activity);
+            }
+        }
+    }
 
-				@Override
-				public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+    public void popActivity(Activity activity) {
+        synchronized (activityList){
+            if (activityList.contains(activity)) {
+                activityList.remove(activity);
+            }
+        }
+    }
 
-				}
+    public boolean isNoActivity(){
+        return activityList.isEmpty();
+    }
 
-				@Override
-				public void onActivityDestroyed(Activity activity) {
-					/**
-					 * 监听到Activity销毁事件 将该Activity 从list中移除
-					 */
-					popActivity(activity);
-				}
-			});
-		}
-	}
 
-	public void setBroadcastUnreadCount(boolean enable){
-		isBroadcastUnreadCount = enable;
-		PreferenceUtils.getInstance().setBroadcastUnReadCount(enable);
-	}
+    /**
+     * 获取当前最顶部的activity的实例
+     * @return
+     */
+    public Activity getTopActivity(){
+        Activity mBaseActivity;
+        synchronized (activityList){
+            final int size = activityList.size() - 1;
+            if(size < 0){
+                return null;
+            }
+            mBaseActivity = activityList.get(size);
+        }
+        return mBaseActivity;
+    }
 
-	public boolean isBroadcastUnreadCount(){
-		return isBroadcastUnreadCount;
-	}
+
+    /**
+     * 结束所有的Activity
+     */
+    public void finishAllActivity() {
+        synchronized (activityList){
+            for (Activity activity : activityList) {
+                if (activity != null) {
+                    if (!activity.isFinishing()) {
+                        activity.finish();
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void registerActivityListener(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH){
+            registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+                @Override
+                public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                    /**
+                     * 监听 activity 创建事件 将该activity 加入list
+                     */
+                    if(!(activity instanceof LoginActivity)){
+                        pushActivity(activity);
+                    }
+
+                }
+
+                @Override
+                public void onActivityStarted(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivityResumed(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivityPaused(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivityStopped(Activity activity) {
+
+                }
+
+                @Override
+                public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+                }
+
+                @Override
+                public void onActivityDestroyed(Activity activity) {
+                    /**
+                     * 监听到Activity销毁事件 将该Activity 从list中移除
+                     */
+                    popActivity(activity);
+                }
+            });
+        }
+    }
+
+
+    public synchronized void logout() {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (avatarBitmap != null && !avatarBitmap.isRecycled()) {
+                    avatarBitmap.recycle();
+                    avatarBitmap = null;
+                }
+                try{
+                    BadgeUtil.resetBadgeCount(getApplicationContext());
+                }catch (Exception e){
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
 }

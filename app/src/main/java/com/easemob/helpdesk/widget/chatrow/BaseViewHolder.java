@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.AlertDialog;
-import com.easemob.helpdesk.activity.chat.ChatActivity;
+import com.easemob.helpdesk.activity.main.CurrentSessionFragment;
 import com.easemob.helpdesk.adapter.ChatAdapter;
-import com.easemob.helpdesk.fragment.main.CurrentSessionFragment;
+import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.utils.DateUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.entity.HDMessage;
@@ -66,7 +66,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 						intent.putExtra("title", "重发");
 						intent.putExtra("cancel", true);
 						intent.putExtra("position", position);
-						activity.startActivityForResult(intent, ChatActivity.REQUEST_CODE_RESEND);
+						activity.startActivityForResult(intent, BaseChatActivity.REQUEST_CODE_RESEND);
 					}
 				});
 			}
@@ -106,6 +106,51 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
 
 	protected void setMessageSendCallback(final HDMessage message) {
+		if (message.getMessageCallback() == null) {
+			message.setMessageCallback(new HDDataCallBack() {
+				@Override
+				public void onSuccess(Object value) {
+					if (activity.isFinishing()) {
+						return;
+					}
+					activity.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							adapter.refresh();
+							if (CurrentSessionFragment.refreshCallback != null) {
+								CurrentSessionFragment.refreshCallback.onRefreshView();
+							}
+						}
+					});
+				}
+
+				@Override
+				public void onError(int error, String errorMsg) {
+					activity.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							adapter.refresh();
+						}
+					});
+				}
+
+				@Override
+				public void onProgress(int progress) {
+					activity.runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							adapter.refresh();
+						}
+					});
+				}
+			});
+		}
+	}
+
+	protected void setMessageReceiveCallback(final HDMessage message) {
 		if (message.getMessageCallback() == null) {
 			message.setMessageCallback(new HDDataCallBack() {
 				@Override

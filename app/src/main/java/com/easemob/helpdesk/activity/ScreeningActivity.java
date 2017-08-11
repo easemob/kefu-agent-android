@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.category.SelectCategoryTreeActivity;
 import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.PreferenceUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
@@ -90,6 +90,7 @@ public class ScreeningActivity extends BaseActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_screening);
         mContext = this;
         String techValue = PreferenceUtils.getInstance().getTechChannel();
@@ -100,7 +101,7 @@ public class ScreeningActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void initView(){
-        ibtnBack = $(R.id.left);
+        ibtnBack = $(R.id.rl_back);
         ibtnFilter = $(R.id.right);
         rlTimeLayout = $(R.id.rl_time);
         tvTimeText = $(R.id.tv_time_text);
@@ -319,7 +320,7 @@ public class ScreeningActivity extends BaseActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.left:
+            case R.id.rl_back:
                 finish();
                 break;
             case R.id.right:

@@ -7,11 +7,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.entity.TabEntity;
-import com.easemob.helpdesk.fragment.transfer.TransferAgentFragment;
-import com.easemob.helpdesk.fragment.transfer.TransferSkillGroupFragment;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
@@ -63,6 +62,7 @@ public class TransferActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_transfer);
         mFragments.add(agentFragment);
         mFragments.add(skillGroupFragment);
@@ -77,7 +77,7 @@ public class TransferActivity extends BaseActivity {
      */
     private void initView() {
         position = getIntent().getIntExtra("position", -1);
-        viewBack = $(R.id.left);
+        viewBack = $(R.id.rl_back);
         mViewPager = $(R.id.viewpager);
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         /** with nothing **/

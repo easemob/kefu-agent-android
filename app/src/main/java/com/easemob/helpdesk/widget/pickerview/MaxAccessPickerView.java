@@ -13,13 +13,12 @@ import com.bigkoo.pickerview.lib.WheelView;
 import com.bigkoo.pickerview.view.BasePickerView;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.activity.main.MainActivity;
+import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.DialogUtils;
-import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.bean.OptionEntity;
+import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.manager.AgentManager;
 
 import java.util.ArrayList;
 
@@ -65,7 +64,7 @@ public class MaxAccessPickerView extends BasePickerView implements View.OnClickL
 
 
     private boolean isModifiable(){
-        OptionEntity optionEntity = AgentManager.getInstance().getOptionEntity("allowAgentChangeMaxSessions");
+        OptionEntity optionEntity = HDClient.getInstance().agentManager().getOptionEntity("allowAgentChangeMaxSessions");
         if (optionEntity != null) {
             String value = optionEntity.getOptionValue();
             if (value != null && value.equalsIgnoreCase("false")) {
@@ -115,7 +114,7 @@ public class MaxAccessPickerView extends BasePickerView implements View.OnClickL
         dialog.show();
 
         final int maxCount = wv.getCurrentItem();
-        AgentManager.getInstance().setMaxAccessCountByServer(maxCount, new HDDataCallBack<String>() {
+        HDClient.getInstance().agentManager().setMaxAccessCountByServer(maxCount, new HDDataCallBack<String>() {
 
             @Override
             public void onSuccess(String value) {

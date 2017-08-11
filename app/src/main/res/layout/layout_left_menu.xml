@@ -56,15 +56,13 @@
 
 
 
-                <com.mikepenz.iconics.view.IconicsTextView
+                <ImageView
                     android:id="@+id/icon_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:text="{fon-arrow_right}"
-                    android:textColor="@android:color/white"
-                    android:textSize="30sp" />
+                    android:background="@drawable/arrow_status_black_right"/>
 
 
                 <TextView
@@ -98,12 +96,13 @@
         android:gravity="left|center_vertical"
         android:visibility="gone"
         >
-        <com.mikepenz.iconics.view.IconicsTextView
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="{fon_nav_agent}"
-            android:textColor="@android:color/white"
-            android:textSize="30sp" />
+            android:background="@drawable/menu_icon_agent_mode"
+            android:layout_margin="5dp"
+            />
 
         <TextView
             android:layout_width="wrap_content"

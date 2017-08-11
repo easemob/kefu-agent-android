@@ -9,10 +9,12 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.activity.ScreeningActivity;
+import com.easemob.helpdesk.activity.SearchHistorySessionActivity;
 import com.easemob.helpdesk.adapter.HistoryListAdapter;
 import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
@@ -21,7 +23,7 @@ import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.bean.HistorySessionEntity;
 import com.hyphenate.kefusdk.bean.TechChannel;
 import com.hyphenate.kefusdk.entity.HDVisitorUser;
-import com.hyphenate.kefusdk.manager.HistorySessionManager;
+import com.hyphenate.kefusdk.manager.session.HistorySessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -54,14 +56,18 @@ public class HistorySessionActivity extends BaseActivity {
 
     private RelativeLayout search_button;
     private View viewFilter, viewBack;
+    private TimeInfo currentTimeInfo;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_history_sessions);
-        historySessionManager = new HistorySessionManager(HistorySessionActivity.this, this);
+        historySessionManager = new HistorySessionManager();
+        currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
+        historySessionManager.setCurrentTimeInfo(currentTimeInfo.getStartTime(), currentTimeInfo.getEndTime());
         initView();
         mWeakHandler = new WeakHandler(this);
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -134,7 +140,6 @@ public class HistorySessionActivity extends BaseActivity {
                 }
             }
         });
-        historySessionManager.setCurrentTimeInfo(DateUtils.getTimeInfoByCurrentWeek().getStartTime(), DateUtils.getTimeInfoByCurrentWeek().getEndTime());
         onFreshData();
     }
 
@@ -179,8 +184,8 @@ public class HistorySessionActivity extends BaseActivity {
 
 
     private void initView() {
-        viewFilter = $(R.id.right);
-        viewBack = $(R.id.left);
+        viewFilter = $(R.id.iv_filter);
+        viewBack = $(R.id.rl_back);
         recyclerView = (EasyRecyclerView) findViewById(R.id.recyclerView);
         tvLabelTotalCount = (TextView) findViewById(R.id.tv_label_total_count);
         search_button = $(R.id.search_button);
@@ -196,15 +201,12 @@ public class HistorySessionActivity extends BaseActivity {
                 startActivityForResult(intent, -1);
             }
         });
-        final TimeInfo timeInfo = new TimeInfo();
-        timeInfo.setStartTime(historySessionManager.getStartTime());
-        timeInfo.setEndTime(historySessionManager.getEndTime());
         viewFilter.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(HistorySessionActivity.this, ScreeningActivity.class);
-                intent.putExtra("timeinfo", timeInfo);
+                intent.putExtra("timeinfo", currentTimeInfo);
                 intent.putExtra("showtag", true);
                 startActivityForResult(intent, REQUEST_CODE_SCREENING);
             }
@@ -261,8 +263,8 @@ public class HistorySessionActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_SCREENING) {
-                TimeInfo timeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
-                historySessionManager.setCurrentTimeInfo(timeInfo.getStartTime(), timeInfo.getEndTime());
+                currentTimeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
+                historySessionManager.setCurrentTimeInfo(currentTimeInfo.getStartTime(), currentTimeInfo.getEndTime());
                 if(data.hasExtra("originType")){
                     historySessionManager.setCurrentOriginType(data.getStringExtra("originType"));
                 }else{
@@ -304,6 +306,11 @@ public class HistorySessionActivity extends BaseActivity {
         return 0;
     }
 
+    @Override
+    protected void onDestroy() {
+        mWeakHandler.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
 
     public void onFreshData() {
         historySessionManager.getFirstPageSessionHistory(new HDDataCallBack<List<HistorySessionEntity>>() {

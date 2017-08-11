@@ -15,7 +15,9 @@ public class PreferenceUtils {
 	private static final String SHARED_KEY_TECHCHANNEL = "tech_channel";
 	private static final String SHARED_KEY_AGENTALL = "agent_all";
 	private static final String SHARED_KEY_BROADCAST_UNREADCOUNT = "broadcast_unreadcount";
-
+	private static final String SHARED_KEY_NEW_MSG_NOTI = "new_msg_noti";
+	private static final String SHARED_KEY_NOTI_ALERT_SOUND = "noti_alert_sound";
+	private static final String SHARED_KEY_NOTI_ALERT_VIBRATE = "noti_alert_vibrate";
 
 	private PreferenceUtils() {
 	}
@@ -61,20 +63,6 @@ public class PreferenceUtils {
 		return mSharedPreferences.getString(SHARED_KEY_TECHCHANNEL, null);
 	}
 
-
-	public void setAgentAll(String agentAll) {
-		editor.putString(SHARED_KEY_AGENTALL, agentAll);
-		editor.commit();
-	}
-
-	public String getAgentAll() {
-		return mSharedPreferences.getString(SHARED_KEY_AGENTALL, null);
-	}
-
-	public void removeAgentAll(){
-		editor.remove(SHARED_KEY_AGENTALL).commit();
-	}
-
 	public void setBroadcastUnReadCount(boolean enable){
 		editor.putBoolean(SHARED_KEY_BROADCAST_UNREADCOUNT, enable);
 		editor.commit();
@@ -84,6 +72,30 @@ public class PreferenceUtils {
 		return mSharedPreferences.getBoolean(SHARED_KEY_BROADCAST_UNREADCOUNT, false);
 	}
 
+	public void setNewMsgNotiStatus(boolean enable) {
+		editor.putBoolean(SHARED_KEY_NEW_MSG_NOTI, enable);
+		editor.commit();
+	}
 
+	public boolean getNewMsgNotiStatus() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_NEW_MSG_NOTI, true);
+	}
 
+	public void setNotiAlertSoundStatus(boolean enable) {
+		editor.putBoolean(SHARED_KEY_NOTI_ALERT_SOUND, enable);
+		editor.commit();
+	}
+
+	public boolean getNotiAlertSoundStatus() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_NOTI_ALERT_SOUND, true);
+	}
+
+	public void setNotiAlertVibrateStatus(boolean enable) {
+		editor.putBoolean(SHARED_KEY_NOTI_ALERT_VIBRATE ,enable);
+		editor.commit();
+	}
+
+	public boolean getNotiAlertVibrateStatus() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_NOTI_ALERT_VIBRATE, true);
+	}
 }

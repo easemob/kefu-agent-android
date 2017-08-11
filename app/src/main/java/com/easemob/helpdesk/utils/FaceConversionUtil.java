@@ -75,7 +75,7 @@ public class FaceConversionUtil {
 	 * @return
 	 */
 	public SpannableString addFace(Context context, int imgId,
-	                               String spannableString) {
+			String spannableString) {
 		if (TextUtils.isEmpty(spannableString)) {
 			return null;
 		}
@@ -103,7 +103,7 @@ public class FaceConversionUtil {
 	 * @throws Exception
 	 */
 	private void dealExpression(Context context,
-	                            SpannableString spannableString, Pattern patten, int start)
+			SpannableString spannableString, Pattern patten, int start)
 			throws Exception {
 		Matcher matcher = patten.matcher(spannableString);
 		while (matcher.find()) {
