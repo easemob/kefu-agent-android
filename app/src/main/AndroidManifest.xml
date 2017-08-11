@@ -100,23 +100,9 @@
         </activity>
         <activity android:name=".activity.BaseActivity"/>
         <activity
-            android:name=".activity.test.CommonTabActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".activity.test.SegmentTabActivity"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".activity.ScreeningActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity
-            android:name=".activity.main.SearchNoticeActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.visitor.VisitorDetailActivity"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.visitor.CustomerDetailActivity"
             android:screenOrientation="portrait"/>
@@ -142,9 +128,6 @@
             android:name=".activity.chat.AddShortCutActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activity.visitor.UserDetailsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activity.history.HistoryChatActivity"
             android:label="@string/title_activity_history_chat"
             android:launchMode="singleTask"
@@ -157,12 +140,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ModifyActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.visitor.UserProfileActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.chat.SkillGroupsActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.visitor.CustomerUpdateActivity"
@@ -202,9 +179,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Transparent"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
-        <activity
-            android:name=".activity.history.HistorySessionDetailActivity"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.chat.ShowNormalFileActivity"
             android:screenOrientation="portrait"/>
