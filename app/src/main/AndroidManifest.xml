@@ -141,10 +141,6 @@
         <activity
             android:name=".activity.ModifyActivity"
             android:screenOrientation="portrait"/>
-        <activity
-            android:name=".activity.visitor.CustomerUpdateActivity"
-            android:screenOrientation="portrait"/>
-
         <!-- photopicker start -->
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
