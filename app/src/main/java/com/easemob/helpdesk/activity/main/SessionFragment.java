@@ -215,6 +215,7 @@ public class SessionFragment extends Fragment {
 
 
     public void refreshSessionCount(int count){
+        currentUser = HDClient.getInstance().getCurrentUser();
         if(tvSessionCount == null || currentUser == null){
             return;
         }
