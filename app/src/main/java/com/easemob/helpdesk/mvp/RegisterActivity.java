@@ -3,7 +3,6 @@ package com.easemob.helpdesk.mvp;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
-import com.easemob.helpdesk.utils.ImageViewService;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 
@@ -82,41 +80,23 @@ public class RegisterActivity  extends BaseActivity {
 
     private void loadVerifyCode(){
         showDialog("验证码获取中...");
-        HDClient.getInstance().userControler().postImgVerifyCode(new HDDataCallBack<String>() {
+        HDClient.getInstance().userControler().postImgVerifyCode(new HDDataCallBack<Bitmap>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(final Bitmap value) {
                 if (isFinishing()) {
                     return;
                 }
-                try {
-                    JSONObject jsonObject = new JSONObject(value);
-                    String imgVerifyCodeUrl = jsonObject.getString("url");
-                    codeId = jsonObject.getString("codeId");
-                    String remoteUrl = HDClient.getInstance().getKefuServerAddress() + imgVerifyCodeUrl;
-                    final byte[] data = ImageViewService.getImage(remoteUrl);
-                    if (isFinishing()) {
-                        return;
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            hideDialog();
-                            if (data == null) {
-                                Toast.makeText(RegisterActivity.this, "加载验证码失败!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                if (bitmap != null) {
-                                    ivCode.setImageBitmap(bitmap);
-                                    etCode.setText("");
-                                }
-                            }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideDialog();
+                        if (value != null) {
+                            ivCode.setImageBitmap(value);
+                            etCode.setText("");
+                            codeId = HDClient.getInstance().userControler().getLastCodeId();
                         }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-
+                    }
+                });
             }
 
             @Override

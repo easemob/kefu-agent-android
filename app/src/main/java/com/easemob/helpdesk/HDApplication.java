@@ -48,6 +48,7 @@ public class HDApplication extends Application {
         PreferenceUtils.getInstance().init(this);
         registerActivityListener();
         IMHelper.getInstance().setGlobalListener();
+        HDClient.getInstance().setDebugMode(true);
 
         if (HDClient.getInstance().isLoggedInBefore()){
             // 我们现在需要服务运行，将标志位重置为 false;

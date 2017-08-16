@@ -17,6 +17,7 @@ import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.utils.DateUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.entity.HDMessage;
+import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.util.Date;
 
