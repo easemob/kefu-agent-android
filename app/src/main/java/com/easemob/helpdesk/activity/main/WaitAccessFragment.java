@@ -430,7 +430,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
         }
         pd.setMessage("加入中...");
         pd.show();
-        waitAccessManager.deleteWaitUser(adapter.getItem(position), new HDDataCallBack<String>() {
+        waitAccessManager.accessWaitUser(adapter.getItem(position), new HDDataCallBack<String>() {
 
             @Override
             public void onSuccess(String value) {
@@ -516,7 +516,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     }
                     pd.show();
 
-                    waitAccessManager.deleteWaitUser(adapter.getItem(position), new HDDataCallBack<String>() {
+                    waitAccessManager.accessWaitUser(adapter.getItem(position), new HDDataCallBack<String>() {
 
                         @Override
                         public void onSuccess(String value) {

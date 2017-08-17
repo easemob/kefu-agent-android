@@ -184,7 +184,7 @@ public class AgentsFragment extends Fragment implements OnFreshCallbackListener,
 	}
 
 	private void getAgentUserListFromRemote() {
-		HDClient.getInstance().agentManager().getAgentList(new HDDataCallBack<List<AgentUser>>() {
+		HDClient.getInstance().agentManager().getAgentList(false, new HDDataCallBack<List<AgentUser>>() {
 			@Override
 			public void onSuccess(final List<AgentUser> value) {
 				if(getActivity()==null){
