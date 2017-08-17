@@ -16,6 +16,7 @@ import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.EMToast;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.chat.AgentManager;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
 
@@ -47,6 +48,7 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
         Collections.addAll(values, statuStrings);
         wv.setCyclic(false);
         wv.setAdapter(new ArrayWheelAdapter(values));
+//        wv.setOnItemSelectedListener(new MyItemSelectedListener());
     }
 
     @Override
@@ -73,7 +75,7 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
     }
 
 
-    private void setStatusByServer(final int index, final String status) {
+    private void setStatusByServer(final int index, final AgentManager.AgentStatus status) {
         final HDUser loginUser = HDClient.getInstance().getCurrentUser();
         if (loginUser == null){
             return;
@@ -100,7 +102,7 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
                                 break;
                         }
 
-                        refreshUI(status);
+                        refreshUI(status.toString());
                     }
                 });
 
@@ -132,10 +134,19 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
     private void setUserStatus(int index) {
         dialog = DialogUtils.getLoadingDialog(mContext, "更新中...");
         dialog.show();
-        String status = "Online";
+        AgentManager.AgentStatus status = AgentManager.AgentStatus.Online;
         switch (index) {
             case 0:
-
+                status = AgentManager.AgentStatus.Online;
+                break;
+            case 1:
+                status = AgentManager.AgentStatus.Busy;
+                break;
+            case 2:
+                status = AgentManager.AgentStatus.Leave;
+                break;
+            case 3:
+                status = AgentManager.AgentStatus.Hidden;
                 break;
         }
         setStatusByServer(index, status);

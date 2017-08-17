@@ -27,19 +27,14 @@ import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.ImageTools;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.AgentProfileEntity;
 import com.hyphenate.kefusdk.entity.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
-import com.hyphenate.kefusdk.utils.JsonUtils;
 import com.hyphenate.kefusdk.utils.PathUtil;
 import com.kyleduo.switchbutton.SwitchButton;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -113,8 +108,8 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
 
     private Dialog dialog;
-    private Map<String, Object> tempUserInfo = Collections.synchronizedMap(new HashMap<String, Object>());
-    private Map<String, Object> oldTempUserInfo = new HashMap<>();
+    private AgentProfileEntity userInfo = new AgentProfileEntity();
+    private AgentProfileEntity oldUserInfo = new AgentProfileEntity();
     private final Context mContext = this;
     private HDUser loginUser;
     private String oldWelcomeContent;
@@ -159,7 +154,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                    switchButton.setChecked(value);
+                        switchButton.setChecked(value);
                     }
                 });
             }
@@ -308,9 +303,9 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     private void getAgentInfo() {
         dialog = DialogUtils.getLoadingDialog(this, R.string.info_loading);
         dialog.show();
-        HDClient.getInstance().agentManager().getAgentInfo(new HDDataCallBack<Map<String, Object>>() {
+        HDClient.getInstance().agentManager().getAgentInfo(new HDDataCallBack<AgentProfileEntity>() {
             @Override
-            public void onSuccess(final Map<String, Object> result) {
+            public void onSuccess(final AgentProfileEntity result) {
                 HDLog.d(TAG, "value:" + result);
                 if (isFinishing()) {
                     return;
@@ -318,16 +313,16 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                    closeDialog();
-                    if (result == null){
-                        return;
-                    }
-                    tempUserInfo.putAll(result);
-                    tempUserInfo.put("password", null);
-                    oldTempUserInfo = tempUserInfo;
-                    if (tempUserInfo != null && tempUserInfo.size() > 0) {
-                        refreshUI();
-                    }
+                        closeDialog();
+                        if (result == null){
+                            return;
+                        }
+                        userInfo = result;
+                        userInfo.password = null;
+                        oldUserInfo = userInfo;
+                        if (userInfo != null) {
+                            refreshUI();
+                        }
                     }
                 });
             }
@@ -362,55 +357,50 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
         dialog.show();
         switch (requestCode) {
             case REQUEST_CODE_MODIFY_NICKNAME:
-                tempUserInfo.put("nicename", content);
+                userInfo.nickName = content;
                 break;
             case REQUEST_CODE_MODIFY_TURENAME:
-                tempUserInfo.put("trueName", content);
+                userInfo.trueName = content;
                 break;
             case REQUEST_CODE_MODIFY_AGENTNUMBER:
-                tempUserInfo.put("agentNumber", content);
+                userInfo.agentNumber = content;
                 break;
             case REQUEST_CODE_MODIFY_MOBILE:
-                tempUserInfo.put("mobilePhone", content);
+                userInfo.mobilePhone = content;
                 break;
             case REQUEST_CODE_MODIFY_PWD:
-                tempUserInfo.put("password", content);
+                userInfo.password = content;
                 break;
             case REQUEST_CODE_AVATAR_UPLOAD:
-                tempUserInfo.put("avatar", content);
+                userInfo.avatar = content;
                 break;
         }
-        saveUserProfile(requestCode, tempUserInfo);
+        saveUserProfile(requestCode, userInfo);
     }
 
 
     private void refreshUI() {
-        if (tempUserInfo == null || tempUserInfo.size() == 0) {
+        if (userInfo == null) {
             return;
         }
-        try{
-            HDLog.d(TAG, "tempUserInfo:" + tempUserInfo);
-            loginUser = JsonUtils.getEMUserFromJson(new JSONObject(tempUserInfo));
-            HDClient.getInstance().setLoginUser(loginUser);
-        }catch (Exception ignored){}
-        if (tempUserInfo.containsKey("agentNumber")) {
-            tvNumber.setText(String.valueOf(tempUserInfo.get("agentNumber")));
+        if (userInfo.agentNumber != null) {
+            tvNumber.setText(String.valueOf(userInfo.agentNumber));
         }
-        if (tempUserInfo.containsKey("nicename")) {
-            tvNickname.setText(String.valueOf(tempUserInfo.get("nicename")));
-            tvNick.setText(String.valueOf(tempUserInfo.get("nicename")));
+        if (userInfo.nickName != null) {
+            tvNickname.setText(String.valueOf(userInfo.nickName));
+            tvNick.setText(String.valueOf(userInfo.nickName));
         }
-        if (tempUserInfo.containsKey("trueName")) {
-            tvTruename.setText(String.valueOf(tempUserInfo.get("trueName")));
+        if (userInfo.trueName != null) {
+            tvTruename.setText(String.valueOf(userInfo.trueName));
         }
-        if (tempUserInfo.containsKey("username")) {
-            tvEmail.setText(String.valueOf(tempUserInfo.get("username")));
+        if (userInfo.userName != null) {
+            tvEmail.setText(String.valueOf(userInfo.userName));
         }
-        if (tempUserInfo.containsKey("mobilePhone")) {
-            tvMobile.setText(String.valueOf(tempUserInfo.get("mobilePhone")));
+        if (userInfo.mobilePhone != null) {
+            tvMobile.setText(String.valueOf(userInfo.mobilePhone));
         }
-        if (tempUserInfo.containsKey("avatar")) {
-            String remoteUrl = String.valueOf(tempUserInfo.get("avatar"));
+        if (userInfo.avatar != null) {
+            String remoteUrl = String.valueOf(userInfo.avatar);
             HDLog.d(TAG, "download avatar url:" + remoteUrl);
             if (TextUtils.isEmpty(remoteUrl)) {
                 return;
@@ -428,8 +418,8 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     }
 
 
-    private void saveUserProfile(int requestCode, Map<String, Object> postBody) {
-        HDClient.getInstance().agentManager().saveUserProfile(postBody, new HDDataCallBack<String>() {
+    private void saveUserProfile(int requestCode, final AgentProfileEntity entity) {
+        HDClient.getInstance().agentManager().saveUserProfile(entity, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {
@@ -439,7 +429,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        oldTempUserInfo = tempUserInfo;
+                        oldUserInfo = userInfo;
                         refreshUI();
                         Toast.makeText(mContext, getString(R.string.toast_getdata_success), Toast.LENGTH_SHORT).show();
                     }
@@ -455,7 +445,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        tempUserInfo = oldTempUserInfo;
+                        userInfo = oldUserInfo;
                         refreshUI();
                         Toast.makeText(mContext, getString(R.string.toast_save_fail_p_check_net), Toast.LENGTH_SHORT).show();
                     }
