@@ -145,7 +145,7 @@ public class ResetPwdActivity extends BaseActivity {
 
         showDialog();
 
-        HDClient.getInstance().userControler().recoveryPassword(strPwd, strConfirmPwd, strEmailCode, new HDDataCallBack<String>() {
+        HDClient.getInstance().accountManager().recoveryPassword(strPwd, strConfirmPwd, strEmailCode, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(final String value) {
                 if (isFinishing()) {

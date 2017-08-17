@@ -53,7 +53,7 @@ public class ForgetPwdActivity extends BaseActivity {
 
     private void loadVerifyCode(){
         showDialog("验证码获取中...");
-        HDClient.getInstance().userControler().postImgVerifyCode(new HDDataCallBack<Bitmap>() {
+        HDClient.getInstance().accountManager().postImgVerifyCode(new HDDataCallBack<Bitmap>() {
             @Override
             public void onSuccess(final Bitmap value) {
                 if (isFinishing()) {
@@ -66,7 +66,7 @@ public class ForgetPwdActivity extends BaseActivity {
                         if (value != null) {
                             ivCode.setImageBitmap(value);
                             etCode.setText("");
-                            codeId = HDClient.getInstance().userControler().getLastCodeId();
+                            codeId = HDClient.getInstance().accountManager().getLastCodeId();
                         }
                     }
                 });
@@ -124,7 +124,7 @@ public class ForgetPwdActivity extends BaseActivity {
         }
         showDialog();
 
-        HDClient.getInstance().userControler().forgotPwd(strEmail, codeId, strCode, new HDDataCallBack<String>() {
+        HDClient.getInstance().accountManager().forgotPwd(strEmail, codeId, strCode, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(final String value) {
                 if (isFinishing()) {

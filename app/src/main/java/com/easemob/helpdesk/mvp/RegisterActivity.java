@@ -80,7 +80,7 @@ public class RegisterActivity  extends BaseActivity {
 
     private void loadVerifyCode(){
         showDialog("验证码获取中...");
-        HDClient.getInstance().userControler().postImgVerifyCode(new HDDataCallBack<Bitmap>() {
+        HDClient.getInstance().accountManager().postImgVerifyCode(new HDDataCallBack<Bitmap>() {
             @Override
             public void onSuccess(final Bitmap value) {
                 if (isFinishing()) {
@@ -93,7 +93,7 @@ public class RegisterActivity  extends BaseActivity {
                         if (value != null) {
                             ivCode.setImageBitmap(value);
                             etCode.setText("");
-                            codeId = HDClient.getInstance().userControler().getLastCodeId();
+                            codeId = HDClient.getInstance().accountManager().getLastCodeId();
                         }
                     }
                 });
@@ -196,7 +196,7 @@ public class RegisterActivity  extends BaseActivity {
         postBody.put("codeValue", strCode);
 
         showDialog("提交中...");
-        HDClient.getInstance().userControler().postSendSmsVerifyCode(postBody, new HDDataCallBack<String>() {
+        HDClient.getInstance().accountManager().postSendSmsVerifyCode(postBody, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(final String value) {
                 if (isFinishing()){

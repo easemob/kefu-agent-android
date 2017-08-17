@@ -85,8 +85,6 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
                 if (((Activity) mContext).isFinishing()) {
                     return;
                 }
-                loginUser.setOnLineState(status);
-                HDClient.getInstance().setLoginUser(loginUser);
                 ((Activity) mContext).runOnUiThread(new Runnable() {
 
                     @Override
@@ -137,16 +135,7 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
         String status = "Online";
         switch (index) {
             case 0:
-                status = "Online";
-                break;
-            case 1:
-                status = "Busy";
-                break;
-            case 2:
-                status = "Leave";
-                break;
-            case 3:
-                status = "Hidden";
+
                 break;
         }
         setStatusByServer(index, status);

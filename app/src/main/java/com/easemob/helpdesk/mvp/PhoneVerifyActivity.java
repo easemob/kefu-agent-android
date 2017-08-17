@@ -90,7 +90,7 @@ public class PhoneVerifyActivity extends BaseActivity {
         postBody.put("verifyCode", strCode);
 
         showDialog();
-        HDClient.getInstance().userControler().postRegister(postBody, new HDDataCallBack<String>() {
+        HDClient.getInstance().accountManager().postRegister(postBody, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(final String value) {
                 if (isFinishing()){

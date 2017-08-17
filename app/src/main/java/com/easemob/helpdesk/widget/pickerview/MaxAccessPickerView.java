@@ -118,9 +118,6 @@ public class MaxAccessPickerView extends BasePickerView implements View.OnClickL
 
             @Override
             public void onSuccess(String value) {
-                HDUser loginUser = HDClient.getInstance().getCurrentUser();
-                loginUser.maxServiceSessionCount = maxCount;
-                HDClient.getInstance().setLoginUser(loginUser);
                 if (((Activity) mContext).isFinishing()) {
                     return;
                 }

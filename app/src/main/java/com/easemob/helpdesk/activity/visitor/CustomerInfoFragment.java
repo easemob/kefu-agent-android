@@ -249,7 +249,7 @@ public class CustomerInfoFragment extends Fragment{
 
 
     private void asyncCustomerDetail(){
-        HDClient.getInstance().visitorManager().getCustomerDetailInfo(String.valueOf(tenantId), visitorId, new HDDataCallBack<String>() {
+        HDClient.getInstance().visitorManager().getCustomerDetailInfo(tenantId, visitorId, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 HDLog.d(TAG, "getCustomerDetailInfo:" + value + ", visitorId:" + visitorId);
@@ -325,7 +325,7 @@ public class CustomerInfoFragment extends Fragment{
         dialog = DialogUtils.getLoadingDialog(getContext(), "信息更新中...");
 
          //putCustomerDetailInfo
-        HDClient.getInstance().visitorManager().putCustomerDetailInfo(String.valueOf(tenantId), customerId, columnName, updateValue, new HDDataCallBack<String>() {
+        HDClient.getInstance().visitorManager().putCustomerDetailInfo(tenantId, customerId, columnName, updateValue, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null){
