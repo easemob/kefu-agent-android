@@ -87,7 +87,6 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
     private PickCategory currentPickCategory = PickCategory.STATUS;
 
     private Context mContext;
-    private long mProjectId;
 
     private LeaveMessageResponse.EntitiesBean ticketEntity;
     ISO8601DateFormat iso8601DateFormat = new ISO8601DateFormat();
@@ -101,7 +100,6 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
     private SimplePickerView simplePickerView;
     private HDUser loginUser;
     private ProgressDialog pd;
-    private TicketStatusResponse ticketStatusResponse;
 
     private List<TicketCommentsResponse.EntitiesBean> commentList = Collections.synchronizedList(new ArrayList<TicketCommentsResponse.EntitiesBean>());
 
@@ -141,9 +139,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         ButterKnife.bind(this);
         Intent intent = getIntent();
         ticketEntity = (LeaveMessageResponse.EntitiesBean) intent.getSerializableExtra("ticket");
-        mProjectId = intent.getLongExtra("projectId", 0L);
-        ticketStatusResponse = (TicketStatusResponse) intent.getSerializableExtra("status");
-        for (TicketStatusResponse.EntitiesBean entitiesBean : ticketStatusResponse.getEntities()) {
+        for (TicketStatusResponse.EntitiesBean entitiesBean : LeaveMessageManager.getInstance().getTicketstatusResponseEntityBean()) {
             if (entitiesBean.isIs_default()){
                 statusList.add(0, entitiesBean.getName());
                 tempStatusList.add(0, entitiesBean);
@@ -342,7 +338,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().putTicketTask(baseUser, mProjectId, ticketEntity, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().putTicketTask(baseUser, ticketEntity, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {
@@ -408,7 +404,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().putTicketStatus(mProjectId, ticketEntity, tempStatusList.get(position), new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().putTicketStatus(ticketEntity, tempStatusList.get(position), new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {
@@ -475,7 +471,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().deleteTicketAssignee(mProjectId, ticketEntity, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().deleteTicketAssignee(ticketEntity, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {
@@ -556,7 +552,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         if (loginUser == null){
             return;
         }
-        LeaveMessageManager.getInstance().getTicketComments(mProjectId, ticketEntity, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().getTicketComments(ticketEntity, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {
@@ -775,7 +771,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         if (loginUser == null){
             return;
         }
-        LeaveMessageManager.getInstance().sendComment(content, fileList, mProjectId, ticketEntity, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().sendComment(content, fileList, ticketEntity, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {

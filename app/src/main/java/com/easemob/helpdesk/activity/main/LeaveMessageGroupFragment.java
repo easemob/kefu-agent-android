@@ -13,10 +13,8 @@ import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.AvatarManager;
-import com.hyphenate.kefusdk.gsonmodel.ticket.TicketStatusResponse;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
-import com.google.gson.Gson;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
@@ -62,9 +60,6 @@ public class LeaveMessageGroupFragment extends Fragment {
 	@BindView(R.id.ticket_custom_fitter)
 	protected LinearLayout customFilterTicketsLayout;
 
-	private HDUser loginUser;
-	private volatile long mProjectId;
-	private TicketStatusResponse ticketStatusResponse;
 	private int openedLeaveMessageCount;
 
 	private Unbinder unbinder;
@@ -79,8 +74,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		loginUser = HDClient.getInstance().getCurrentUser();
-		getProjectIds();
+		LeaveMessageManager.getInstance().getProjectIds();
 		loadFirstStatus();
 		refreshAgentAvatar();
 	}
@@ -102,27 +96,22 @@ public class LeaveMessageGroupFragment extends Fragment {
 	@OnClick({R.id.ticket_my_open, R.id.ticket_pending, R.id.ticket_my_solved, R.id.ticket_unassigned, R.id.ticket_custom_fitter})
 	public void layoutClicks(View view) {
 		Intent i = new Intent(getActivity(), LeaveMessageActivity.class);
-		i.putExtra("projectId", mProjectId);
-		i.putExtra("TicketStatusResponse", ticketStatusResponse);
 		switch (view.getId()) {
-			case R.id.ticket_my_open:
-				i.putExtra("Title", "未处理留言");
-				i.putExtra("statusIdIndex", 2);
-				i.putExtra("assigned", 1);
-				break;
 			case R.id.ticket_pending:
 				i.putExtra("Title", "处理中留言");
-				i.putExtra("statusIdIndex", 0);
-				i.putExtra("assigned", 1);
+				i.putExtra("statusIdIndex", LeaveMessageManager.pendingTicketStatusId);
 				break;
 			case R.id.ticket_my_solved:
 				i.putExtra("Title", "已解决留言");
-				i.putExtra("statusIdIndex", 1);
-				i.putExtra("assigned", 1);
+				i.putExtra("statusIdIndex", LeaveMessageManager.solvedTicketStatusId);
+				break;
+			case R.id.ticket_my_open:
+				i.putExtra("Title", "未处理留言");
+				i.putExtra("statusIdIndex", LeaveMessageManager.openedTicketStatusId);
 				break;
 			case R.id.ticket_unassigned:
 				i.putExtra("Title", "未分配留言");
-				i.putExtra("assigned", 0);
+				i.putExtra("statusIdIndex", LeaveMessageManager.noTicketStatusId);
 				break;
 			case R.id.ticket_custom_fitter:
 				i.putExtra("Title", "自定义留言筛选");
@@ -149,61 +138,6 @@ public class LeaveMessageGroupFragment extends Fragment {
 		}
 	}
 
-
-	private synchronized  void getProjectIds(){
-		if (loginUser == null){
-			return;
-		}
-
-		LeaveMessageManager.getInstance().getProjectIds(new HDDataCallBack<Long>() {
-			@Override
-			public void onSuccess(Long value) {
-				mProjectId = value;
-				if (mProjectId > 0) {
-					loadTicketStatus();
-				}
-			}
-
-			@Override
-			public void onError(int error, String errorMsg) {
-
-			}
-
-			@Override
-			public void onAuthenticationException() {
-
-			}
-		});
-
-	}
-
-
-	private synchronized void loadTicketStatus(){
-		if (loginUser == null || mProjectId == 0){
-			return;
-		}
-
-		LeaveMessageManager.getInstance().getTicketStatus(mProjectId, new HDDataCallBack<String>() {
-			@Override
-			public void onSuccess(String value) {
-				Gson gson = new Gson();
-				ticketStatusResponse = gson.fromJson(value, TicketStatusResponse.class);
-			}
-
-			@Override
-			public void onError(int error, String errorMsg) {
-
-			}
-
-			@Override
-			public void onAuthenticationException() {
-
-			}
-		});
-
-
-	}
-
 	private void refleshTicketsCount() {
 		getOpenTicketsCount();
 		getPendingTicketsCount();
@@ -212,184 +146,143 @@ public class LeaveMessageGroupFragment extends Fragment {
 		getCustomFilterTicketsCount();
 	}
 
-    private void getPendingTicketsCount() {
-	    if (loginUser == null || mProjectId == 0){
-		    return;
-	    }
+	private void getPendingTicketsCount() {
 
-	    if (ticketStatusResponse == null || ticketStatusResponse.getNumberOfElements() < 3) {
-		    return;
-	    }
 
-	    String pendingTicketsId = String.valueOf(ticketStatusResponse.getEntities().get(0).getId());
+		pendingTicketsLayout.setClickable(false);
 
-	    pendingTicketsLayout.setClickable(false);
+		LeaveMessageManager.getInstance().getPendingTicketsCount(new HDDataCallBack<String>() {
+			@Override
+			public void onSuccess(final String value) {
+				if (getActivity() == null) {
+					return;
+				}
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						pendingTicketsCounts.setText(value);
+						pendingTicketsLayout.setClickable(true);
+					}
+				});
+			}
 
-	    LeaveMessageManager.getInstance().getTicketCountsByStatusIds(mProjectId, pendingTicketsId, new HDDataCallBack<String>() {
-		    @Override
-		    public void onSuccess(final String value) {
-			    if (getActivity() == null) {
-				    return;
-			    }
-			    getActivity().runOnUiThread(new Runnable() {
-				    @Override
-				    public void run() {
-					    pendingTicketsCounts.setText(value);
-					    pendingTicketsLayout.setClickable(true);
-				    }
-			    });
-		    }
+			@Override
+			public void onError(int error, String errorMsg) {
 
-		    @Override
-		    public void onError(int error, String errorMsg) {
+			}
+		});
 
-		    }
-	    });
+	}
 
-    }
+	private void getSolvedTicketsCount() {
+		mysolvedTicketsLayout.setClickable(false);
 
-    private void getSolvedTicketsCount() {
-	    if (loginUser == null || mProjectId == 0){
-		    return;
-	    }
+		LeaveMessageManager.getInstance().getSolvedTicketsCount(new HDDataCallBack<String>() {
+			@Override
+			public void onSuccess(final String value) {
+				if (getActivity() == null) {
+					return;
+				}
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						mySolvedTicketsCounts.setText(value);
+						mysolvedTicketsLayout.setClickable(true);
+					}
+				});
+			}
 
-	    if (ticketStatusResponse == null || ticketStatusResponse.getNumberOfElements() < 3) {
-		    return;
-	    }
+			@Override
+			public void onError(int error, String errorMsg) {
 
-	    String pendingTicketsId = String.valueOf(ticketStatusResponse.getEntities().get(1).getId());
+			}
+		});
+	}
 
-	    mysolvedTicketsLayout.setClickable(false);
+	private void getOpenTicketsCount() {
 
-	    LeaveMessageManager.getInstance().getTicketCountsByStatusIds(mProjectId, pendingTicketsId, new HDDataCallBack<String>() {
-		    @Override
-		    public void onSuccess(final String value) {
-			    if (getActivity() == null) {
-				    return;
-			    }
-			    getActivity().runOnUiThread(new Runnable() {
-				    @Override
-				    public void run() {
-					    mySolvedTicketsCounts.setText(value);
-					    mysolvedTicketsLayout.setClickable(true);
-				    }
-			    });
-		    }
+		myOpenTicketsLayout.setClickable(false);
 
-		    @Override
-		    public void onError(int error, String errorMsg) {
+		LeaveMessageManager.getInstance().getOpenTicketsCount(new HDDataCallBack<String>() {
+			@Override
+			public void onSuccess(final String value) {
+				openedLeaveMessageCount = Integer.parseInt(value);
+				if (getActivity() == null) {
+					return;
+				}
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						((MainActivity)getActivity()).refreshOpenedLeaveMessageCount();
+						myOpenTicketsCounts.setText(value);
+						myOpenTicketsLayout.setClickable(true);
+					}
+				});
+			}
 
-		    }
-	    });
-    }
+			@Override
+			public void onError(int error, String errorMsg) {
 
-    private void getOpenTicketsCount() {
-	    if (loginUser == null || mProjectId == 0){
-		    return;
-	    }
+			}
+		});
+	}
 
-	    if (ticketStatusResponse == null || ticketStatusResponse.getNumberOfElements() < 3) {
-		    return;
-	    }
+	public int getOpenTicketsCountResult() {
+		return openedLeaveMessageCount;
+	}
 
-	    String pendingTicketsId = String.valueOf(ticketStatusResponse.getEntities().get(2).getId());
+	private void getUnassigneeTicketsCount() {
+		unassignedTicketsLayout.setClickable(false);
 
-	    myOpenTicketsLayout.setClickable(false);
+		LeaveMessageManager.getInstance().getUnassignedTicketCounts(new HDDataCallBack<String>() {
+			@Override
+			public void onSuccess(final String value) {
+				if (getActivity() == null) {
+					return;
+				}
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						unassignedTicketsCounts.setText(value);
+						unassignedTicketsLayout.setClickable(true);
+					}
+				});
+			}
 
-	    LeaveMessageManager.getInstance().getTicketCountsByStatusIds(mProjectId, pendingTicketsId, new HDDataCallBack<String>() {
-		    @Override
-		    public void onSuccess(final String value) {
-			    openedLeaveMessageCount = Integer.parseInt(value);
-			    if (getActivity() == null) {
-				    return;
-			    }
-		        getActivity().runOnUiThread(new Runnable() {
-			        @Override
-			        public void run() {
-				        ((MainActivity)getActivity()).refreshOpenedLeaveMessageCount();
-				        myOpenTicketsCounts.setText(value);
-				        myOpenTicketsLayout.setClickable(true);
-			        }
-		        });
-		    }
+			@Override
+			public void onError(int error, String errorMsg) {
 
-		    @Override
-		    public void onError(int error, String errorMsg) {
+			}
+		});
+	}
 
-		    }
-	    });
-    }
+	private void getCustomFilterTicketsCount() {
+		int count = getActivity().getSharedPreferences("screeningCount", MODE_PRIVATE).getInt("screeningCount", -1);
+		if(count >= 0) {
+			customFilterTicketsCounts.setText(String.valueOf(count));
+			customFilterTicketsLayout.setClickable(true);
+		} else {
+			customFilterTicketsLayout.setClickable(false);
+			LeaveMessageManager.getInstance().getAllCurrentAgentTicketsCount(new HDDataCallBack<String>() {
+				@Override
+				public void onSuccess(final String value) {
+					if (getActivity() == null) {
+						return;
+					}
+					getActivity().runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							customFilterTicketsCounts.setText(value);
+							customFilterTicketsLayout.setClickable(true);
+						}
+					});
+				}
 
-    public int getOpenTicketsCountResult() {
-	    return openedLeaveMessageCount;
-    }
+				@Override
+				public void onError(int error, String errorMsg) {
 
-    private void getUnassigneeTicketsCount() {
-	    if (loginUser == null || mProjectId == 0){
-		    return;
-	    }
-
-	    unassignedTicketsLayout.setClickable(false);
-
-	    LeaveMessageManager.getInstance().getUnassignedTicketCounts(mProjectId, new HDDataCallBack<String>() {
-		    @Override
-		    public void onSuccess(final String value) {
-			    if (getActivity() == null) {
-				    return;
-			    }
-			    getActivity().runOnUiThread(new Runnable() {
-				    @Override
-				    public void run() {
-					    unassignedTicketsCounts.setText(value);
-					    unassignedTicketsLayout.setClickable(true);
-				    }
-			    });
-		    }
-
-		    @Override
-		    public void onError(int error, String errorMsg) {
-
-		    }
-	    });
-    }
-
-    private void getCustomFilterTicketsCount() {
-	    if (loginUser == null || mProjectId == 0){
-		    return;
-	    }
-
-	    if (ticketStatusResponse == null || ticketStatusResponse.getNumberOfElements() < 3) {
-		    return;
-	    }
-	    int count = getActivity().getSharedPreferences("screeningCount", MODE_PRIVATE).getInt("screeningCount", -1);
-	    if(count >= 0) {
-		   customFilterTicketsCounts.setText(String.valueOf(count));
-		   customFilterTicketsLayout.setClickable(true);
-	    } else {
-		    String pendingTicketsId = ticketStatusResponse.getEntities().get(0).getId() + "," + ticketStatusResponse.getEntities().get(1).getId() +
-				    "," + ticketStatusResponse.getEntities().get(2).getId();
-
-		    customFilterTicketsLayout.setClickable(false);
-		    LeaveMessageManager.getInstance().getTicketCountsByStatusIds(mProjectId, pendingTicketsId, new HDDataCallBack<String>() {
-			    @Override
-			    public void onSuccess(final String value) {
-				    if (getActivity() == null) {
-					    return;
-				    }
-				    getActivity().runOnUiThread(new Runnable() {
-					    @Override
-					    public void run() {
-						    customFilterTicketsCounts.setText(value);
-						    customFilterTicketsLayout.setClickable(true);
-					    }
-				    });
-			    }
-
-			    @Override
-			    public void onError(int error, String errorMsg) {
-
-			    }
-		    });
-	    }
-    }
+				}
+			});
+		}
+	}
 }

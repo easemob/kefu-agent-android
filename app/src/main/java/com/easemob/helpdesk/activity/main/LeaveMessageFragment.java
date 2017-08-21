@@ -23,8 +23,8 @@ import com.easemob.helpdesk.EMValueCallBack;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.adapter.TicketAdapter;
+import com.hyphenate.kefusdk.entity.LeaveMessageConfigEntity;
 import com.hyphenate.kefusdk.gsonmodel.ticket.LeaveMessageResponse;
-import com.hyphenate.kefusdk.gsonmodel.ticket.TicketStatusResponse;
 import com.easemob.helpdesk.utils.OnFreshCallbackListener;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
@@ -89,27 +89,16 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     private WeakHandler mWeakHandler;
 
     public static OnFreshCallbackListener callback = null;
-    private static final int PER_PAGE_WAIT_COUNT = 20;
     private int total_count = 0;
     private boolean isSelectionMode = false;
     private ArrayList<String> assigneeList = new ArrayList<>();
     private List<HDBaseUser> agentUsers = Collections.synchronizedList(new ArrayList<HDBaseUser>());
 
-    private volatile long mProjectId;
     private HDUser loginUser;
-    private TicketStatusResponse ticketStatusResponse;
-    private boolean customMode = false;
-    private int statusIdIndex = -1;
-    private int assigned = 0;
-
-    private TimeInfo currentTimeInfo = new TimeInfo();
-    private String visitorName = "";
-    private int originTypeIndex;
-    private int selectedAgentIndex;
-    private int selectedStatusIndex;
-
     private Unbinder unbinder;
     private Handler handler = new Handler();
+
+    private LeaveMessageConfigEntity configEntity = new LeaveMessageConfigEntity();
 
     @Nullable
     @Override
@@ -131,9 +120,8 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         if (titleText != null) {
             title.setText(titleText);
         }
-        statusIdIndex = getActivity().getIntent().getIntExtra("statusIdIndex", -1);
-        assigned = getActivity().getIntent().getIntExtra("assigned", 0);
-        customMode = getActivity().getIntent().getBooleanExtra("CustomMode", false);
+        configEntity.statusIdIndex = getActivity().getIntent().getIntExtra("statusIdIndex", -1);
+        configEntity.customMode = getActivity().getIntent().getBooleanExtra("CustomMode", false);
 
         if(loginUser != null){
             assigneeList.add("未分配");
@@ -141,21 +129,23 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
             agentUsers.add(loginUser);
         }
         getOtherAgents();
-        if (customMode) {
+        if (configEntity.customMode) {
             itvRight.setVisibility(View.VISIBLE);
             getTicketsScreeningResult();
+        } else {
+            itvRight.setVisibility(View.GONE);
         }
         setUpView();
     }
 
     private void getTicketsScreeningResult() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("ticketScreening", MODE_PRIVATE);
-        currentTimeInfo.setStartTime(sharedPreferences.getLong("TimeInfoStart", 0));
-        currentTimeInfo.setEndTime(sharedPreferences.getLong("TimeInfoEnd", 0));
-        selectedAgentIndex = sharedPreferences.getInt("AgentIndex", 1);
-        visitorName = sharedPreferences.getString("CreateBy", "");
-        selectedStatusIndex = sharedPreferences.getInt("Status", -1);
-        originTypeIndex = sharedPreferences.getInt("Channel", -1);
+        configEntity.currentTimeInfo.setStartTime(sharedPreferences.getLong("TimeInfoStart", 0));
+        configEntity.currentTimeInfo.setEndTime(sharedPreferences.getLong("TimeInfoEnd", 0));
+        configEntity.selectedAgentIndex = sharedPreferences.getInt("AgentIndex", 1);
+        configEntity.visitorName = sharedPreferences.getString("CreateBy", "");
+        configEntity.selectedStatusIndex = sharedPreferences.getInt("Status", -1);
+        configEntity.originTypeIndex = sharedPreferences.getInt("Channel", -1);
     }
 
     private void getOtherAgents(){
@@ -180,31 +170,6 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         });
 
 
-    }
-
-    private String getStatusId() {
-        if (ticketStatusResponse == null || ticketStatusResponse.getNumberOfElements() < 3) {
-            return "";
-        }
-
-        switch (statusIdIndex) {
-            case 0:
-            case 1:
-            case 2:
-                return String.valueOf(ticketStatusResponse.getEntities().get(statusIdIndex).getId());
-        }
-        if (customMode) {
-            switch (selectedStatusIndex) {
-                case -1:
-                case 0: //全部留言
-                    break;
-                case 1: //处理中
-                case 2: //已解决
-                case 3: //未处理
-                    return String.valueOf(ticketStatusResponse.getEntities().get(selectedStatusIndex - 1).getId());
-            }
-        }
-        return "";
     }
 
     private void setUpView() {
@@ -239,7 +204,6 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                 refreshLabelTotalCount();
             }
         });
-        loadFirstStatus();
     }
 
     @Override
@@ -249,7 +213,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         ticketList.clear();
         updateSelectionMode();
         refreshLabelTotalCount();
-        getProjectIds();
+        loadTheFirstPageData();
     }
 
     public void closePickerView(){
@@ -282,17 +246,9 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         }
     }
 
-    private void loadFirstStatus() {
-        HDUser loginUser = HDClient.getInstance().getCurrentUser();
-    }
-
     @Override
     public void onRefresh() {
-        if(mProjectId > 0){
-            loadTheFirstPageData();
-        }else{
-            getProjectIds();
-        }
+        loadTheFirstPageData();
     }
 
     @Override
@@ -305,16 +261,10 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         if (position < 0 || position >= ticketList.size()){
             return;
         }
-        if (ticketStatusResponse == null || ticketStatusResponse.getEntities() == null || ticketStatusResponse.getEntities().isEmpty()){
-            loadTicketStatus();
-            return;
-        }
 
         LeaveMessageResponse.EntitiesBean bean = ticketList.get(position);
         Intent intent = new Intent(getContext(), TicketDetailActivity.class);
         intent.putExtra("ticket", bean);
-        intent.putExtra("projectId", mProjectId);
-        intent.putExtra("status", ticketStatusResponse);
         startActivityForResult(intent, REQUEST_CODE_TICKET_DETAIL);
     }
 
@@ -386,7 +336,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
             isSelectionMode = false;
             updateSelectionMode();
             refreshLabelTotalCount();
-            if (data.size() < PER_PAGE_WAIT_COUNT) {
+            if (data.size() < configEntity.PER_PAGE_WAIT_COUNT) {
                 adapter.stopMore();
             }
             updateListCount();
@@ -398,98 +348,15 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     }
 
     private void updateListCount() {
-        if (customMode) {
+        if (configEntity.customMode) {
             SharedPreferences.Editor editor = getActivity().getSharedPreferences("screeningCount", MODE_PRIVATE).edit();
             editor.putInt("screeningCount", total_count).apply();
         }
-//        if (getActivity() != null) {
-//            ((MainActivity) getActivity()).refreshWaitUnreadCount();
-//        }
-    }
-
-    private synchronized  void getProjectIds(){
-        if (loginUser == null){
-            return;
-        }
-
-        mProjectId = getActivity().getIntent().getLongExtra("projectId", -1);
-
-        if (mProjectId > 0) {
-            loadTicketStatus();
-            mWeakHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadTheFirstPageData();
-                }
-            }, 50);
-            return;
-        }
-
-        LeaveMessageManager.getInstance().getProjectIds(new HDDataCallBack<Long>() {
-            @Override
-            public void onSuccess(Long value) {
-                mProjectId = value;
-                if (mProjectId > 0) {
-                    loadTheFirstPageData();
-                    loadTicketStatus();
-                }
-            }
-
-            @Override
-            public void onError(int error, String errorMsg) {
-
-            }
-
-            @Override
-            public void onAuthenticationException() {
-
-            }
-        });
-
-
-
-    }
-
-    private synchronized void loadTicketStatus(){
-        if (loginUser == null || mProjectId == 0){
-            return;
-        }
-
-        ticketStatusResponse = (TicketStatusResponse) getActivity().getIntent().getSerializableExtra("TicketStatusResponse");
-
-        if (ticketStatusResponse != null) {
-            return;
-        }
-
-        LeaveMessageManager.getInstance().getTicketStatus(mProjectId, new HDDataCallBack<String>() {
-            @Override
-            public void onSuccess(String value) {
-                Gson gson = new Gson();
-                ticketStatusResponse = gson.fromJson(value, TicketStatusResponse.class);
-            }
-
-            @Override
-            public void onError(int error, String errorMsg) {
-
-            }
-
-            @Override
-            public void onAuthenticationException() {
-
-            }
-        });
-
-
     }
 
     private synchronized void loadTheFirstPageData() {
 
-        if (loginUser == null || mProjectId == 0){
-            return;
-        }
-        String stringBuilder = getRequestString(0);
-
-        LeaveMessageManager.getInstance().getTicketsList(mProjectId, stringBuilder, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().getTicketsList(0, configEntity, agentUsers, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null) {
@@ -530,31 +397,11 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         });
     }
 
-    private String getAgentIds() {
-        if (customMode) {
-            if (selectedAgentIndex <= 0 || selectedAgentIndex > agentUsers.size()) {
-                assigned = 0;
-                return "";
-            }
-            assigned = 1;
-            return agentUsers.get(selectedAgentIndex - 1).getUserId();
-        }
-        if (assigned == 0) {
-            return "0";
-        }
-        return loginUser.getUserId();
-    }
 
     private void loadMoreData() {
-        if (loginUser == null || mProjectId == 0){
-            adapter.stopMore();
-            return;
-        }
         final int nextPage = mCurPageNo + 1;
 
-        String stringBuilder = getRequestString(nextPage);
-
-        LeaveMessageManager.getInstance().getTicketsList(mProjectId, stringBuilder, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().getTicketsList(nextPage, configEntity, agentUsers, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null) {
@@ -592,37 +439,6 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         });
     }
 
-    @NonNull
-    private String getRequestString(int p) {
-        int page = p;
-        String agentIds = getAgentIds();
-        String requestString = "tenantId=" + loginUser.getTenantId() + "&userId=" + loginUser.getUserId() + "&userRoles=" + loginUser.getRoles() +
-                "&page=" + page + "&size=" + PER_PAGE_WAIT_COUNT + "&ticketId=&sort=createdAt%2Cdesc&assigned=" +
-                assigned + "&agentIds=" + agentIds + "&statusId=" + getStatusId() + "&visitorName=" + visitorName;
-        if(customMode) {
-            switch (originTypeIndex) {
-                case -1:
-                case 0: //全部渠道
-                    requestString += "&originType=";
-                    break;
-                case 1: //网页
-                    requestString += "&originType=webim";
-                    break;
-                case 2: //App
-                    requestString += "&originType=app";
-                    break;
-                case 3: //微博
-                    requestString += "&originType=weibo";
-
-                    break;
-            }
-            if(currentTimeInfo != null && currentTimeInfo.getStartTime() != 0 && currentTimeInfo.getEndTime() != 0) {
-                requestString += "&startTime=" + currentTimeInfo.getStartTime() + "&endTime=" + currentTimeInfo.getEndTime();
-            }
-        }
-        return requestString;
-    }
-
     @OnClick({R.id.rl_back, R.id.iv_filter, R.id.left_action, R.id.right_action, R.id.handleAll})
     public void onItemClick(View view){
         switch (view.getId()) {
@@ -658,47 +474,45 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     public void onFragmentResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == Activity.RESULT_OK) {
-         //   if(requestCode == 100) {
-                if(data == null) {
-                    return;
-                }
-                currentTimeInfo = (TimeInfo) data.getSerializableExtra("TimeInfo");
-                visitorName = data.getStringExtra("CreateBy");
-                originTypeIndex = data.getIntExtra("Channel", -1);
-                selectedStatusIndex = data.getIntExtra("Status", -1);
-                selectedAgentIndex= data.getIntExtra("AgentIndex", -1);
+            if(data == null) {
+                return;
+            }
+            configEntity.currentTimeInfo.setStartTime(((TimeInfo) data.getSerializableExtra("TimeInfo")).getStartTime());
+            configEntity.currentTimeInfo.setEndTime(((TimeInfo) data.getSerializableExtra("TimeInfo")).getEndTime());
+            configEntity.visitorName = data.getStringExtra("CreateBy");
+            configEntity.originTypeIndex = data.getIntExtra("Channel", -1);
+            configEntity.selectedStatusIndex = data.getIntExtra("Status", -1);
+            configEntity.selectedAgentIndex = data.getIntExtra("AgentIndex", -1);
 
-                adapter.clear();
-                ticketList.clear();
-                isSelectionMode = false;
-                updateSelectionMode();
-                refreshLabelTotalCount();
-                mCurPageNo = 0;
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            adapter.clear();
+            ticketList.clear();
+            isSelectionMode = false;
+            updateSelectionMode();
+            refreshLabelTotalCount();
+            mCurPageNo = 0;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
                     loadTheFirstPageData();
-                    }
-                }, 100);
-       //     }
+                }
+            }, 100);
         }
     }
 
     public void simplePickerSelect(int position){
-            if(position >=0 && position < assigneeList.size()){
-//                tvDist.setText(assigneeList.get(position));
-                if (position == 0){
-                    deleteTicketAssignee();
-                }else if (position > 0){
-                    if (position > agentUsers.size()){
-                        return;
-                    }
-                    HDBaseUser bUser = agentUsers.get(position - 1);
-
-
-                    putTicketTask(bUser);
+        if(position >=0 && position < assigneeList.size()){
+            if (position == 0){
+                deleteTicketAssignee();
+            }else if (position > 0){
+                if (position > agentUsers.size()){
+                    return;
                 }
+                HDBaseUser bUser = agentUsers.get(position - 1);
+
+
+                putTicketTask(bUser);
             }
+        }
     }
 
     private void updateSelectionMode(){
@@ -743,7 +557,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().batAssignTicketAssignee(baseUser, mProjectId, getSelectedListIds(), new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().batAssignTicketAssignee(baseUser, getSelectedListIds(), new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null || getActivity().isFinishing()) {
@@ -818,7 +632,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().batDeleteTicketAssignee(mProjectId, getSelectedListIds(), new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().batDeleteTicketAssignee(getSelectedListIds(), new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null || getActivity().isFinishing()) {
