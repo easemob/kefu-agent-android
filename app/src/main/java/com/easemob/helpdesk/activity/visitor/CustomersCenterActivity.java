@@ -17,10 +17,10 @@ import com.easemob.helpdesk.adapter.CustomersListAdapter;
 import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
-import com.google.gson.Gson;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.bean.CustomerEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.CustomersCenterScreenEntity;
 import com.hyphenate.kefusdk.entity.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -45,11 +45,9 @@ public class CustomersCenterActivity extends BaseActivity{
 	private static final int MSG_REFRESH_DATA = 0x02;
 	private static final int MSG_AUTHENTICATION = 0x03;
 
-	private static final int PER_PAGE_COUNT = 15;
 
 	private static final int REQUEST_CODE_SCREENING = 16;
 
-	private int total_count = 0;
 	private int mCurPageNo;
 	private WeakHandler mWeakHandler;
 
@@ -61,11 +59,8 @@ public class CustomersCenterActivity extends BaseActivity{
 	private List<CustomerEntity.EntitiesBean> customers = new ArrayList<>();
 
 	private Dialog pd;
-	private String visitorName = "";
-	private String userTagIds = "";
-	private String userName = "";
-	private String beginDate = "";
-	private String endDate = "";
+
+	private CustomersCenterScreenEntity customersCenterScreenEntity = new CustomersCenterScreenEntity();
 
 	private static class WeakHandler extends Handler {
 		WeakReference<CustomersCenterActivity> weakReference;
@@ -151,8 +146,8 @@ public class CustomersCenterActivity extends BaseActivity{
 		});
 
 		TimeInfo defaultTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
-		beginDate = DateUtils.getStartDateTimeString(defaultTimeInfo.getStartTime());
-		endDate = DateUtils.getEndDateTimeString(defaultTimeInfo.getEndTime());
+		customersCenterScreenEntity.beginDate = DateUtils.getStartDateTimeString(defaultTimeInfo.getStartTime());
+		customersCenterScreenEntity.endDate = DateUtils.getEndDateTimeString(defaultTimeInfo.getEndTime());
 
 		loadTheFirstPageData();
 	}
@@ -174,34 +169,28 @@ public class CustomersCenterActivity extends BaseActivity{
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
 			if (requestCode == REQUEST_CODE_SCREENING) {
-				visitorName = data.getStringExtra("cusName");
-				userTagIds = data.getStringExtra("tagsId");
-				userName = data.getStringExtra("cusId");
-				beginDate = data.getStringExtra("beginDate");
-				endDate = data.getStringExtra("endDate");
+				customersCenterScreenEntity.visitorName = data.getStringExtra("cusName");
+				customersCenterScreenEntity.userTagIds = data.getStringExtra("tagsId");
+				customersCenterScreenEntity.userName = data.getStringExtra("cusId");
+				customersCenterScreenEntity.beginDate = data.getStringExtra("beginDate");
+				customersCenterScreenEntity.endDate = data.getStringExtra("endDate");
 				loadTheFirstPageData();
 			}
 		}
 	}
 
 	private void loadMoreMethod() {
-		HDClient.getInstance().visitorManager().getAgentCustomersInfo(getRequestString(mCurPageNo + 1), new HDDataCallBack<String>() {
+		HDClient.getInstance().visitorManager().getAgentCustomersInfo(mCurPageNo + 1, customersCenterScreenEntity, new HDDataCallBack<List<CustomerEntity.EntitiesBean>>() {
 			@Override
-			public void onSuccess(String value) {
+			public void onSuccess(List<CustomerEntity.EntitiesBean> value) {
 				if (isFinishing()) {
 					return;
 				}
-				Gson gson = new Gson();
-				CustomerEntity customerEntity = gson.fromJson(value, CustomerEntity.class);
-
 				Message message = mWeakHandler.obtainMessage();
 				message.what = MSG_LOAD_MORE_DATA;
-				if (customerEntity != null) {
-					total_count = customerEntity.getTotalElements();
-					message.obj = customerEntity.getEntities();
-					if (customerEntity.getEntities().size() > 0) {
-						mCurPageNo++;
-					}
+				message.obj = value;
+				if (value.size() > 0) {
+					mCurPageNo++;
 				}
 				mWeakHandler.sendMessage(message);
 			}
@@ -230,23 +219,18 @@ public class CustomersCenterActivity extends BaseActivity{
 	}
 
 	private void loadTheFirstPageData() {
-		HDClient.getInstance().visitorManager().getAgentCustomersInfo(getRequestString(0), new HDDataCallBack<String>() {
+		HDClient.getInstance().visitorManager().getAgentCustomersInfo(0, customersCenterScreenEntity, new HDDataCallBack<List<CustomerEntity.EntitiesBean>>() {
 			@Override
-			public void onSuccess(String value) {
+			public void onSuccess(List<CustomerEntity.EntitiesBean> value) {
 				if (isFinishing()) {
 					return;
 				}
-				Gson gson = new Gson();
-				CustomerEntity customerEntity = gson.fromJson(value, CustomerEntity.class);
 
 				Message message = mWeakHandler.obtainMessage();
 				message.what = MSG_REFRESH_DATA;
-				if (customerEntity != null) {
-					total_count = customerEntity.getTotalElements();
-					message.obj = customerEntity.getEntities();
-					if (customerEntity.getEntities().size() > 0) {
-						mCurPageNo = 0;
-					}
+				message.obj = value;
+				if (value.size() > 0) {
+					mCurPageNo = 0;
 				}
 				mWeakHandler.sendMessage(message);
 			}
@@ -274,23 +258,13 @@ public class CustomersCenterActivity extends BaseActivity{
 		});
 	}
 
-	private String getRequestString(int page) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("page=").append(page).append("&size=").append(PER_PAGE_COUNT)
-				.append("userTagIds=").append(userTagIds).append("&categoryId=-1&subCategoryId=-1&visitorName=").append(visitorName)
-				.append("&visitorUserId=&summaryIds=&enquirySummary=&beginDate=").append(beginDate).append("&endDate=").append(endDate)
-				.append("&originType=&username=").append(userName);
-		return sb.toString();
-	}
-
-
 	private void refreshView(List<CustomerEntity.EntitiesBean> data){
 		if (null != data){
 			mAdapter.clear();
 			mAdapter.addAll(data);
 			customers.clear();
 			customers.addAll(data);
-			if (data.size() < PER_PAGE_COUNT){
+			if (data.size() < customersCenterScreenEntity.PER_PAGE_COUNT){
 				mAdapter.stopMore();
 			}
 			mAdapter.pauseMore();
@@ -308,7 +282,7 @@ public class CustomersCenterActivity extends BaseActivity{
 			}
 			mAdapter.addAll(data);
 			customers.addAll(data);
-			if (data.size() < PER_PAGE_COUNT) {
+			if (data.size() < customersCenterScreenEntity.PER_PAGE_COUNT) {
 				mAdapter.stopMore();
 				return;
 			}

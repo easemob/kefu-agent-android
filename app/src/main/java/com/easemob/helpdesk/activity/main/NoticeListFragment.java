@@ -21,9 +21,7 @@ import com.hyphenate.kefusdk.gsonmodel.main.NoticesResponse;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
-import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.entity.HDUser;
 import com.hyphenate.kefusdk.manager.main.NoticeManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -50,7 +48,6 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
     private static final int MSG_REFRESH_DATA = 0x02;
     private static final int MSG_AUTHENTICATION = 0x03;
     private static final int REQUEST_CODE_ALERT_DIALOG = 0x04;
-//    public static final int REQUEST_CODE_SEARCH_ACTIVITY = 0x05;
 
     @BindView(R.id.recyclerView)
     protected EasyRecyclerView recyclerView;
@@ -59,9 +56,6 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
     private static final int PER_PAGE_COUNT = 20;
     private WeakHandler mWeakHandler;
     private final ArrayList<NoticesResponse.EntitiesBean> noticeEntities = new ArrayList<NoticesResponse.EntitiesBean>();
-
-    private HDUser currentUser;
-
 
     private boolean isReadyed = false;
     private long lastUpdateTime = 0;
@@ -94,8 +88,7 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         HDLog.d(TAG, "onActivityCreated");
-        currentUser = HDClient.getInstance().getCurrentUser();
-        noticeManager = new NoticeManager(currentUser);
+        noticeManager = new NoticeManager();
         Bundle bundle = getArguments();
         if (bundle != null) {
             isUnreadSettings = bundle.getBoolean("isUnreadSettings", false);
@@ -263,7 +256,7 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
     }
 
 
-     void loadTheFirstPageData() {
+    void loadTheFirstPageData() {
         noticeManager.loadTheFirstPageData(typeSettings, isUnreadSettings, new HDDataCallBack<List<NoticesResponse.EntitiesBean>>() {
             @Override
             public void onSuccess(List<NoticesResponse.EntitiesBean> value) {
@@ -318,10 +311,6 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
 
     @Override
     public void onItemClick(final int i) {
-
-        if(currentUser == null){
-            return;
-        }
         if (i >= noticeEntities.size() || i < 0){
             return;
         }
@@ -332,12 +321,12 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
         startActivity(intent);
         if (noticeEntity.getStatus().equals("unread")){
             noticeEntity.setStatus("read");
-            markNoticeRead(noticeEntity, i);
+            markNoticeRead(noticeEntity);
         }
 
     }
 
-    public void markNoticeRead(NoticesResponse.EntitiesBean noticeEntity,final int position){
+    public void markNoticeRead(final NoticesResponse.EntitiesBean noticeEntity){
         noticeManager.markNoticeRead(noticeEntity, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
@@ -347,9 +336,8 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.remove(position);
-                        noticeEntities.remove(position);
-                        diminishingUnreadCount();
+                        adapter.remove(noticeEntity);
+                        noticeEntities.remove(noticeEntity);
                         refreshShowLabel();
                         ((NoticeFragment)getParentFragment()).diminishingUnreadCount();
                         ((NoticeFragment)getParentFragment()).refreshTabUnreadCount();
@@ -394,7 +382,6 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                     public void run() {
                         closeDialog();
                         synchronized (noticeEntities){
-                            noticeManager.setUnread_count(0);
                             noticeEntities.clear();
                             adapter.clear();
                         }
@@ -428,16 +415,6 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
 
     public int getCount() {
         return noticeManager.getTotal_count();
-    }
-
-    /**
-     * 递减未读数
-     */
-    public void  diminishingUnreadCount(){
-        int unread_count = noticeManager.getUnread_count();
-        if (unread_count > 0){
-            noticeManager.setUnread_count(unread_count - 1);
-        }
     }
 
     private void refreshShowLabel(){

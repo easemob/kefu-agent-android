@@ -90,7 +90,7 @@ public class NoticeFragment extends Fragment {
             currentSelectedIndex = savedInstanceState.getInt("selectedIndex", 0);
         }
         loginUser = HDClient.getInstance().getCurrentUser();
-        noticeManager = new NoticeManager(loginUser);
+        noticeManager = new NoticeManager();
         for (int i = 0; i < mTabTitles.length; i++){
             mTabEntities.add(new TabEntity(mTabTitles[i]));
         }
@@ -100,11 +100,11 @@ public class NoticeFragment extends Fragment {
             @Override
             public void onTabSelect(int position) {
                 if (position == 0){
-                    typeSettings = "all";
+                    typeSettings = NoticeManager.typeAll;
                 }else if (position == 1){
-                    typeSettings = "agent";
+                    typeSettings = NoticeManager.typeAgent;
                 }else if (position == 2){
-                    typeSettings = "system";
+                    typeSettings = NoticeManager.typeSystem;
                 }
                 currentSelectedIndex = position;
                 setTabSelection(position);
@@ -207,9 +207,6 @@ public class NoticeFragment extends Fragment {
     }
 
     public void refreshTabUnreadCount(){
-        if (loginUser == null){
-            return;
-        }
         if (isUnreadSettings){
             noticeManager.getUnReadCount(new HDDataCallBack<List<UnReadCountBean>>() {
                 @Override
