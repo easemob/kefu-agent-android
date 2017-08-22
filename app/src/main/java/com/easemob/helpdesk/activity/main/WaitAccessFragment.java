@@ -96,7 +96,6 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
 
     @BindView(R.id.search_layout)
     public RelativeLayout search_layout;
-    private HDUser loginUser;
     private Unbinder unbinder;
     private boolean isSearch;
     private List<SkillGroupResponse.EntitiesBean> agentList = Collections.synchronizedList(new ArrayList<SkillGroupResponse.EntitiesBean>());
@@ -117,8 +116,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
         super.onActivityCreated(savedInstanceState);
         callback = this;
         mWeakHandler = new WeakHandler(this);
-        loginUser = HDClient.getInstance().getCurrentUser();
-        waitAccessManager = new WaitAccessManager(loginUser);
+        waitAccessManager = new WaitAccessManager();
         setUpView();
     }
 
@@ -197,6 +195,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     }
 
     private void loadFirstStatus() {
+        HDUser loginUser = HDClient.getInstance().getCurrentUser();
         if (loginUser != null) {
             refreshOnline(loginUser.getOnLineState());
         }
@@ -235,7 +234,10 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
         }
         pd.setMessage("关闭中...");
         pd.show();
-        waitAccessManager.waitAbort(adapter.getItem(position), new HDDataCallBack<String>() {
+
+        final WaitQueueResponse.ItemsBean bean = adapter.getItem(position);
+
+        waitAccessManager.waitAbort(bean, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null) {
@@ -245,14 +247,8 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     @Override
                     public void run() {
                         closeDialog();
-
-                        if (adapter.getCount() > position) {
-                            adapter.remove(position);
-                        }
-                        if (waitAccessManager.getTotal_count() > 0) {
-                            waitAccessManager.total_countSelfMinus();
-                            updateListCount();
-                        }
+                        adapter.remove(bean);
+                        updateListCount();
                     }
                 });
             }
@@ -304,111 +300,54 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
         pd.setMessage("转接中...");
         pd.show();
 
-        if (!TextUtils.isEmpty(userId)){
-            waitAccessManager.transferWaitAccessAgent(adapter.getItem(position), userId, new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeDialog();
-                            if (adapter.getCount() > position) {
-                                adapter.remove(position);
-                            }
-                            if (waitAccessManager.getTotal_count() > 0) {
-                                waitAccessManager.total_countSelfMinus();
-                                updateListCount();
-                            }
-                        }
-                    });
+        final WaitQueueResponse.ItemsBean bean = adapter.getItem(position);
+
+        waitAccessManager.transferWaitAccess(bean, userId, queueId, new HDDataCallBack<String>() {
+            @Override
+            public void onSuccess(String value) {
+                if (getActivity() == null) {
+                    return;
                 }
-
-                @Override
-                public void onError(int error, String errorMsg) {
-                    if (getActivity() == null) {
-                        return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeDialog();
+                        adapter.remove(bean);
+                        updateListCount();
                     }
-                    (getActivity()).runOnUiThread(new Runnable() {
+                });
+            }
 
-                        @Override
-                        public void run() {
-                            closeDialog();
-                            Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            @Override
+            public void onError(int error, String errorMsg) {
+                if (getActivity() == null) {
+                    return;
                 }
+                (getActivity()).runOnUiThread(new Runnable() {
 
-                @Override
-                public void onAuthenticationException() {
-                    if (getActivity() == null) {
-                        return;
+                    @Override
+                    public void run() {
+                        closeDialog();
+                        Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
                     }
-                    (getActivity()).runOnUiThread(new Runnable() {
+                });
+            }
 
-                        @Override
-                        public void run() {
-                            closeDialog();
-                            HDApplication.getInstance().logout();
-                        }
-                    });
+            @Override
+            public void onAuthenticationException() {
+                if (getActivity() == null) {
+                    return;
                 }
-            });
-        }else if (queueId > 0){
-            waitAccessManager.transferWaitAccessQueues(adapter.getItem(position), String.valueOf(queueId), new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (getActivity() == null) {
-                        return;
+                (getActivity()).runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        closeDialog();
+                        HDApplication.getInstance().logout();
                     }
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeDialog();
-                            if (adapter.getCount() > position) {
-                                adapter.remove(position);
-                            }
-                            if (waitAccessManager.getTotal_count() > 0) {
-                                waitAccessManager.total_countSelfMinus();
-                                updateListCount();
-                            }
-                        }
-                    });
-                }
-
-                @Override
-                public void onError(int error, String errorMsg) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    (getActivity()).runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            closeDialog();
-                            Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void onAuthenticationException() {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    (getActivity()).runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            closeDialog();
-                            HDApplication.getInstance().logout();
-                        }
-                    });
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
     public void closeDialog(){
@@ -430,7 +369,10 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
         }
         pd.setMessage("加入中...");
         pd.show();
-        waitAccessManager.accessWaitUser(adapter.getItem(position), new HDDataCallBack<String>() {
+
+        final WaitQueueResponse.ItemsBean bean = adapter.getItem(position);
+
+        waitAccessManager.accessWaitUser(bean, new HDDataCallBack<String>() {
 
             @Override
             public void onSuccess(String value) {
@@ -441,13 +383,8 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     @Override
                     public void run() {
                         closeDialog();
-                        if (adapter.getCount() > position) {
-                            adapter.remove(position);
-                        }
-                        if (waitAccessManager.getTotal_count() > 0) {
-                            waitAccessManager.total_countSelfMinus();
-                            updateListCount();
-                        }
+                        adapter.remove(bean);
+                        updateListCount();
                     }
                 });
             }
@@ -516,7 +453,9 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     }
                     pd.show();
 
-                    waitAccessManager.accessWaitUser(adapter.getItem(position), new HDDataCallBack<String>() {
+                    final WaitQueueResponse.ItemsBean bean = adapter.getItem(position);
+
+                    waitAccessManager.accessWaitUser(bean, new HDDataCallBack<String>() {
 
                         @Override
                         public void onSuccess(String value) {
@@ -527,13 +466,8 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                                 @Override
                                 public void run() {
                                     closeDialog();
-                                    if (adapter.getCount() > position) {
-                                        adapter.remove(position);
-                                    }
-                                    if (waitAccessManager.getTotal_count() > 0) {
-                                        waitAccessManager.total_countSelfMinus();
-                                        updateListCount();
-                                    }
+                                    adapter.remove(bean);
+                                    updateListCount();
                                 }
                             });
                         }
@@ -577,7 +511,10 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     }
                     pd.setMessage("关闭中...");
                     pd.show();
-                    waitAccessManager.waitAbort(adapter.getItem(position), new HDDataCallBack<String>() {
+
+                    final WaitQueueResponse.ItemsBean bean = adapter.getItem(position);
+
+                    waitAccessManager.waitAbort(bean, new HDDataCallBack<String>() {
                         @Override
                         public void onSuccess(String value) {
                             if (getActivity() == null) {
@@ -587,13 +524,8 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                                 @Override
                                 public void run() {
                                     closeDialog();
-                                    if (adapter.getCount() > position) {
-                                        adapter.remove(position);
-                                    }
-                                    if (waitAccessManager.getTotal_count() > 0) {
-                                        waitAccessManager.total_countSelfMinus();
-                                        updateListCount();
-                                    }
+                                    adapter.remove(bean);
+                                    updateListCount();
                                 }
                             });
                         }
@@ -741,82 +673,39 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     }
 
     private void loadMoreData() {
-        if (loginUser == null){
-            return;
-        }
-
-        if (isSearch){
-            waitAccessManager.getUserWaitQueuesSearch(agentList, mCurPageNo + 1, new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    mCurPageNo++;
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_LOAD_MORE_DATA;
-                    message.obj = waitAccessManager.getMorePageItems(value);
-                    mWeakHandler.sendMessage(message);
+        waitAccessManager.getUserWaitQueues(isSearch, agentList, mCurPageNo + 1, new HDDataCallBack<List<WaitQueueResponse.ItemsBean>>() {
+            @Override
+            public void onSuccess(List<WaitQueueResponse.ItemsBean> value) {
+                if (getActivity() == null) {
+                    return;
                 }
+                mCurPageNo++;
+                Message message = mWeakHandler.obtainMessage();
+                message.what = MSG_LOAD_MORE_DATA;
+                message.obj = value;
+                mWeakHandler.sendMessage(message);
+            }
 
-                @Override
-                public void onError(int error, String errorMsg) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_LOAD_MORE_DATA;
-                    mWeakHandler.sendMessage(message);
+            @Override
+            public void onError(int error, String errorMsg) {
+                if (getActivity() == null) {
+                    return;
                 }
+                Message message = mWeakHandler.obtainMessage();
+                message.what = MSG_LOAD_MORE_DATA;
+                mWeakHandler.sendMessage(message);
+            }
 
-                @Override
-                public void onAuthenticationException() {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_AUTHENTICATION;
-                    mWeakHandler.sendMessage(message);
+            @Override
+            public void onAuthenticationException() {
+                if (getActivity() == null) {
+                    return;
                 }
-            });
-
-        }else{
-            waitAccessManager.getUserWaitQueues(agentList, mCurPageNo + 1, new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    mCurPageNo++;
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_LOAD_MORE_DATA;
-                    message.obj = waitAccessManager.getMorePageItems(value);
-                    mWeakHandler.sendMessage(message);
-                }
-
-                @Override
-                public void onError(int error, String errorMsg) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_LOAD_MORE_DATA;
-                    mWeakHandler.sendMessage(message);
-                }
-
-                @Override
-                public void onAuthenticationException() {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_AUTHENTICATION;
-                    mWeakHandler.sendMessage(message);
-                }
-            });
-        }
-
-
+                Message message = mWeakHandler.obtainMessage();
+                message.what = MSG_AUTHENTICATION;
+                mWeakHandler.sendMessage(message);
+            }
+        });
     }
 
     private void updateListCount() {
@@ -826,57 +715,23 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     }
 
     private synchronized void loadSkillGroups(){
-        //isLoadSkillGroups
-        HDUser loginUser = HDClient.getInstance().getCurrentUser();
-        if (loginUser == null) {
-            return;
-        }
-        if (loginUser.getRoles() != null && loginUser.getRoles().contains("admin")) {
-            waitAccessManager.asyncGetAllSkillGroups(new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (TextUtils.isEmpty(value)){
-                        return;
-                    }
-                    agentList.clear();
-                    agentList.addAll(waitAccessManager.getSkillGroupEntites(value));
-                    loadTheFirstPageData();
-                }
+        waitAccessManager.loadSkillGroup(new HDDataCallBack<List<SkillGroupResponse.EntitiesBean>>() {
+            @Override
+            public void onSuccess(List<SkillGroupResponse.EntitiesBean> value) {
+                agentList.clear();
+                agentList.addAll(value);
+                loadTheFirstPageData();
+            }
 
-                @Override
-                public void onError(int error, String errorMsg) {
-                    HDLog.e(TAG, "asyncGetSkillGroups-onError:" + errorMsg);
-                }
+            @Override
+            public void onError(int error, String errorMsg) {
+                HDLog.e(TAG, "asyncGetSkillGroups-onError:" + errorMsg);
+            }
 
-                @Override
-                public void onAuthenticationException() {
-
-                }
-            });
-        } else if (loginUser.getRoles() != null && loginUser.getRoles().contains("agent")) {
-            waitAccessManager.asyncGetAgentSkillGroups(new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (TextUtils.isEmpty(value)){
-                        return;
-                    }
-                    agentList.clear();
-                    agentList.addAll(waitAccessManager.getSkillGroupEntites(value));
-                    loadTheFirstPageData();
-                }
-
-                @Override
-                public void onError(int error, String errorMsg) {
-                    HDLog.e(TAG, "asyncGetSkillGroups-onError:" + errorMsg);
-                }
-
-                @Override
-                public void onAuthenticationException() {
-
-                }
-            });
-        }
-
+            @Override
+            public void onAuthenticationException() {
+            }
+        });
     }
 
     private synchronized void loadTheFirstPageData() {
@@ -884,88 +739,39 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
             loadSkillGroups();
             return;
         }
-        if (loginUser == null){
-            return;
-        }
-
-        if (isSearch){
-            waitAccessManager.getUserWaitQueuesSearch(agentList, 1, new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    if (TextUtils.isEmpty(value)) {
-                        return;
-                    }
-                    mCurPageNo = 1;
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_REFRESH_DATA;
-                    message.obj = waitAccessManager.getFirstPageItems(value);
-                    mWeakHandler.sendMessage(message);
+        waitAccessManager.getUserWaitQueues(isSearch, agentList, 1, new HDDataCallBack<List<WaitQueueResponse.ItemsBean>>() {
+            @Override
+            public void onSuccess(List<WaitQueueResponse.ItemsBean> value) {
+                if (getActivity() == null) {
+                    return;
                 }
+                mCurPageNo = 1;
+                Message message = mWeakHandler.obtainMessage();
+                message.what = MSG_REFRESH_DATA;
+                message.obj = value;
+                mWeakHandler.sendMessage(message);
+            }
 
-                @Override
-                public void onError(int error, String errorMsg) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_REFRESH_DATA;
-                    mWeakHandler.sendMessage(message);
+            @Override
+            public void onError(int error, String errorMsg) {
+                if (getActivity() == null) {
+                    return;
                 }
+                Message message = mWeakHandler.obtainMessage();
+                message.what = MSG_REFRESH_DATA;
+                mWeakHandler.sendMessage(message);
+            }
 
-                @Override
-                public void onAuthenticationException() {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_AUTHENTICATION;
-                    mWeakHandler.sendMessage(message);
-
+            @Override
+            public void onAuthenticationException() {
+                if (getActivity() == null) {
+                    return;
                 }
-            });
-        }else{
-            waitAccessManager.getUserWaitQueues(agentList, 1, new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    if (TextUtils.isEmpty(value)) {
-                        return;
-                    }
-                    mCurPageNo = 1;
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_REFRESH_DATA;
-                    message.obj = waitAccessManager.getFirstPageItems(value);
-                    mWeakHandler.sendMessage(message);
-                }
-
-                @Override
-                public void onError(int error, String errorMsg) {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_REFRESH_DATA;
-                    mWeakHandler.sendMessage(message);
-                }
-
-                @Override
-                public void onAuthenticationException() {
-                    if (getActivity() == null) {
-                        return;
-                    }
-                    Message message = mWeakHandler.obtainMessage();
-                    message.what = MSG_AUTHENTICATION;
-                    mWeakHandler.sendMessage(message);
-                }
-            });
-        }
-
-
+                Message message = mWeakHandler.obtainMessage();
+                message.what = MSG_AUTHENTICATION;
+                mWeakHandler.sendMessage(message);
+            }
+        });
 
     }
 
