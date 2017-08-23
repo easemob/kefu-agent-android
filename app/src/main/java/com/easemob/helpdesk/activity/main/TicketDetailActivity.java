@@ -149,11 +149,9 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
             }
         }
         loginUser = HDClient.getInstance().getCurrentUser();
-        if(loginUser != null){
-            assigneeList.add("未分配");
-            assigneeList.add(loginUser.getNicename());
-            agentUsers.add(loginUser);
-        }
+
+        assigneeList.add("未分配");
+
         initView();
         setData();
         mListView.setAdapter(commentAdapter = new CommentAdapter(commentList));

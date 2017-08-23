@@ -36,7 +36,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-
+/**
+ * 历史会话
+ */
 public class HistorySessionActivity extends BaseActivity {
 
     private static final String TAG = HistorySessionActivity.class.getSimpleName();
@@ -66,6 +68,7 @@ public class HistorySessionActivity extends BaseActivity {
         AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_history_sessions);
         historySessionManager = new HistorySessionManager();
+        /** 默认获取本周的会话 */
         currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
         historySessionManager.setCurrentTimeInfo(currentTimeInfo.getStartTime(), currentTimeInfo.getEndTime());
         initView();
@@ -229,7 +232,6 @@ public class HistorySessionActivity extends BaseActivity {
                 return;
             }
             mAdapter.addAll(data);
-            historySessionManager.addList(data);
             refreshLabelTotalCount(mAdapter.getCount());
             if (data.size() < PER_PAGE_SESSION_COUNT) {
                 mAdapter.stopMore();
@@ -243,7 +245,6 @@ public class HistorySessionActivity extends BaseActivity {
         if (data != null) {
             mAdapter.clear();
             mAdapter.addAll(data);
-            historySessionManager.setList(data);
             refreshLabelTotalCount(mAdapter.getCount());
             if (data.size() < PER_PAGE_SESSION_COUNT) {
                 mAdapter.stopMore();
@@ -281,7 +282,7 @@ public class HistorySessionActivity extends BaseActivity {
                     historySessionManager.setCurrentVisitorName("");
                 }
                 if (data.hasExtra("ids")) {
-                    historySessionManager.setCurrentTagIds(data.getStringExtra("ids").replace("[","").replace("]",""));
+                    historySessionManager.setCurrentTagIds(data.getStringExtra("ids"));
                 } else {
                     historySessionManager.setCurrentTagIds(null);
                 }

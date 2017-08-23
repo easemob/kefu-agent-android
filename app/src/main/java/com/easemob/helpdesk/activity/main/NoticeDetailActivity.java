@@ -186,16 +186,8 @@ public class NoticeDetailActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        try{
-                            JSONObject jsonObject = new JSONObject(value);
-                            JSONObject jsonEntity = jsonObject.getJSONObject("entity");
-                            String userId = jsonEntity.getString("userId");
-                            postAgentLinks(userId);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            closeDialog();
-                            Toast.makeText(NoticeDetailActivity.this, "数据解析异常！", Toast.LENGTH_SHORT).show();
-                        }
+                        closeDialog();
+                        toCustomerDetail(loginUser.getTenantId(), value);
                     }
                 });
 
@@ -239,12 +231,12 @@ public class NoticeDetailActivity extends BaseActivity {
         }
         HDClient.getInstance().agentManager().postAgentLinks(visitorId, new HDDataCallBack<String>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(final String value) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         closeDialog();
-                        toCustomerDetail(loginUser.getTenantId(), visitorId);
+                        toCustomerDetail(loginUser.getTenantId(), value);
                     }
                 });
             }

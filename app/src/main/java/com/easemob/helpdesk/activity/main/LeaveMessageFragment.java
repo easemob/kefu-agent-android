@@ -123,11 +123,8 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         configEntity.statusIdIndex = getActivity().getIntent().getIntExtra("statusIdIndex", -1);
         configEntity.customMode = getActivity().getIntent().getBooleanExtra("CustomMode", false);
 
-        if(loginUser != null){
-            assigneeList.add("未分配");
-            assigneeList.add(loginUser.getNicename());
-            agentUsers.add(loginUser);
-        }
+        assigneeList.add("未分配");
+
         getOtherAgents();
         if (configEntity.customMode) {
             itvRight.setVisibility(View.VISIBLE);
