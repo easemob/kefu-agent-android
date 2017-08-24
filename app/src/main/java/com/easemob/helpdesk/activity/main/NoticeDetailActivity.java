@@ -32,8 +32,6 @@ import com.hyphenate.kefusdk.gsonmodel.main.NoticesResponse;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.JsonUtils;
 
-import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
