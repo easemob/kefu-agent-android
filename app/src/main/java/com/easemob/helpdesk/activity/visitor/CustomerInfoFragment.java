@@ -24,7 +24,6 @@ import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DialogUtils;
-import com.google.gson.Gson;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.gsonmodel.customer.CustomerInfoResponse;
@@ -49,7 +48,7 @@ public class CustomerInfoFragment extends Fragment{
 
     public LinearLayout llContainer;
 
-    private CustomerInfoResponse customerInfoResponse;
+    private CustomerInfoResponse.EntityBean customerInfo;
 
     private Dialog dialog;
     private BasePickerView pickerView;
@@ -78,39 +77,38 @@ public class CustomerInfoFragment extends Fragment{
 
 
     private void drawAllComponent(){
-        if (customerInfoResponse == null){
+        if (customerInfo == null || customerInfo.getColumnValues() != null || customerInfo.getColumnValues().size() <= 0){
             return;
         }
-        List<CustomerInfoResponse.EntityBean.ColumnValuesBean> columnValues = customerInfoResponse.getEntity().getColumnValues();
         llContainer.removeAllViews();
-        for (final CustomerInfoResponse.EntityBean.ColumnValuesBean bean : columnValues){
+        for (final CustomerInfoResponse.EntityBean.ColumnValuesBean bean : customerInfo.getColumnValues()){
             final CustomerInfoResponse.EntityBean.ColumnValuesBean.ColumnTypeBean columnType = bean.getColumnType();
 //            if (columnType.getTypeName().equals("TEXT_STRING")){
-                if (!bean.isVisible()){
-                    continue;
-                }
+            if (!bean.isVisible()){
+                continue;
+            }
 
-                LinearLayout itemLayout = new LinearLayout(getContext());
-                itemLayout.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout itemLayout = new LinearLayout(getContext());
+            itemLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-                TextView leftTv = new TextView(getContext());
-                leftTv.setGravity(Gravity.CENTER_VERTICAL);
-                leftTv.setText(bean.getDisplayName());
-                leftTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
-                leftTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            TextView leftTv = new TextView(getContext());
+            leftTv.setGravity(Gravity.CENTER_VERTICAL);
+            leftTv.setText(bean.getDisplayName());
+            leftTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
+            leftTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
-                final TextView rightTv = new TextView(getContext());
-                rightTv.setGravity(Gravity.CENTER_VERTICAL);
-                rightTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
-                rightTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                if (bean.getColumnDescribe() != null){
-                    rightTv.setHint(bean.getColumnDescribe());
-                }
+            final TextView rightTv = new TextView(getContext());
+            rightTv.setGravity(Gravity.CENTER_VERTICAL);
+            rightTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
+            rightTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            if (bean.getColumnDescribe() != null){
+                rightTv.setHint(bean.getColumnDescribe());
+            }
 
-               String valueString = null;
-                if (bean.getValues() != null && !bean.getValues().isEmpty()){
-                    valueString = bean.getValues().get(0);
-                }
+            String valueString = null;
+            if (bean.getValues() != null && !bean.getValues().isEmpty()){
+                valueString = bean.getValues().get(0);
+            }
 
 
             if (!bean.isReadonly()) {
@@ -138,7 +136,7 @@ public class CustomerInfoFragment extends Fragment{
                                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfoResponse.getEntity().getCustomerId());
+                                            updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfo.getCustomerId());
                                         }
                                     })
                                     .setNegativeButton("取消", null).show();
@@ -159,7 +157,7 @@ public class CustomerInfoFragment extends Fragment{
                                 public void onOptionsSelect(int options1, int option2, int options3) {
                                     if (!list.isEmpty()){
                                         String value = list.get(options1);
-                                        updateColumnValue(rightTv, bean.getColumnName(), value, customerInfoResponse.getEntity().getCustomerId());
+                                        updateColumnValue(rightTv, bean.getColumnName(), value, customerInfo.getCustomerId());
                                     }
                                 }
                             });
@@ -180,7 +178,7 @@ public class CustomerInfoFragment extends Fragment{
                             ((TimePickerView) pickerView).setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
                                 @Override
                                 public void onTimeSelect(Date date) {
-                                    updateColumnValue(rightTv, bean.getColumnName(), date.getTime(), customerInfoResponse.getEntity().getCustomerId(), true);
+                                    updateColumnValue(rightTv, bean.getColumnName(), date.getTime(), customerInfo.getCustomerId(), true);
                                 }
                             });
                             pickerView.show();
@@ -202,7 +200,7 @@ public class CustomerInfoFragment extends Fragment{
                                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfoResponse.getEntity().getCustomerId());
+                                            updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfo.getCustomerId());
                                         }
                                     })
                                     .setNegativeButton("取消", null).show();
@@ -228,36 +226,26 @@ public class CustomerInfoFragment extends Fragment{
                 }
             }
 
-                itemLayout.addView(leftTv, CommonUtils.convertDip2Px(getContext(), 90), ViewGroup.LayoutParams.MATCH_PARENT);
-                itemLayout.addView(rightTv, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            itemLayout.addView(leftTv, CommonUtils.convertDip2Px(getContext(), 90), ViewGroup.LayoutParams.MATCH_PARENT);
+            itemLayout.addView(rightTv, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-                llContainer.addView(itemLayout, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 44));
-                View lineView = new View(getContext());
-                lineView.setBackgroundColor(getResources().getColor(R.color.line_color_2));
-                llContainer.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 0.5f));
+            llContainer.addView(itemLayout, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 44));
+            View lineView = new View(getContext());
+            lineView.setBackgroundColor(getResources().getColor(R.color.line_color_2));
+            llContainer.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 0.5f));
 
 //            }
         }
     }
 
-    public String getStringNotNull(String content){
-        if (content == null){
-            return "";
-        }
-        return content;
-    }
-
-
     private void asyncCustomerDetail(){
-        HDClient.getInstance().visitorManager().getCustomerDetailInfo(tenantId, visitorId, new HDDataCallBack<String>() {
+        HDClient.getInstance().visitorManager().getCustomerDetailInfo(tenantId, visitorId, new HDDataCallBack<CustomerInfoResponse.EntityBean>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(CustomerInfoResponse.EntityBean value) {
                 HDLog.d(TAG, "getCustomerDetailInfo:" + value + ", visitorId:" + visitorId);
-                if (TextUtils.isEmpty(value)){
-                    return;
-                }
-                Gson gson = new Gson();
-                customerInfoResponse = gson.fromJson(value, CustomerInfoResponse.class);
+
+                customerInfo = value;
+
                 if (getActivity() == null){
                     return;
                 }
@@ -324,7 +312,7 @@ public class CustomerInfoFragment extends Fragment{
         dismissDialog();
         dialog = DialogUtils.getLoadingDialog(getContext(), "信息更新中...");
 
-         //putCustomerDetailInfo
+        //putCustomerDetailInfo
         HDClient.getInstance().visitorManager().putCustomerDetailInfo(tenantId, customerId, columnName, updateValue, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {

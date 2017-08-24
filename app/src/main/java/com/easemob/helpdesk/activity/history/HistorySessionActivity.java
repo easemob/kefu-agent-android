@@ -23,6 +23,7 @@ import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.bean.HistorySessionEntity;
 import com.hyphenate.kefusdk.bean.TechChannel;
 import com.hyphenate.kefusdk.entity.HDVisitorUser;
+import com.hyphenate.kefusdk.entity.HistorySessionScreenEntity;
 import com.hyphenate.kefusdk.manager.session.HistorySessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -264,28 +265,23 @@ public class HistorySessionActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_SCREENING) {
+                HistorySessionScreenEntity screenEntity = new HistorySessionScreenEntity();
                 currentTimeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
-                historySessionManager.setCurrentTimeInfo(currentTimeInfo.getStartTime(), currentTimeInfo.getEndTime());
+                screenEntity.startTime = currentTimeInfo.getStartTime();
+                screenEntity.endTime = currentTimeInfo.getEndTime();
                 if(data.hasExtra("originType")){
-                    historySessionManager.setCurrentOriginType(data.getStringExtra("originType"));
-                }else{
-                    historySessionManager.setCurrentOriginType("");
+                    screenEntity.currentOriginType = data.getStringExtra("originType");
                 }
                 if(data.hasExtra("techChannel")){
-                    historySessionManager.setCurrentTechChannel((TechChannel) data.getSerializableExtra("techChannel"));
-                }else{
-                    historySessionManager.setCurrentTechChannel(null);
+                    screenEntity.currentTechChannel = (TechChannel) data.getSerializableExtra("techChannel");
                 }
                 if(data.hasExtra("visitorName")){
-                    historySessionManager.setCurrentVisitorName(data.getStringExtra("visitorName"));
-                }else{
-                    historySessionManager.setCurrentVisitorName("");
+                    screenEntity.currentVisitorName = data.getStringExtra("visitorName");
                 }
                 if (data.hasExtra("ids")) {
-                    historySessionManager.setCurrentTagIds(data.getStringExtra("ids"));
-                } else {
-                    historySessionManager.setCurrentTagIds(null);
+                    screenEntity.currentTagIds = data.getStringExtra("ids");
                 }
+                historySessionManager.setScreenOption(screenEntity);
                 onFreshData();
             }
 

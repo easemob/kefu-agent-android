@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import com.easemob.helpdesk.utils.OnFreshCallbackListener;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
-import com.google.gson.Gson;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.entity.HDBaseUser;
@@ -353,22 +351,17 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
 
     private synchronized void loadTheFirstPageData() {
 
-        LeaveMessageManager.getInstance().getTicketsList(0, configEntity, agentUsers, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().getTicketsList(0, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(LeaveMessageResponse value) {
                 if (getActivity() == null) {
                     return;
                 }
-                if (TextUtils.isEmpty(value)) {
-                    return;
-                }
-                Gson gson = new Gson();
-                LeaveMessageResponse response = gson.fromJson(value, LeaveMessageResponse.class);
-                total_count = response.getTotalElements();
+                total_count = value.getTotalElements();
                 mCurPageNo = 0;
                 Message message = mWeakHandler.obtainMessage();
                 message.what = MSG_REFRESH_DATA;
-                message.obj = response.getEntities();
+                message.obj = value.getEntities();
                 mWeakHandler.sendMessage(message);
             }
 
@@ -398,19 +391,17 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     private void loadMoreData() {
         final int nextPage = mCurPageNo + 1;
 
-        LeaveMessageManager.getInstance().getTicketsList(nextPage, configEntity, agentUsers, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().getTicketsList(nextPage, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(LeaveMessageResponse value) {
                 if (getActivity() == null) {
                     return;
                 }
-                Gson gson = new Gson();
-                LeaveMessageResponse response = gson.fromJson(value, LeaveMessageResponse.class);
-                total_count = response.getTotalElements();
+                total_count = value.getTotalElements();
                 mCurPageNo = nextPage;
                 Message message = mWeakHandler.obtainMessage();
                 message.what = MSG_LOAD_MORE_DATA;
-                message.obj = response.getEntities();
+                message.obj = value.getEntities();
                 mWeakHandler.sendMessage(message);
             }
 

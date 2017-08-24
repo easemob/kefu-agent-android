@@ -28,6 +28,7 @@ import com.easemob.helpdesk.activity.SearchWaitAccessActivity;
 import com.easemob.helpdesk.activity.transfer.TransferActivity;
 import com.easemob.helpdesk.adapter.WaitAccessAdapter;
 import com.easemob.helpdesk.utils.AvatarManager;
+import com.hyphenate.kefusdk.entity.WaitAccessScreenEntity;
 import com.hyphenate.kefusdk.gsonmodel.main.SkillGroupResponse;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
@@ -89,11 +90,6 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     @BindView(R.id.tv_label_total_count)
     public TextView tvLabelTotalCount;
 
-    private TimeInfo currentTimeInfo;
-    private String currentOriginType;
-    private String currentVisitorName;
-    private TechChannel currentTechChannel;
-
     @BindView(R.id.search_layout)
     public RelativeLayout search_layout;
     private Unbinder unbinder;
@@ -101,6 +97,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     private List<SkillGroupResponse.EntitiesBean> agentList = Collections.synchronizedList(new ArrayList<SkillGroupResponse.EntitiesBean>());
     private WaitAccessManager waitAccessManager;
     private int mCurPageNo;
+    private TimeInfo currentTimeInfo = new TimeInfo();
 
 
     @Nullable
@@ -572,23 +569,20 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
             }else if(requestCode == REQUEST_CODE_ALERT_DIALOG_CLOSE){
                 waitCloseActivityResult(data);
             }else if(requestCode == REQUEST_CODE_SCREENING){
+                WaitAccessScreenEntity screenEntity = new WaitAccessScreenEntity();
                 currentTimeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
+                screenEntity.startTime = currentTimeInfo.getStartTime();
+                screenEntity.endTime = currentTimeInfo.getEndTime();
                 if(data.hasExtra("originType")){
-                    currentOriginType = data.getStringExtra("originType");
-                }else{
-                    currentOriginType = "";
+                    screenEntity.currentOriginType = data.getStringExtra("originType");
                 }
                 if(data.hasExtra("techChannel")){
-                    currentTechChannel = (TechChannel) data.getSerializableExtra("techChannel");
-                }else{
-                    currentTechChannel = null;
+                    screenEntity.currentTechChannel = (TechChannel) data.getSerializableExtra("techChannel");
                 }
                 if(data.hasExtra("visitorName")){
-                    currentVisitorName = data.getStringExtra("visitorName");
-                }else{
-                    currentVisitorName = "";
+                    screenEntity.currentVisitorName = data.getStringExtra("visitorName");
                 }
-                waitAccessManager.setScreeningOption(currentTimeInfo.getStartTime(), currentTimeInfo.getEndTime(), currentOriginType, currentVisitorName, currentTechChannel);
+                waitAccessManager.setScreeningOption(screenEntity);
                 isSearch = true;
                 onFresh(null);
             }

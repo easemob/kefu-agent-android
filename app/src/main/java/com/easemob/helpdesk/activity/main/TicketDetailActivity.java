@@ -38,7 +38,6 @@ import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.FileUtils;
 import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
 import com.easemob.helpdesk.widget.recyclerview.MyRecyclerView;
-import com.google.gson.Gson;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDBaseUser;
@@ -336,14 +335,13 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().putTicketTask(baseUser, ticketEntity, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().putTicketTask(baseUser, ticketEntity, new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(LeaveMessageResponse.EntitiesBean value) {
                 if (isFinishing()) {
                     return;
                 }
-                Gson gson = new Gson();
-                ticketEntity = gson.fromJson(value, LeaveMessageResponse.EntitiesBean.class);
+                ticketEntity = value;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -402,14 +400,13 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().putTicketStatus(ticketEntity, tempStatusList.get(position), new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().putTicketStatus(ticketEntity, tempStatusList.get(position), new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(LeaveMessageResponse.EntitiesBean value) {
                 if (isFinishing()) {
                     return;
                 }
-                Gson gson = new Gson();
-                ticketEntity = gson.fromJson(value, LeaveMessageResponse.EntitiesBean.class);
+                ticketEntity = value;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -469,14 +466,13 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().deleteTicketAssignee(ticketEntity, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().deleteTicketAssignee(ticketEntity, new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(LeaveMessageResponse.EntitiesBean value) {
                 if (isFinishing()) {
                     return;
                 }
-                Gson gson = new Gson();
-                ticketEntity = gson.fromJson(value, LeaveMessageResponse.EntitiesBean.class);
+                ticketEntity = value;
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -550,21 +546,14 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         if (loginUser == null){
             return;
         }
-        LeaveMessageManager.getInstance().getTicketComments(ticketEntity, new HDDataCallBack<String>() {
+        LeaveMessageManager.getInstance().getTicketComments(ticketEntity, new HDDataCallBack<List<TicketCommentsResponse.EntitiesBean>>() {
             @Override
-            public void onSuccess(String value) {
+            public void onSuccess(List<TicketCommentsResponse.EntitiesBean> value) {
                 if (isFinishing()) {
                     return;
                 }
-                if (TextUtils.isEmpty(value)) {
-                    return;
-                }
-                Gson gson = new Gson();
-                TicketCommentsResponse response = gson.fromJson(value, TicketCommentsResponse.class);
-                if (response != null) {
-                    commentList.clear();
-                    commentList.addAll(response.getEntities());
-                }
+                commentList.clear();
+                commentList.addAll(value);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -969,26 +958,6 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
     public void refreshFileCount(){
         tvFileCount.setText("" + fileList.size());
     }
-
-
-//    private void openFile(File file) {
-//        Intent intent = new Intent();
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        //设置intent的Action属性
-//        intent.setAction(Intent.ACTION_VIEW);
-//        //获取文件file的MIME类型
-//        String type = CommonUtils.getMIMEType(file);
-//        //设置intent的data和Type属性。
-//        intent.setDataAndType(/*uri*/Uri.fromFile(file), type);
-//        //跳转
-//        try {
-//            startActivity(intent); //这里最好try一下，有可能会报错。 //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
-//            finish();
-//        } catch (Exception e) {
-//            Toast.makeText(getApplicationContext(), "文件无法打开", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
 
     @Override
     protected void onDestroy() {
