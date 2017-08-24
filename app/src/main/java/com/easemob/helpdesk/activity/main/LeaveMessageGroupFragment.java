@@ -74,7 +74,6 @@ public class LeaveMessageGroupFragment extends Fragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		LeaveMessageManager.getInstance().getProjectIds();
 		loadFirstStatus();
 		refreshAgentAvatar();
 	}

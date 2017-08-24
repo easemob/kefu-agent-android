@@ -77,7 +77,7 @@ public class CustomerInfoFragment extends Fragment{
 
 
     private void drawAllComponent(){
-        if (customerInfo == null || customerInfo.getColumnValues() != null || customerInfo.getColumnValues().size() <= 0){
+        if (customerInfo == null || customerInfo.getColumnValues() == null || customerInfo.getColumnValues().size() <= 0){
             return;
         }
         llContainer.removeAllViews();
