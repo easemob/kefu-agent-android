@@ -18,7 +18,7 @@ import com.easemob.helpdesk.utils.CommonUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.manager.main.LeaveMessageManager;
+import com.hyphenate.kefusdk.chat.LeaveMessageManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -150,7 +150,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 
 		pendingTicketsLayout.setClickable(false);
 
-		LeaveMessageManager.getInstance().getPendingTicketsCount(new HDDataCallBack<String>() {
+		HDClient.getInstance().leaveMessageManager().getPendingTicketsCount(new HDDataCallBack<String>() {
 			@Override
 			public void onSuccess(final String value) {
 				if (getActivity() == null) {
@@ -176,7 +176,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 	private void getSolvedTicketsCount() {
 		mysolvedTicketsLayout.setClickable(false);
 
-		LeaveMessageManager.getInstance().getSolvedTicketsCount(new HDDataCallBack<String>() {
+		HDClient.getInstance().leaveMessageManager().getSolvedTicketsCount(new HDDataCallBack<String>() {
 			@Override
 			public void onSuccess(final String value) {
 				if (getActivity() == null) {
@@ -202,7 +202,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 
 		myOpenTicketsLayout.setClickable(false);
 
-		LeaveMessageManager.getInstance().getOpenTicketsCount(new HDDataCallBack<String>() {
+		HDClient.getInstance().leaveMessageManager().getOpenTicketsCount(new HDDataCallBack<String>() {
 			@Override
 			public void onSuccess(final String value) {
 				openedLeaveMessageCount = Integer.parseInt(value);
@@ -233,7 +233,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 	private void getUnassigneeTicketsCount() {
 		unassignedTicketsLayout.setClickable(false);
 
-		LeaveMessageManager.getInstance().getUnassignedTicketCounts(new HDDataCallBack<String>() {
+		HDClient.getInstance().leaveMessageManager().getUnassignedTicketCounts(new HDDataCallBack<String>() {
 			@Override
 			public void onSuccess(final String value) {
 				if (getActivity() == null) {
@@ -262,7 +262,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 			customFilterTicketsLayout.setClickable(true);
 		} else {
 			customFilterTicketsLayout.setClickable(false);
-			LeaveMessageManager.getInstance().getAllCurrentAgentTicketsCount(new HDDataCallBack<String>() {
+			HDClient.getInstance().leaveMessageManager().getAllCurrentAgentTicketsCount(new HDDataCallBack<String>() {
 				@Override
 				public void onSuccess(final String value) {
 					if (getActivity() == null) {

@@ -32,7 +32,6 @@ import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.entity.HDBaseUser;
 import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.manager.main.LeaveMessageManager;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
@@ -144,7 +143,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     }
 
     private void getOtherAgents(){
-        LeaveMessageManager.getInstance().getOtherAgents(new HDDataCallBack<List<HDBaseUser>>() {
+        HDClient.getInstance().leaveMessageManager().getOtherAgents(new HDDataCallBack<List<HDBaseUser>>() {
             @Override
             public void onSuccess(List<HDBaseUser> value) {
                 for (HDBaseUser bUser: value) {
@@ -351,7 +350,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
 
     private synchronized void loadTheFirstPageData() {
 
-        LeaveMessageManager.getInstance().getTicketsList(0, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
+        HDClient.getInstance().leaveMessageManager().getTicketsList(0, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
             @Override
             public void onSuccess(LeaveMessageResponse value) {
                 if (getActivity() == null) {
@@ -391,7 +390,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     private void loadMoreData() {
         final int nextPage = mCurPageNo + 1;
 
-        LeaveMessageManager.getInstance().getTicketsList(nextPage, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
+        HDClient.getInstance().leaveMessageManager().getTicketsList(nextPage, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
             @Override
             public void onSuccess(LeaveMessageResponse value) {
                 if (getActivity() == null) {
@@ -545,7 +544,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().batAssignTicketAssignee(baseUser, getSelectedListIds(), new HDDataCallBack<String>() {
+        HDClient.getInstance().leaveMessageManager().batAssignTicketAssignee(baseUser, getSelectedListIds(), new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null || getActivity().isFinishing()) {
@@ -620,7 +619,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().batDeleteTicketAssignee(getSelectedListIds(), new HDDataCallBack<String>() {
+        HDClient.getInstance().leaveMessageManager().batDeleteTicketAssignee(getSelectedListIds(), new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (getActivity() == null || getActivity().isFinishing()) {

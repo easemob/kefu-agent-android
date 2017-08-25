@@ -42,7 +42,6 @@ import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDBaseUser;
 import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.manager.main.LeaveMessageManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.ISO8601DateFormat;
 import com.hyphenate.kefusdk.utils.PathUtil;
@@ -138,7 +137,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         ButterKnife.bind(this);
         Intent intent = getIntent();
         ticketEntity = (LeaveMessageResponse.EntitiesBean) intent.getSerializableExtra("ticket");
-        for (TicketStatusResponse.EntitiesBean entitiesBean : LeaveMessageManager.getInstance().getTicketstatusResponseEntityBean()) {
+        for (TicketStatusResponse.EntitiesBean entitiesBean : HDClient.getInstance().leaveMessageManager().getTicketstatusResponseEntityBean()) {
             if (entitiesBean.isIs_default()){
                 statusList.add(0, entitiesBean.getName());
                 tempStatusList.add(0, entitiesBean);
@@ -159,7 +158,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
     }
 
     private void getOtherAgents(){
-        LeaveMessageManager.getInstance().getOtherAgents(new HDDataCallBack<List<HDBaseUser>>() {
+        HDClient.getInstance().leaveMessageManager().getOtherAgents(new HDDataCallBack<List<HDBaseUser>>() {
             @Override
             public void onSuccess(List<HDBaseUser> value) {
                 for(HDBaseUser bUser: value) {
@@ -335,7 +334,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().putTicketTask(baseUser, ticketEntity, new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
+        HDClient.getInstance().leaveMessageManager().putTicketTask(baseUser, ticketEntity, new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
             @Override
             public void onSuccess(LeaveMessageResponse.EntitiesBean value) {
                 if (isFinishing()) {
@@ -400,7 +399,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().putTicketStatus(ticketEntity, tempStatusList.get(position), new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
+        HDClient.getInstance().leaveMessageManager().putTicketStatus(ticketEntity, tempStatusList.get(position), new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
             @Override
             public void onSuccess(LeaveMessageResponse.EntitiesBean value) {
                 if (isFinishing()) {
@@ -466,7 +465,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().deleteTicketAssignee(ticketEntity, new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
+        HDClient.getInstance().leaveMessageManager().deleteTicketAssignee(ticketEntity, new HDDataCallBack<LeaveMessageResponse.EntitiesBean>() {
             @Override
             public void onSuccess(LeaveMessageResponse.EntitiesBean value) {
                 if (isFinishing()) {
@@ -546,7 +545,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         if (loginUser == null){
             return;
         }
-        LeaveMessageManager.getInstance().getTicketComments(ticketEntity, new HDDataCallBack<List<TicketCommentsResponse.EntitiesBean>>() {
+        HDClient.getInstance().leaveMessageManager().getTicketComments(ticketEntity, new HDDataCallBack<List<TicketCommentsResponse.EntitiesBean>>() {
             @Override
             public void onSuccess(List<TicketCommentsResponse.EntitiesBean> value) {
                 if (isFinishing()) {
@@ -758,7 +757,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         if (loginUser == null){
             return;
         }
-        LeaveMessageManager.getInstance().sendComment(content, fileList, ticketEntity, new HDDataCallBack<String>() {
+        HDClient.getInstance().leaveMessageManager().sendComment(content, fileList, ticketEntity, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {
                 if (isFinishing()) {
@@ -890,7 +889,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
         pd.setMessage("请求中...");
         pd.show();
 
-        LeaveMessageManager.getInstance().sendTicketCommentFile(filePath, new HDDataCallBack<FileEntity>() {
+        HDClient.getInstance().leaveMessageManager().sendTicketCommentFile(filePath, new HDDataCallBack<FileEntity>() {
             @Override
             public void onSuccess(final FileEntity value) {
                 if (isFinishing()) {
