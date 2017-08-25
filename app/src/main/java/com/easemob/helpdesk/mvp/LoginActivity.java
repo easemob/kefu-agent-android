@@ -28,12 +28,10 @@ import android.widget.Toast;
 
 import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.ChannelConfig;
-import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.activity.ForgetPwdActivity;
 import com.easemob.helpdesk.mvp.view.IUserLoginView;
-import com.easemob.helpdesk.service.WorkService;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.EMToast;
@@ -365,8 +363,6 @@ public class LoginActivity extends BaseActivity implements IUserLoginView, Compo
      */
     @Override
     public void toMainActivity() {
-        WorkService.sShouldStopService = false;
-        startService(new Intent(HDApplication.getInstance(), WorkService.class));
         hideLoading();
         Intent intent = new Intent();
         intent.putExtra("displayExpireInfo", true);

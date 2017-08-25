@@ -3,7 +3,6 @@ package com.easemob.helpdesk;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.os.Handler;
 import android.support.multidex.MultiDex;
 
 import com.easemob.helpdesk.mvp.LoginActivity;
-import com.easemob.helpdesk.service.WorkService;
 import com.easemob.helpdesk.utils.PreferenceUtils;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.manager.session.CurrentSessionManager;
@@ -49,12 +47,6 @@ public class HDApplication extends Application {
         registerActivityListener();
         IMHelper.getInstance().setGlobalListener();
         HDClient.getInstance().setDebugMode(true);
-
-        if (HDClient.getInstance().isLoggedInBefore()){
-            // 我们现在需要服务运行，将标志位重置为 false;
-            WorkService.sShouldStopService = false;
-            startService(new Intent(this, WorkService.class));
-        }
 
         isBroadcastUnreadCount = PreferenceUtils.getInstance().getBroadcastUnReadCount();
 
