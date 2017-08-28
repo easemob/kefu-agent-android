@@ -271,7 +271,7 @@ public class AvatarManager {
 		}
 
 		// 查看请求列表是否含有这个请求
-		if (mRequestQueue.contains(remoteUrl)) {
+		if (mRequestQueue.containsKey(remoteUrl)) {
 			mRequestQueue.get(remoteUrl).addImageView(imageView);
 			return;
 		}
@@ -316,7 +316,7 @@ public class AvatarManager {
 		}
 
 		// 查看请求列表是否含有这个请求
-		if (mRequestQueue.contains(url)) {
+		if (mRequestQueue.containsKey(url)) {
 			mRequestQueue.get(url).addImageView(imageView);
 			return;
 		}
