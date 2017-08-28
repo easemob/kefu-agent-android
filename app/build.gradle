@@ -20,7 +20,7 @@ android {
 
     productFlavors {
         travis {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "Tools", APP_LABLE_VALUE: "@string/app_name", APP_ICON_VALUE: "@drawable/icon_launcher2"]
+            manifestPlaceholders = [APP_LABLE_VALUE: "@string/app_name", APP_ICON_VALUE: "@drawable/icon_launcher2"]
         }
     }
 }
@@ -34,6 +34,9 @@ repositories{
 allprojects{
     repositories{
         jcenter()
+        maven{
+            url 'https://dl.bintray.com/liyuzhao/maven'
+        }
     }
 }
 
@@ -47,8 +50,8 @@ dependencies {
     //methodCount more than 65535, split dex
     compile 'com.android.support:multidex:1.0.0'
     // kefu agent sdk
-       compile(name:'kefu-agentsdk-android-debug',ext:'aar')
-//    compile 'com.hyphenate:kefu-agentsdk-android:1.0.3'
+//       compile(name:'kefu-agentsdk-android-debug',ext:'aar')
+    compile 'com.hyphenate:kefu-agentsdk-android:1.0.3'
     // http request library, sdk required
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
     // show picture library , ui required

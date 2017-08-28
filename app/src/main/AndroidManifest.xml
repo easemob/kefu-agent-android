@@ -39,10 +39,11 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
 
+    <!-- 需要修改为自己的包名:com.easemob.helpdesk -->
     <permission
         android:name="com.easemob.helpdesk.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature"/>
-
+    <!-- 需要修改为自己的包名:com.easemob.helpdesk -->
     <uses-permission android:name="com.easemob.helpdesk.permission.MIPUSH_RECEIVE"/>
     <application
         android:name=".HDApplication"
