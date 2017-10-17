@@ -31,16 +31,6 @@ repositories{
     }
 }
 
-allprojects{
-    repositories{
-        jcenter()
-        maven{
-            url 'https://dl.bintray.com/liyuzhao/maven'
-        }
-    }
-}
-
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -51,7 +41,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     // kefu agent sdk
 //       compile(name:'kefu-agentsdk-android-debug',ext:'aar')
-    compile 'com.hyphenate:kefu-agentsdk-android:1.0.3'
+    compile 'com.easemob:kefu-agentsdk-android:1.0.3'
     // http request library, sdk required
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
     // show picture library , ui required
@@ -90,6 +80,5 @@ dependencies {
     compile 'com.wefika:flowlayout:0.4.0'
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
-
 
 }
