@@ -31,8 +31,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
    * @param photo Photo of the item to check
    * @return true if the item is selected, false otherwise
    */
-  @Override
-  public boolean isSelected(Photo photo) {
+  @Override public boolean isSelected(Photo photo) {
     return getSelectedPhotos().contains(photo);
   }
 
@@ -42,8 +41,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
    *
    * @param photo Photo of the item to toggle the selection status for
    */
-  @Override
-  public void toggleSelection(Photo photo) {
+  @Override public void toggleSelection(Photo photo) {
     if (selectedPhotos.contains(photo)) {
       selectedPhotos.remove(photo);
     } else {
@@ -55,8 +53,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
   /**
    * Clear the selection status for all items
    */
-  @Override
-  public void clearSelection() {
+  @Override public void clearSelection() {
     selectedPhotos.clear();
   }
 
@@ -66,8 +63,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
    *
    * @return Selected items count
    */
-  @Override
-  public int getSelectedItemCount() {
+  @Override public int getSelectedItemCount() {
     return selectedPhotos.size();
   }
 
@@ -91,8 +87,7 @@ public abstract class SelectableAdapter<VH extends RecyclerView.ViewHolder>
   }
 
 
-  @Override
-  public List<Photo> getSelectedPhotos() {
+  @Override public List<Photo> getSelectedPhotos() {
     return selectedPhotos;
   }
 

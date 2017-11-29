@@ -17,8 +17,10 @@ import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.PreferenceUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
-import com.hyphenate.kefusdk.bean.HDCategorySummary;
-import com.hyphenate.kefusdk.bean.TechChannel;
+import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.HDCategorySummary;
+import com.hyphenate.kefusdk.entity.TechChannel;
+import com.hyphenate.kefusdk.manager.main.UserCustomInfoManager;
 import com.hyphenate.kefusdk.utils.CategoryTreeUtils;
 import com.hyphenate.kefusdk.utils.JsonUtils;
 import com.zdxd.tagview.OnTagDeleteListener;
@@ -95,6 +97,9 @@ public class ScreeningActivity extends BaseActivity implements View.OnClickListe
         mContext = this;
         String techValue = PreferenceUtils.getInstance().getTechChannel();
         techChannels = JsonUtils.getTechChannels(techValue);
+        if (!UserCustomInfoManager.getInstance().getCategoryIsUpdated()) {
+            HDClient.getInstance().chatManager().asyncGetCategoryTree();
+        }
         initView();
         initListener();
         initData();
@@ -198,6 +203,10 @@ public class ScreeningActivity extends BaseActivity implements View.OnClickListe
     }
 
     private void timeMatch(TimeInfo info1) {
+        if (info1 == null){
+            tvTimeText.setText("指定时间");
+            return;
+        }
         if (timeEqual(info1, DateUtils.getTodayStartAndEndTime())) {
             tvTimeText.setText("今天");
         } else if (timeEqual(info1, DateUtils.getYesterdayStartAndEndTime())) {
@@ -336,7 +345,11 @@ public class ScreeningActivity extends BaseActivity implements View.OnClickListe
                     sIntent.putExtra("visitorName", currentVisitorName);
                 }
                 if(enttyIds.size() > 0){
-                    sIntent.putExtra("ids", enttyIds.toString());
+                    String ids = enttyIds.get(0).toString();
+                    for (int i = 1; i < enttyIds.size(); i++) {
+                        ids += "," + enttyIds.get(i);
+                    }
+                    sIntent.putExtra("ids", ids);
                 }
                 setResult(RESULT_OK, sIntent);
                 finish();

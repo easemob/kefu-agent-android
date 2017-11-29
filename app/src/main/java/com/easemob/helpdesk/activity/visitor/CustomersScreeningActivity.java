@@ -22,7 +22,7 @@ import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.UsersTagEntity;
+import com.hyphenate.kefusdk.gsonmodel.customer.UsersTagEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
 
 import java.text.SimpleDateFormat;
@@ -170,14 +170,14 @@ public class CustomersScreeningActivity extends BaseActivity implements View.OnC
 	}
 
 	private void initData() {
-		if (currentTimeInfo == null) {
-			currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
-		}
-		timeMatch(currentTimeInfo);
+		Intent intent = getIntent();
+		currentTimeInfo = (TimeInfo) intent.getSerializableExtra("timeinfo");
 		if (currentTimeInfo != null) {
+			timeMatch(currentTimeInfo);
 			tvBeginTime.setText(dateFormat.format(new Date(currentTimeInfo.getStartTime())));
 			tvEndTime.setText(dateFormat.format(new Date(currentTimeInfo.getEndTime())));
 		} else {
+			tvTimeText.setText("指定时间");
 			tvBeginTime.setText("");
 			tvEndTime.setText("");
 		}
@@ -297,11 +297,11 @@ public class CustomersScreeningActivity extends BaseActivity implements View.OnC
 			case R.id.right:
 				Intent intent = new Intent();
 				if (currentTimeInfo != null) {
-					intent.putExtra("beginDate", DateUtils.getStartDateTimeString(currentTimeInfo.getStartTime()));
-					intent.putExtra("endDate", DateUtils.getEndDateTimeString(currentTimeInfo.getEndTime()));
+					intent.putExtra("beginDate", currentTimeInfo.getStartTime());
+					intent.putExtra("endDate", currentTimeInfo.getEndTime());
 				} else {
-					intent.putExtra("beginDate", "");
-					intent.putExtra("endDate", "");
+					intent.putExtra("beginDate", -1);
+					intent.putExtra("endDate", -1);
 				}
 				intent.putExtra("cusName", tvCusName.getText().toString().trim());
 				intent.putExtra("cusId", tvCusId.getText().toString().trim());

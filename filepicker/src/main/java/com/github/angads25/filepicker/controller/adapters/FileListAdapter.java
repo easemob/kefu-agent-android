@@ -50,7 +50,7 @@ import java.util.Locale;
  * Adapter Class that extends {@link BaseAdapter} that is
  * used to populate {@link ListView} with file info.
  */
-public class FileListAdapter extends BaseAdapter {
+public class FileListAdapter extends BaseAdapter{
     private ArrayList<FileListItem> listItem;
     private Context context;
     private DialogProperties properties;
@@ -91,11 +91,11 @@ public class FileListAdapter extends BaseAdapter {
         }
         final FileListItem item = listItem.get(i);
         if (MarkedItemList.hasItem(item.getLocation())) {
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.marked_item_animation);
+            Animation animation = AnimationUtils.loadAnimation(context,R.anim.marked_item_animation);
             view.setAnimation(animation);
         }
         else {
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.unmarked_item_animation);
+            Animation animation = AnimationUtils.loadAnimation(context,R.anim.unmarked_item_animation);
             view.setAnimation(animation);
         }
         if (item.isDirectory()) {
@@ -121,7 +121,7 @@ public class FileListAdapter extends BaseAdapter {
             else
             {   holder.type_icon.setColorFilter(context.getResources().getColor(R.color.colorAccent));
             }
-            if(properties.selection_type== DialogConfigs.DIR_SELECT)
+            if(properties.selection_type==DialogConfigs.DIR_SELECT)
             {   holder.fmark.setVisibility(View.INVISIBLE);
             }
             else
@@ -139,7 +139,7 @@ public class FileListAdapter extends BaseAdapter {
         else {
             holder.type.setText("Last edited: " + sdate.format(date) + ", " + stime.format(date));
         }
-        if(holder.fmark.getVisibility()== View.VISIBLE) {
+        if(holder.fmark.getVisibility()==View.VISIBLE) {
             if(i==0&&item.getFilename().startsWith("..."))
             {   holder.fmark.setVisibility(View.INVISIBLE);
             }

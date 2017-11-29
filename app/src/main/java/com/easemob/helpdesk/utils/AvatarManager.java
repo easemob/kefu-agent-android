@@ -14,9 +14,8 @@ import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.chat.OkHttpClientManager;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -162,7 +161,7 @@ public class AvatarManager {
 		try {
 			JSONObject weichat = msgExt.getJSONObject("weichat");
 
-			if (weichat == null || !weichat.has("agent")) {
+			if (weichat == null || !weichat.has("agent") || weichat.isNull("agent")) {
 				return false;
 			}
 
@@ -172,29 +171,10 @@ public class AvatarManager {
 				return false;
 			}
 
-			String remoteUrl = agent.getString("avatar");
-			if (TextUtils.isEmpty(remoteUrl) || remoteUrl.equals("null")) {
+			String remoteUrl = recombineUrl(agent.getString("avatar"));
+
+			if (TextUtils.isEmpty(remoteUrl)) {
 				return false;
-			}
-
-			if (remoteUrl.contains("/ossimages/null")){
-				return false;
-			}
-
-			if (remoteUrl.startsWith("//")) {
-				remoteUrl = "http:" + remoteUrl;
-			}
-
-			if(remoteUrl.contains("/images/uikit/")){
-				return false;
-			}
-
-			if(remoteUrl.startsWith("\\/\\/")) {
-				remoteUrl.replace("\\/\\/", "https://kefu.easemob.com/ossimages/");
-			}
-
-			if(remoteUrl.contains("\\/")) {
-				remoteUrl.replace("\\/", "\\");
 			}
 
 			asyncGetAvatar(imageView, remoteUrl, activity);
@@ -203,6 +183,39 @@ public class AvatarManager {
 			return false;
 		}
 		return true;
+	}
+
+	public String recombineUrl(String oriUrl) {
+		String remoteUrl = oriUrl;
+		if (TextUtils.isEmpty(remoteUrl) || remoteUrl.equals("null")) {
+			return "";
+		}
+
+		if (remoteUrl.contains("/ossimages/null")){
+			return "";
+		}
+
+		if (remoteUrl.startsWith("//")) {
+			remoteUrl = "http:" + remoteUrl;
+		}
+
+		if(remoteUrl.contains("/images/uikit/")){
+			return "";
+		}
+
+		if(remoteUrl.startsWith("\\/\\/")) {
+			remoteUrl.replace("\\/\\/", "https://kefu.easemob.com/ossimages/");
+		}
+
+		if(remoteUrl.contains("\\/")) {
+			remoteUrl.replace("\\/", "\\");
+		}
+
+		if (remoteUrl.startsWith("/v1/Tenant/")) {
+			remoteUrl = HDClient.getInstance().getKefuServerAddress() + remoteUrl;
+		}
+
+		return remoteUrl;
 	}
 
 	/**
@@ -216,36 +229,19 @@ public class AvatarManager {
 		}
 
 		if (HDApplication.getInstance().avatarBitmap != null && !HDApplication.getInstance().avatarBitmap.isRecycled()) {
-			if(imageView != null){
-				imageView.setImageBitmap(HDApplication.getInstance().avatarBitmap);
-			}
+			imageView.setImageBitmap(HDApplication.getInstance().avatarBitmap);
 			return;
 		}
 
 		HDUser loginUser = HDClient.getInstance().getCurrentUser();
 		if (loginUser == null) {
-			return;
-		}
-
-		String remoteUrl = loginUser.getAvatar();
-		if (TextUtils.isEmpty(remoteUrl)) {
-			imageView.setImageResource(R.drawable.default_agent_avatar);
-			return;
-		}
-		if (remoteUrl.contains("/ossimages/null")){
 			imageView.setImageResource(R.drawable.default_agent_avatar);
 			return;
 		}
 
-		if (remoteUrl.startsWith("//")) {
-			remoteUrl = "http:" + remoteUrl;
-		}
+		String remoteUrl = recombineUrl(loginUser.getAvatar());
 
-		if (remoteUrl.startsWith("/v1/Tenant/")) {
-			remoteUrl = HDClient.getInstance().getKefuServerAddress() + remoteUrl;
-		}
-
-		if(remoteUrl.contains("/images/uikit/")){
+		if(TextUtils.isEmpty(remoteUrl) || remoteUrl.contains("/images/uikit/")){
 			imageView.setImageResource(R.drawable.default_agent_avatar);
 			return;
 		}
@@ -338,7 +334,7 @@ public class AvatarManager {
 
 		final File localFile = new File(imageRef.filePath);
 
-		OkHttpClientManager.getInstance().downloadAsync(imageRef.url, imageRef.filePath, new HDDataCallBack<String>() {
+		HDClient.getInstance().visitorManager().downloadFile(imageRef.filePath, imageRef.url, new HDDataCallBack<String>() {
 			@Override
 			public void onSuccess(String value) {
 				mRequestQueue.remove(imageRef.url);

@@ -18,10 +18,10 @@ import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.CustomerEntity;
+import com.hyphenate.kefusdk.gsonmodel.customer.CustomerEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.CustomersCenterScreenEntity;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.option.CustomersCenterScreenEntity;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -62,6 +62,8 @@ public class CustomersCenterActivity extends BaseActivity{
 
 	private CustomersCenterScreenEntity customersCenterScreenEntity = new CustomersCenterScreenEntity();
 
+	private TimeInfo currentTimeInfo;
+
 	private static class WeakHandler extends Handler {
 		WeakReference<CustomersCenterActivity> weakReference;
 		public WeakHandler(CustomersCenterActivity activity){
@@ -95,6 +97,9 @@ public class CustomersCenterActivity extends BaseActivity{
 		AppConfig.setFitWindowMode(this);
 		setContentView(R.layout.activity_customers_center);
 		ButterKnife.bind(this);
+
+		currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
+
 		mWeakHandler = new WeakHandler(this);
 
 		final LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -128,9 +133,13 @@ public class CustomersCenterActivity extends BaseActivity{
 				if(currentUser == null) {
 					return;
 				}
+
+				if (bean.getBind_visitors() == null || bean.getBind_visitors().size() <= 0) {
+					return;
+				}
+
 				Intent intent = new Intent();
-				intent.putExtra("visitorId", bean.getUserId());
-				intent.putExtra("userId", bean.getUserId());
+				intent.putExtra("userId", bean.getBind_visitors().get(0));
 				intent.putExtra("tenantId", currentUser.getTenantId());
 				intent.putExtra("showContact", true);
 				intent.setClass(CustomersCenterActivity.this, CustomerDetailActivity.class);
@@ -146,8 +155,8 @@ public class CustomersCenterActivity extends BaseActivity{
 		});
 
 		TimeInfo defaultTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
-		customersCenterScreenEntity.beginDate = DateUtils.getStartDateTimeString(defaultTimeInfo.getStartTime());
-		customersCenterScreenEntity.endDate = DateUtils.getEndDateTimeString(defaultTimeInfo.getEndTime());
+		customersCenterScreenEntity.timeRange.setStartTime(defaultTimeInfo.getStartTime());
+		customersCenterScreenEntity.timeRange.setEndTime(defaultTimeInfo.getEndTime());
 
 		loadTheFirstPageData();
 	}
@@ -161,6 +170,7 @@ public class CustomersCenterActivity extends BaseActivity{
 	protected void onFilterClick(View view) {
 		Intent intent = new Intent();
 		intent.setClass(CustomersCenterActivity.this, CustomersScreeningActivity.class);
+		intent.putExtra("timeinfo", currentTimeInfo);
 		startActivityForResult(intent, REQUEST_CODE_SCREENING);
 	}
 
@@ -172,8 +182,12 @@ public class CustomersCenterActivity extends BaseActivity{
 				customersCenterScreenEntity.visitorName = data.getStringExtra("cusName");
 				customersCenterScreenEntity.userTagIds = data.getStringExtra("tagsId");
 				customersCenterScreenEntity.userName = data.getStringExtra("cusId");
-				customersCenterScreenEntity.beginDate = data.getStringExtra("beginDate");
-				customersCenterScreenEntity.endDate = data.getStringExtra("endDate");
+				currentTimeInfo.setStartTime(data.getLongExtra("beginDate", -1));
+				currentTimeInfo.setEndTime(data.getLongExtra("endDate", -1));
+				if (!(currentTimeInfo.getStartTime() == -1 || currentTimeInfo.getEndTime() == -1)) {
+					customersCenterScreenEntity.timeRange.setStartTime(currentTimeInfo.getStartTime());
+					customersCenterScreenEntity.timeRange.setEndTime(currentTimeInfo.getEndTime());
+				}
 				loadTheFirstPageData();
 			}
 		}
@@ -300,7 +314,9 @@ public class CustomersCenterActivity extends BaseActivity{
 
 	@Override
 	public void onDestroy() {
-		mWeakHandler.removeCallbacksAndMessages(null);
+		if (mWeakHandler != null) {
+			mWeakHandler.removeCallbacksAndMessages(null);
+		}
 		super.onDestroy();
 		closeDialog();
 	}

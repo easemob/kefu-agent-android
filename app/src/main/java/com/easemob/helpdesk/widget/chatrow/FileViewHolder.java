@@ -15,7 +15,7 @@ import com.easemob.helpdesk.adapter.ChatAdapter;
 import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.utils.FileUtils;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDNormalFileMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDNormalFileMessageBody;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.util.TextFormater;
 

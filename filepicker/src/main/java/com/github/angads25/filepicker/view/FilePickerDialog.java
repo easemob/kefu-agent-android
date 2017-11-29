@@ -146,19 +146,19 @@ public class FilePickerDialog extends Dialog implements AdapterView.OnItemClickL
         if(title==null||dname==null)
             return;
         if(titleStr!=null)
-        {   if(title.getVisibility()== View.INVISIBLE)
+        {   if(title.getVisibility()==View.INVISIBLE)
             {   title.setVisibility(View.VISIBLE);
             }
             title.setText(titleStr);
-            if(dname.getVisibility()== View.VISIBLE)
+            if(dname.getVisibility()==View.VISIBLE)
             {   dname.setVisibility(View.INVISIBLE);
             }
         }
         else
-        {   if(title.getVisibility()== View.VISIBLE)
+        {   if(title.getVisibility()==View.VISIBLE)
             {   title.setVisibility(View.INVISIBLE);
             }
-            if(dname.getVisibility()== View.INVISIBLE)
+            if(dname.getVisibility()==View.INVISIBLE)
             {   dname.setVisibility(View.VISIBLE);
             }
         }
@@ -171,7 +171,7 @@ public class FilePickerDialog extends Dialog implements AdapterView.OnItemClickL
         if(Utility.checkStorageAccessPermissions(context))
         {   File currLoc;
             internalList.clear();
-            if(properties.offset.isDirectory())
+            if(properties.offset != null && properties.offset.isDirectory())
             {   currLoc = new File(properties.offset.getAbsolutePath());
                 FileListItem parent = new FileListItem();
                 parent.setFilename("...");
@@ -188,8 +188,10 @@ public class FilePickerDialog extends Dialog implements AdapterView.OnItemClickL
             else
             {   currLoc = new File(properties.error_dir.getAbsolutePath());
             }
-            dname.setText(currLoc.getName());
-            dir_path.setText(currLoc.getAbsolutePath());
+            if (currLoc != null){
+                dname.setText(currLoc.getName());
+                dir_path.setText(currLoc.getAbsolutePath());
+            }
             setTitle();
             internalList=Utility.prepareFileListEntries(internalList,currLoc,filter);
             mFileListAdapter.notifyDataSetChanged();
@@ -223,7 +225,7 @@ public class FilePickerDialog extends Dialog implements AdapterView.OnItemClickL
                                 mFileListAdapter.notifyDataSetChanged();
                             }
                             else
-                            {   Toast.makeText(context,"Directory cannot be accessed", Toast.LENGTH_SHORT).show();
+                            {   Toast.makeText(context,"Directory cannot be accessed",Toast.LENGTH_SHORT).show();
                             }
                         }
                         else
@@ -384,7 +386,7 @@ public class FilePickerDialog extends Dialog implements AdapterView.OnItemClickL
             {   dname.setText(currLoc.getName());
                 dir_path.setText(currLoc.getAbsolutePath());
                 internalList.clear();
-                if (!currLoc.getName().equals(properties.root.getName())) {
+                if (currLoc.getParentFile() != null && !currLoc.getName().equals(properties.root.getName())) {
                     FileListItem parent = new FileListItem();
                     parent.setFilename("...");
                     parent.setDirectory(true);

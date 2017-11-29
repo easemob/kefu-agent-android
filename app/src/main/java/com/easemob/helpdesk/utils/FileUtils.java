@@ -8,27 +8,15 @@ import android.net.Uri;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
-import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.utils.HDLog;
-
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.FileNameMap;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class FileUtils {
 	private static final String TAG = "FileUtis";
@@ -161,5 +149,6 @@ public class FileUtils {
 		}
 		return true;
 	}
+
 
 }

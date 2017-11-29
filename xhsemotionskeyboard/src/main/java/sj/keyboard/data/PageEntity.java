@@ -8,7 +8,7 @@ import sj.keyboard.interfaces.PageViewInstantiateListener;
 /**
  * Created by liyuzhao on 16/9/23.
  */
-public class PageEntity<T extends PageEntity> implements PageViewInstantiateListener<T> {
+public class PageEntity<T extends  PageEntity> implements PageViewInstantiateListener<T> {
 
     protected View mRootView;
 

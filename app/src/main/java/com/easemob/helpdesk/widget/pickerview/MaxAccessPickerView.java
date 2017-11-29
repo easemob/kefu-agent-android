@@ -16,9 +16,9 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.OptionEntity;
+import com.hyphenate.kefusdk.entity.option.OptionEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 
 import java.util.ArrayList;
 
@@ -63,21 +63,16 @@ public class MaxAccessPickerView extends BasePickerView implements View.OnClickL
     }
 
 
-    private boolean isModifiable(){
+    public static boolean isModifiable(){
         OptionEntity optionEntity = HDClient.getInstance().agentManager().getOptionEntity("allowAgentChangeMaxSessions");
         if (optionEntity != null) {
             String value = optionEntity.getOptionValue();
             if (value != null && value.equalsIgnoreCase("false")) {
                 HDUser loginUser = HDClient.getInstance().getCurrentUser();
-                if (loginUser.getRoles().contains("admin")) {
-                    return true;
-                }
-                return false;
-            } else {
-                return true;
-            }
+                return loginUser != null && loginUser.getRoles() != null && loginUser.getRoles().contains("admin");
+            } else return true;
         }
-        return true;
+        return false;
     }
 
 

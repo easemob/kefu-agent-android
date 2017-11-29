@@ -97,8 +97,7 @@ public class ImagePagerFragment extends Fragment {
 
 
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
+  @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     paths = new ArrayList<>();
@@ -129,9 +128,8 @@ public class ImagePagerFragment extends Fragment {
 
 
   @Nullable
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
 
     View rootView = inflater.inflate(R.layout.fragment_image_pager, container, false);
 
@@ -171,13 +169,11 @@ public class ImagePagerFragment extends Fragment {
 
       }
 
-      @Override
-      public void onPageSelected(int position) {
+      @Override public void onPageSelected(int position) {
         hasAnim = currentItem == position;
       }
 
-      @Override
-      public void onPageScrollStateChanged(int state) {
+      @Override public void onPageScrollStateChanged(int state) {
 
       }
     });
@@ -255,18 +251,14 @@ public class ImagePagerFragment extends Fragment {
         .translationX(thumbnailLeft)
         .translationY(thumbnailTop)
         .setListener(new Animator.AnimatorListener() {
-          @Override
-          public void onAnimationStart(Animator animation) {
+          @Override public void onAnimationStart(Animator animation) {
           }
-          @Override
-          public void onAnimationEnd(Animator animation) {
+          @Override public void onAnimationEnd(Animator animation) {
             endAction.run();
           }
-          @Override
-          public void onAnimationCancel(Animator animation) {
+          @Override public void onAnimationCancel(Animator animation) {
           }
-          @Override
-          public void onAnimationRepeat(Animator animation) {
+          @Override public void onAnimationRepeat(Animator animation) {
           }
         });
 

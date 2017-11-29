@@ -16,8 +16,7 @@ public class Photo {
   public Photo() {
   }
 
-  @Override
-  public boolean equals(Object o) {
+  @Override public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Photo)) return false;
 
@@ -26,8 +25,7 @@ public class Photo {
     return id == photo.id;
   }
 
-  @Override
-  public int hashCode() {
+  @Override public int hashCode() {
     return id;
   }
 

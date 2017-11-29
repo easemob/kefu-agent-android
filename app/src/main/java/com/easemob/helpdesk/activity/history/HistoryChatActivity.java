@@ -27,15 +27,19 @@ import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.recorder.MediaManager;
 import com.easemob.helpdesk.widget.popupwindow.HistorySessionMore;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.HDCategorySummary;
-import com.hyphenate.kefusdk.bean.HDSession;
+import com.hyphenate.kefusdk.entity.HDCategorySummary;
+import com.hyphenate.kefusdk.entity.HDSession;
+import com.hyphenate.kefusdk.entity.option.OptionEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.entity.HDVisitorUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDVisitorUser;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
 import com.zdxd.tagview.Tag;
 import com.zdxd.tagview.TagView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -297,11 +301,11 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 							sessionManager.asyncGetSessionMessages(new HDDataCallBack<List<HDMessage>>() {
 								@Override
 								public void onSuccess(final List<HDMessage> value) {
-									swipeRefreshLayout.setRefreshing(false);
-									isLoadding = false;
 									runOnUiThread(new Runnable() {
 										@Override
 										public void run() {
+											swipeRefreshLayout.setRefreshing(false);
+											isLoadding = false;
 											if (value.isEmpty()){
 												haveMoreData = false;
 												Toast.makeText(mActivity, getString(R.string.txt_no_more_message), Toast.LENGTH_SHORT).show();
@@ -454,6 +458,36 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 							}
 						});
 					}
+
+					@Override
+					public void onError(final int error, String errorMsg, final String valueExt) {
+						if (isFinishing()) {
+							return;
+						}
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								closeDialog();
+								if (error == 400) {
+									try {
+										JSONObject obj = new JSONObject(valueExt);
+										String errorCode = obj.getString("errorCode");
+										if (errorCode.equals("KEFU_025")) {
+											Toast.makeText(getApplicationContext(), "回呼失败，会话的关联不存在!", Toast.LENGTH_SHORT).show();
+										} else {
+											Toast.makeText(getApplicationContext(), "回呼失败，该访客有尚未结束的会话！", Toast.LENGTH_SHORT).show();
+										}
+
+									} catch (JSONException e) {
+										e.printStackTrace();
+										Toast.makeText(getApplicationContext(), "回呼失败，该访客有尚未结束的会话！", Toast.LENGTH_SHORT).show();
+									}
+								} else {
+									Toast.makeText(getApplicationContext(), "回呼失败！", Toast.LENGTH_SHORT).show();
+								}
+							}
+						});
+					}
 				});
 
 				break;
@@ -526,21 +560,29 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 	}
 
 	private void getSessionExtraInfo() {
-		sessionManager.getSessionExtraInfo(new HDDataCallBack<String>() {
-			@Override
-			public void onSuccess(final String value) {
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						sessionExtraInfo.setText(value);
+		OptionEntity optionEntity = HDClient.getInstance().agentManager().getOptionEntity("sessionOpenNoticeEnable");
+
+		if (optionEntity != null && optionEntity.getOptionValue().equals("true")) {
+			sessionManager.getSessionExtraInfo(new HDDataCallBack<String>() {
+				@Override
+				public void onSuccess(final String value) {
+					if (isFinishing()){
+						return;
 					}
-				});
-			}
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if (sessionExtraInfo != null)
+								sessionExtraInfo.setText(value);
+						}
+					});
+				}
 
-			@Override
-			public void onError(int error, String errorMsg) {
+				@Override
+				public void onError(int error, String errorMsg) {
 
-			}
-		});
+				}
+			});
+		}
 	}
 }

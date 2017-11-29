@@ -2,18 +2,25 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical">
-
-    <com.easemob.flowlayout.TagFlowLayout
-        android:id="@+id/id_flowlayout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        app:max_select="-1"
-        />
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+        <com.easemob.flowlayout.TagFlowLayout
+            android:id="@+id/id_flowlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            app:max_select="-1"
+            />
+    </ScrollView>
+
+
 
 </LinearLayout>
 

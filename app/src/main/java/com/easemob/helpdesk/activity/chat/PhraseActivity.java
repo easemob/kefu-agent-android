@@ -16,9 +16,9 @@ import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.adapter.PhraseAdapter;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.HDPhrase;
+import com.hyphenate.kefusdk.entity.HDPhrase;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
@@ -245,7 +245,9 @@ public class PhraseActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        mWeakHandler.removeCallbacksAndMessages(null);
+        if (mWeakHandler != null) {
+            mWeakHandler.removeCallbacksAndMessages(null);
+        }
         super.onDestroy();
         closeDialog();
     }

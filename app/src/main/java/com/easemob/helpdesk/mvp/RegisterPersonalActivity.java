@@ -74,7 +74,6 @@ public class RegisterPersonalActivity extends BaseActivity {
     private void loadVerifyCode(){
         showDialog("验证码获取中...");
         HDClient.getInstance().accountManager().postImgVerifyCode(new HDDataCallBack<Bitmap>() {
-
             @Override
             public void onSuccess(final Bitmap value) {
                 if (isFinishing()) {
@@ -135,7 +134,7 @@ public class RegisterPersonalActivity extends BaseActivity {
             Toast.makeText(this, "密码不能为空!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!strPwd.matches("^[a-zA-Z0-9_,\\.;\\:\"'!*&]{6,22}$")){
+        if (!strPwd.matches("^[\\d\\D]{6,22}$")){
             Toast.makeText(this, "密码有效长度6~22位!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -155,7 +154,7 @@ public class RegisterPersonalActivity extends BaseActivity {
             return;
         }
 
-        final String strPhoneNum = etPhoneNumber.getText().toString().trim();
+        String strPhoneNum = etPhoneNumber.getText().toString().trim();
         if (TextUtils.isEmpty(strPhoneNum)){
             Toast.makeText(this, "手机号不能为空!", Toast.LENGTH_SHORT).show();
             return;
@@ -171,10 +170,15 @@ public class RegisterPersonalActivity extends BaseActivity {
             Toast.makeText(this, "验证码不能为空!", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        StringBuilder sbPhoneNum = new StringBuilder();
+        if(!strPhoneNum.startsWith("+")){
+            sbPhoneNum.append("+86");
+        }
+        sbPhoneNum.append(strPhoneNum);
+        final String strPhoneNumber = sbPhoneNum.toString();
         Map<String, Object> postBody = new HashMap<>();
 //        postBody.put("company", strCompanyName);
-        postBody.put("phone", strPhoneNum);
+        postBody.put("phone", strPhoneNumber);
         postBody.put("username", strEmail);
         postBody.put("password", strPwd);
         postBody.put("confirmPsw", strConPwd);
@@ -207,7 +211,7 @@ public class RegisterPersonalActivity extends BaseActivity {
                                 intent.setClass(RegisterPersonalActivity.this, PhoneVerifyActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("company", "个人");
-                                bundle.putString("phone", strPhoneNum);
+                                bundle.putString("phone", strPhoneNumber);
                                 bundle.putString("username", strEmail);
                                 bundle.putString("password", strPwd);
                                 bundle.putString("confirmPsw", strConPwd);

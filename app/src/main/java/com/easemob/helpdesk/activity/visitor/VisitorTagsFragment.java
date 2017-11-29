@@ -15,7 +15,7 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.ViewFindUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.entity.UserTag;
 
 import java.util.ArrayList;

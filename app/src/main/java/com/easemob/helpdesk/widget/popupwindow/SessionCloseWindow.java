@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.CommonUtils;
@@ -17,6 +18,7 @@ import com.easemob.helpdesk.utils.CommonUtils;
 public class SessionCloseWindow extends BasePopupWindow {
     private Context mContext;
 
+    private ImageView evalIcon;
 
     public SessionCloseWindow(Context context) {
         this.mContext = context;
@@ -29,8 +31,7 @@ public class SessionCloseWindow extends BasePopupWindow {
         this.update();
         ColorDrawable cDraw = new ColorDrawable(Color.argb(POPUPWINDOW_BG_ALPHA_HALF, 0, 0, 0));
         this.setBackgroundDrawable(cDraw);
-
-
+        evalIcon = (ImageView) contentView.findViewById(R.id.iv_eval);
     }
 
     public void showPopupWindow(View parent) {
@@ -45,5 +46,11 @@ public class SessionCloseWindow extends BasePopupWindow {
         }
     }
 
-
+    public void setEvalIcon(boolean isOver) {
+        if (isOver) {
+            evalIcon.setImageResource(R.drawable.expand_icon_vote_over);
+        } else {
+            evalIcon.setImageResource(R.drawable.expand_icon_vote);
+        }
+    }
 }

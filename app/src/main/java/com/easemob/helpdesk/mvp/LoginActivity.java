@@ -16,6 +16,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -40,6 +42,9 @@ import com.easemob.helpdesk.widget.CircleImageView;
 import com.easemob.helpdesk.widget.scrollview.ResizeScrollView;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -149,10 +154,26 @@ public class LoginActivity extends BaseActivity implements IUserLoginView, Compo
         logoImageView.setImageResource(ChannelConfig.getInstance().getLoginlogo());
         cbInputHidden.setOnCheckedChangeListener(this);
         etAccount.addTextChangedListener(new AccountTextWatch());
+        etAccount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    etPwd.requestFocus();
+                }
+                return false;
+            }
+        });
         //默认英文
         etAccount.setInputType(EditorInfo.TYPE_TEXT_VARIATION_URI);
         etPwd.addTextChangedListener(new PwdTextWatch());
-
+        etPwd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND || actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    clickMethod(btnLogin);
+                    return true;
+                }
+                return false;
+            }
+        });
         //设置版本号
         String versionName = CommonUtils.getAppVersionNameFromApp(this);
         if (!TextUtils.isEmpty(versionName)) {
@@ -247,13 +268,6 @@ public class LoginActivity extends BaseActivity implements IUserLoginView, Compo
         startActivity(intent);
     }
 
-
-    @Override
-    public int[] hideSoftByEditViewIds() {
-        int ids[] = {R.id.etAccount, R.id.etPwd};
-        return ids;
-    }
-
     @OnClick({R.id.btnLogin, R.id.ivAccountClear, R.id.ivPwdClear})
     public void clickMethod(View v){
         switch (v.getId()) {
@@ -308,6 +322,27 @@ public class LoginActivity extends BaseActivity implements IUserLoginView, Compo
                 });
             }
 
+            @Override
+            public void onError(int error, final String errorMsg, final String valueExt) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideLoading();
+                        try {
+                            JSONObject object = new JSONObject(valueExt);
+                            String errorDescription = object.getString("errorDescription");
+                            if (!TextUtils.isEmpty(errorDescription)) {
+                                showFailedError(errorDescription);
+                            } else {
+                                showFailedError("登录失败:" + errorMsg);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            showFailedError("登录失败:" + errorMsg);
+                        }
+                    }
+                });
+            }
         });
 
 
@@ -347,7 +382,11 @@ public class LoginActivity extends BaseActivity implements IUserLoginView, Compo
     @Override
     public void showLoading() {
         //显示登录提示对话框
-        pd = DialogUtils.getLoadingDialog(LoginActivity.this, R.string.loading_login);
+        if (pd == null) {
+            pd = DialogUtils.getLoadingDialog(LoginActivity.this, R.string.loading_login);
+        } else {
+            hideLoading();
+        }
         pd.show();
     }
 
@@ -425,5 +464,117 @@ public class LoginActivity extends BaseActivity implements IUserLoginView, Compo
         }).create().show();
 
     }
+
+
+    /**
+     * 传入EditText的id
+     * 没有传入的EditText不做处理
+     * @return id 数组
+     */
+    public int[] hideSoftByEditViewIds() {
+        int ids[] = {R.id.etAccount, R.id.etPwd};
+        return ids;
+    }
+
+    /**
+     * 传入要过滤的View
+     * 过滤之后点击将不会有隐藏软键盘的操作
+     *
+     * @return id 数组
+     */
+    public View[] filterViewByIds(){
+        return null;
+    }
+
+    // 是否触摸在指定view上面，对某个控件过滤
+    public boolean isTouchView(View[] views, MotionEvent ev){
+        if (views == null || views.length == 0) return false;
+        int[] location = new int[2];
+        for(View view : views){
+            view.getLocationOnScreen(location);
+            int x = location[0];
+            int y = location[1];
+            if (ev.getX() > x && ev.getX() < (x + view.getWidth())
+                    && ev.getY() > y && ev.getY() < (y + view.getHeight())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 是否触摸在指定view上面，对某个控件过滤
+    public boolean isTouchView(int[] ids, MotionEvent ev){
+        int[] location = new int[2];
+        for (int id : ids){
+            View view = findViewById(id);
+            if (view == null) continue;
+            view.getLocationOnScreen(location);
+            int x = location[0];
+            int y = location[1];
+            if (ev.getX() > x && ev.getX() < (x + view.getWidth())
+                    && ev.getY() > y && ev.getY() < (y + view.getHeight())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 隐藏键盘
+     * @param v 焦点所在View
+     * @param ids 输入框
+     *
+     * @return true 代表焦点在edit上
+     */
+    public boolean isFousEditText(View v, int... ids){
+        if (v instanceof EditText){
+            EditText tmp_et = (EditText) v;
+            for (int id : ids){
+                if (tmp_et.getId() == id){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 清除editText的焦点
+     * @param v 焦点所在View
+     * @param ids 输入框
+     */
+    public void clearViewFocus(View v, int... ids){
+        if (null != v && null != ids && ids.length > 0){
+            for (int id : ids){
+                if (v.getId() == id){
+                    v.clearFocus();
+                    break;
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN){
+            if (isTouchView(filterViewByIds(), ev)) return super.dispatchTouchEvent(ev);
+            if (hideSoftByEditViewIds() == null || hideSoftByEditViewIds().length == 0)
+                return super.dispatchTouchEvent(ev);
+            View v = getCurrentFocus();
+            if (isFousEditText(v, hideSoftByEditViewIds())){
+                if (isTouchView(hideSoftByEditViewIds(), ev))
+                    return super.dispatchTouchEvent(ev);
+                //隐藏键盘
+                hideKeyboard();
+                clearViewFocus(v, hideSoftByEditViewIds());
+            }
+
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+
 
 }

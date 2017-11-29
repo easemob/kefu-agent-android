@@ -33,7 +33,7 @@ import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.OnFreshCallbackListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.AgentUser;
+import com.hyphenate.kefusdk.entity.agent.AgentUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.util.ArrayList;
@@ -218,7 +218,9 @@ public class AgentsFragment extends Fragment implements OnFreshCallbackListener,
 					@Override
 					public void run() {
 						sortUserByLastChatTime(agentList);
-						agentsAdapter.refresh();
+						if (agentsAdapter != null) {
+							agentsAdapter.refresh();
+						}
 						if(mSwipeLayout != null){
 							mSwipeLayout.setRefreshing(false);
 						}

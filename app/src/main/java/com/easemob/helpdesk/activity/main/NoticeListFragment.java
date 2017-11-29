@@ -256,7 +256,7 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
     }
 
 
-    void loadTheFirstPageData() {
+     void loadTheFirstPageData() {
         noticeManager.loadTheFirstPageData(typeSettings, isUnreadSettings, new HDDataCallBack<List<NoticesResponse.EntitiesBean>>() {
             @Override
             public void onSuccess(List<NoticesResponse.EntitiesBean> value) {
@@ -293,7 +293,9 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
 
     @Override
     public void onDestroy() {
-        mWeakHandler.removeCallbacksAndMessages(null);
+        if (mWeakHandler != null) {
+            mWeakHandler.removeCallbacksAndMessages(null);
+        }
         super.onDestroy();
         closeDialog();
         if (recyclerView != null){
@@ -336,8 +338,12 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.remove(noticeEntity);
-                        noticeEntities.remove(noticeEntity);
+                        if (adapter != null) {
+                            adapter.remove(noticeEntity);
+                        }
+                        if (noticeEntities != null) {
+                            noticeEntities.remove(noticeEntity);
+                        }
                         refreshShowLabel();
                         ((NoticeFragment)getParentFragment()).diminishingUnreadCount();
                         ((NoticeFragment)getParentFragment()).refreshTabUnreadCount();
@@ -383,9 +389,13 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                         closeDialog();
                         synchronized (noticeEntities){
                             noticeEntities.clear();
-                            adapter.clear();
+                            if (adapter != null) {
+                                adapter.clear();
+                            }
                         }
-                        adapter.notifyDataSetChanged();
+                        if (adapter != null) {
+                            adapter.notifyDataSetChanged();
+                        }
                         refreshShowLabel();
                         if (getActivity() instanceof MainActivity) {
                             if (isUnreadSettings) {

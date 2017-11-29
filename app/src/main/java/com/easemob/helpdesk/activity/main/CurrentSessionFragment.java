@@ -30,12 +30,13 @@ import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.mvp.LoginActivity;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.EMToast;
+import com.easemob.helpdesk.utils.HDNotifier;
 import com.easemob.helpdesk.utils.OnFreshCallbackListener;
 import com.easemob.helpdesk.utils.OnRefreshViewListener;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
 import com.hyphenate.kefusdk.HDConnectionListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.HDSession;
+import com.hyphenate.kefusdk.entity.HDSession;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.manager.session.CloseSessionManager;
 import com.hyphenate.kefusdk.manager.session.CurrentSessionManager;
@@ -191,12 +192,13 @@ public class CurrentSessionFragment extends Fragment implements OnFreshCallbackL
 				getActivity().runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						HDLog.e(TAG, "onAuthenticationFailed");
+						HDLog.d(TAG, "onAuthenticationFailed");
+						HDNotifier.getInstance().cancelNotification();
 						// Jump to the login UI
 						Intent intent = new Intent();
 						intent.setClass(HDApplication.getInstance(), LoginActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(intent);
+						HDApplication.getInstance().startActivity(intent);
 						HDApplication.getInstance().finishAllActivity();
 					}
 				});
@@ -239,7 +241,9 @@ public class CurrentSessionFragment extends Fragment implements OnFreshCallbackL
 
 					@Override
 					public void run() {
-						adapter.refresh();
+						if (adapter != null) {
+							adapter.refresh();
+						}
 						refreshSessionLabel();
 					}
 				});
@@ -274,7 +278,9 @@ public class CurrentSessionFragment extends Fragment implements OnFreshCallbackL
 
 					@Override
 					public void run() {
-						adapter.refresh();
+						if (adapter != null) {
+							adapter.refresh();
+						}
 						refreshSessionLabel();
 						if (mSwipeLayout != null)
 							mSwipeLayout.setRefreshing(false);
@@ -307,6 +313,9 @@ public class CurrentSessionFragment extends Fragment implements OnFreshCallbackL
 	}
 
 	private void updateEmptyStatus(boolean empty) {
+		if (mRecyclerView == null) {
+			return;
+		}
 		if (empty) {
 			mRecyclerView.setVisibility(View.GONE);
 			if (emptyView != null) {
@@ -349,7 +358,7 @@ public class CurrentSessionFragment extends Fragment implements OnFreshCallbackL
 	}
 
 	private boolean isEmpty() {
-		return adapter == null ? true : adapter.getItemCount() == 0;
+		return adapter == null || adapter.getItemCount() == 0;
 	}
 
 	private RecyclerView.AdapterDataObserver mObserver = new RecyclerView.AdapterDataObserver() {

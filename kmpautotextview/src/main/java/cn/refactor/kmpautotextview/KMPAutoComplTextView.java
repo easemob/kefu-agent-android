@@ -145,6 +145,9 @@ public class KMPAutoComplTextView extends AutoCompleteTextView {
         List<PopupTextBean> newDatas = new ArrayList<PopupTextBean>();
         List<String> newDataStrings = new ArrayList<String>();
         for (PopupTextBean resultBean : datas) {
+            if (input.trim().equals(resultBean.mTarget.trim())) {
+                continue;
+            }
             int matchIndex = matchString(resultBean.mTarget, input, mIsIgnoreCase);
             if (-1 != matchIndex) {
                 PopupTextBean bean = new PopupTextBean(resultBean.mTarget, matchIndex, matchIndex + input.length());
@@ -164,7 +167,7 @@ public class KMPAutoComplTextView extends AutoCompleteTextView {
 
     private List<String> getResultDatas(List<String> strings) {
         if (strings == null || strings.size() == 0) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<PopupTextBean> list = new ArrayList<PopupTextBean>();

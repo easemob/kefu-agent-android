@@ -44,6 +44,7 @@ public class HDApplication extends Application {
 	    instance = this;
         HDClient.getInstance().init(this);
         PreferenceUtils.getInstance().init(this);
+        HDClient.getInstance().setDebugMode(true);
         registerActivityListener();
         IMHelper.getInstance().setGlobalListener();
         HDClient.getInstance().setDebugMode(true);
@@ -225,7 +226,7 @@ public class HDApplication extends Application {
                 }
                 try{
                     BadgeUtil.resetBadgeCount(getApplicationContext());
-                }catch (Exception e){
+                }catch (Exception ignored){
                 }
             }
         });

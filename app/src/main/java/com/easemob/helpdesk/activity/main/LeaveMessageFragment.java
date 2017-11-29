@@ -22,7 +22,7 @@ import com.easemob.helpdesk.EMValueCallBack;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.adapter.TicketAdapter;
-import com.hyphenate.kefusdk.entity.LeaveMessageConfigEntity;
+import com.hyphenate.kefusdk.entity.option.LeaveMessageConfigEntity;
 import com.hyphenate.kefusdk.gsonmodel.ticket.LeaveMessageResponse;
 import com.easemob.helpdesk.utils.OnFreshCallbackListener;
 import com.easemob.helpdesk.utils.TimeInfo;
@@ -30,8 +30,8 @@ import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.entity.HDBaseUser;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDBaseUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 
@@ -122,7 +122,6 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
 
         assigneeList.add("未分配");
 
-        getOtherAgents();
         if (configEntity.customMode) {
             itvRight.setVisibility(View.VISIBLE);
             getTicketsScreeningResult();
@@ -140,6 +139,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
         configEntity.visitorName = sharedPreferences.getString("CreateBy", "");
         configEntity.selectedStatusIndex = sharedPreferences.getInt("Status", -1);
         configEntity.originTypeIndex = sharedPreferences.getInt("Channel", -1);
+        configEntity.createSourceId = sharedPreferences.getInt("CreateSourceId", -1);
     }
 
     private void getOtherAgents(){
@@ -150,16 +150,16 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                     assigneeList.add(bUser.getNicename());
                     agentUsers.add(bUser);
                 }
+                loadTheFirstPageData();
             }
 
             @Override
             public void onError(int error, String errorMsg) {
-
+                loadTheFirstPageData();
             }
 
             @Override
             public void onAuthenticationException() {
-
             }
         });
 
@@ -203,11 +203,22 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     @Override
     public void onResume() {
         super.onResume();
+        if (pd == null){
+            pd = new ProgressDialog(getContext());
+            pd.setCanceledOnTouchOutside(false);
+        }
+
+        pd.setMessage("请求中...");
+        pd.show();
+        if (agentUsers.size() == 0) {
+            getOtherAgents();
+        } else {
+            loadTheFirstPageData();
+        }
         adapter.clear();
         ticketList.clear();
         updateSelectionMode();
         refreshLabelTotalCount();
-        loadTheFirstPageData();
     }
 
     public void closePickerView(){
@@ -242,7 +253,18 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
 
     @Override
     public void onRefresh() {
-        loadTheFirstPageData();
+        if (pd == null){
+            pd = new ProgressDialog(getContext());
+            pd.setCanceledOnTouchOutside(false);
+        }
+
+        pd.setMessage("请求中...");
+        pd.show();
+        if (agentUsers.size() == 0) {
+            getOtherAgents();
+        } else {
+            loadTheFirstPageData();
+        }
     }
 
     @Override
@@ -296,13 +318,16 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
 
     @Override
     public void onDestroy() {
-        mWeakHandler.removeCallbacksAndMessages(null);
+        if (mWeakHandler != null) {
+            mWeakHandler.removeCallbacksAndMessages(null);
+        }
         super.onDestroy();
         callback = null;
         adapter = null;
     }
 
     private void updateView(List<LeaveMessageResponse.EntitiesBean> data) {
+        closeDialog();
         if (data != null) {
             if (data.size() == 0) {
                 adapter.stopMore();
@@ -322,6 +347,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
 
 
     private void refreshView(List<LeaveMessageResponse.EntitiesBean> data) {
+        closeDialog();
         if (data != null) {
             adapter.clear();
             ticketList.clear();
@@ -349,8 +375,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     }
 
     private synchronized void loadTheFirstPageData() {
-
-        HDClient.getInstance().leaveMessageManager().getTicketsList(0, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
+        HDClient.getInstance().leaveMessageManager().getTicketsList(0, configEntity, new HDDataCallBack<LeaveMessageResponse>() {
             @Override
             public void onSuccess(LeaveMessageResponse value) {
                 if (getActivity() == null) {
@@ -390,7 +415,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     private void loadMoreData() {
         final int nextPage = mCurPageNo + 1;
 
-        HDClient.getInstance().leaveMessageManager().getTicketsList(nextPage, configEntity, agentUsers, new HDDataCallBack<LeaveMessageResponse>() {
+        HDClient.getInstance().leaveMessageManager().getTicketsList(nextPage, configEntity, new HDDataCallBack<LeaveMessageResponse>() {
             @Override
             public void onSuccess(LeaveMessageResponse value) {
                 if (getActivity() == null) {
@@ -470,6 +495,7 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
             configEntity.originTypeIndex = data.getIntExtra("Channel", -1);
             configEntity.selectedStatusIndex = data.getIntExtra("Status", -1);
             configEntity.selectedAgentIndex = data.getIntExtra("AgentIndex", -1);
+            configEntity.createSourceId = data.getIntExtra("CreateSourceId", -1);
 
             adapter.clear();
             ticketList.clear();
@@ -478,28 +504,44 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
             refreshLabelTotalCount();
             mCurPageNo = 0;
             handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadTheFirstPageData();
-                }
-            }, 100);
+                    @Override
+                    public void run() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (pd == null){
+                                    pd = new ProgressDialog(getContext());
+                                    pd.setCanceledOnTouchOutside(false);
+                                }
+
+                                pd.setMessage("请求中...");
+                                pd.show();
+                                if (agentUsers.size() == 0) {
+                                    getOtherAgents();
+                                } else {
+                                    loadTheFirstPageData();
+                                }
+                            }
+                        });
+                    }
+                }, 100);
         }
     }
 
     public void simplePickerSelect(int position){
-        if(position >=0 && position < assigneeList.size()){
-            if (position == 0){
-                deleteTicketAssignee();
-            }else if (position > 0){
-                if (position > agentUsers.size()){
-                    return;
+            if(position >=0 && position < assigneeList.size()){
+                if (position == 0){
+                    deleteTicketAssignee();
+                }else if (position > 0){
+                    if (position > agentUsers.size()){
+                        return;
+                    }
+                    HDBaseUser bUser = agentUsers.get(position - 1);
+
+
+                    putTicketTask(bUser);
                 }
-                HDBaseUser bUser = agentUsers.get(position - 1);
-
-
-                putTicketTask(bUser);
             }
-        }
     }
 
     private void updateSelectionMode(){
@@ -529,9 +571,14 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
     }
 
     private void closeDialog(){
-        if (pd != null && pd.isShowing()){
-            pd.dismiss();
-        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (pd != null && pd.isShowing()){
+                    pd.dismiss();
+                }
+            }
+        });
     }
 
     private void putTicketTask(HDBaseUser baseUser){
@@ -562,8 +609,11 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                closeDialog();
-                                loadTheFirstPageData();
+                                if (agentUsers.size() == 0) {
+                                    getOtherAgents();
+                                } else {
+                                    loadTheFirstPageData();
+                                }
                             }
                         }, 100);
                     }
@@ -575,10 +625,10 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                 if (getActivity() == null || getActivity().isFinishing()) {
                     return;
                 }
+                closeDialog();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeDialog();
                         Toast.makeText(getContext(), "请求失败!", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -590,10 +640,10 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                 if (getActivity() == null || getActivity().isFinishing()) {
                     return;
                 }
+                closeDialog();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeDialog();
                         Toast.makeText(getContext(), "请求失败!", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -637,8 +687,11 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                closeDialog();
-                                loadTheFirstPageData();
+                                if (agentUsers.size() == 0) {
+                                    getOtherAgents();
+                                } else {
+                                    loadTheFirstPageData();
+                                }
                             }
                         }, 100);
                     }
@@ -650,10 +703,10 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                 if (getActivity() == null || getActivity().isFinishing()) {
                     return;
                 }
+                closeDialog();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeDialog();
                         Toast.makeText(getContext(), "请求失败!", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -665,10 +718,10 @@ public class LeaveMessageFragment extends Fragment implements OnFreshCallbackLis
                 if (getActivity() == null || getActivity().isFinishing()) {
                     return;
                 }
+                closeDialog();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeDialog();
                         Toast.makeText(getContext(), "请求失败!", Toast.LENGTH_SHORT).show();
                     }
                 });

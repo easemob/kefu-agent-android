@@ -34,8 +34,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
     mLayoutInflater = LayoutInflater.from(mContext);
   }
 
-  @Override
-  public Object instantiateItem(ViewGroup container, int position) {
+  @Override public Object instantiateItem(ViewGroup container, int position) {
 
     View itemView = mLayoutInflater.inflate(R.layout.item_pager, container, false);
 
@@ -56,8 +55,7 @@ public class PhotoPagerAdapter extends PagerAdapter {
         .into(imageView);
 
     imageView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
+      @Override public void onClick(View view) {
         if (mContext instanceof PhotoPickerActivity) {
           if (!((Activity) mContext).isFinishing()) {
             ((Activity) mContext).onBackPressed();
@@ -72,14 +70,12 @@ public class PhotoPagerAdapter extends PagerAdapter {
   }
 
 
-  @Override
-  public int getCount() {
+  @Override public int getCount() {
     return paths.size();
   }
 
 
-  @Override
-  public boolean isViewFromObject(View view, Object object) {
+  @Override public boolean isViewFromObject(View view, Object object) {
     return view == object;
   }
 

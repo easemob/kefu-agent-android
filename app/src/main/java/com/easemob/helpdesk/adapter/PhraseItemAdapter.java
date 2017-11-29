@@ -22,10 +22,10 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.chat.AddShortCutActivity;
 import com.easemob.helpdesk.activity.chat.PhraseItemActivity;
 import com.easemob.helpdesk.utils.DialogUtils;
-import com.hyphenate.kefusdk.bean.HDPhrase;
+import com.hyphenate.kefusdk.entity.HDPhrase;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.lang.ref.WeakReference;

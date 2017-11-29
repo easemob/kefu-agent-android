@@ -284,7 +284,9 @@ public class TagFlowLayout extends FlowLayout implements TagAdapter.OnDataChange
                     mSelectedView.add(index);
 
                     TagView tagView = (TagView) getChildAt(index);
-                    tagView.setChecked(true);
+                    if (tagView != null) {
+                        tagView.setChecked(true);
+                    }
                 }
 
             }

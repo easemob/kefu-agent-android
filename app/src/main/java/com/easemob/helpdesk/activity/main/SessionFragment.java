@@ -21,7 +21,7 @@ import com.easemob.helpdesk.widget.relative.ViewPagerContainerLayout;
 import com.flyco.tablayout.SegmentTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.util.ArrayList;
@@ -153,6 +153,17 @@ public class SessionFragment extends Fragment {
         });
     }
 
+    public void setSettingButtonVisible(boolean visible) {
+        if (visible) {
+            if (imageButtonSetting != null) {
+                imageButtonSetting.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (imageButtonSetting != null) {
+                imageButtonSetting.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
 
     public void refreshTabBarUnread(boolean isAgent) {
         if(tabLayout == null) {

@@ -1,7 +1,6 @@
 package me.leolin.shortcutbadger.impl;
 
 import android.annotation.TargetApi;
-import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -32,7 +31,7 @@ import me.leolin.shortcutbadger.util.CloseHelper;
  * Version number 6 applies only to chat-type apps
  */
 
-public class OPPOHomeBader extends Badger {
+public class OPPOHomeBader implements Badger {
 
     private static final String PROVIDER_CONTENT_URI = "content://com.android.badge/badge";
     private static final String INTENT_ACTION = "com.oppo.unsettledevent";
@@ -41,33 +40,6 @@ public class OPPOHomeBader extends Badger {
     private static final String INTENT_EXTRA_BADGE_UPGRADENUMBER = "upgradeNumber";
     private static final String INTENT_EXTRA_BADGEUPGRADE_COUNT = "app_badge_count";
     private static int ROMVERSION = -1;
-
-
-    @Override
-    public void executeBadge(Context context, ComponentName componentName, Notification notification, int notificationId, int thisNotificationCount, int badgeCount) throws ShortcutBadgeException {
-        setNotification(notification, notificationId, context);
-        if (badgeCount == 0) {
-            badgeCount = -1;
-        }
-        Intent intent = new Intent(INTENT_ACTION);
-        intent.putExtra(INTENT_EXTRA_PACKAGENAME, componentName.getPackageName());
-        intent.putExtra(INTENT_EXTRA_BADGE_COUNT, badgeCount);
-        intent.putExtra(INTENT_EXTRA_BADGE_UPGRADENUMBER, badgeCount);
-        if (BroadcastHelper.canResolveBroadcast(context, intent)) {
-            context.sendBroadcast(intent);
-        } else {
-            int version = getSupportVersion();
-            if (version == 6) {
-                try {
-                    Bundle extras = new Bundle();
-                    extras.putInt(INTENT_EXTRA_BADGEUPGRADE_COUNT, badgeCount);
-                    context.getContentResolver().call(Uri.parse(PROVIDER_CONTENT_URI), "setAppBadgeCount", null, extras);
-                } catch (Throwable th) {
-                    throw new ShortcutBadgeException("unable to resolve intent: " + intent.toString());
-                }
-            }
-        }
-    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
@@ -197,6 +169,4 @@ public class OPPOHomeBader extends Badger {
         }
         return line;
     }
-
-
 }

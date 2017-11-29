@@ -296,6 +296,10 @@ public class SimpleCommonUtils {
     }
 
     public static void spannableEmoticonFilter(TextView tv_content, String content) {
+        if (tv_content == null) {
+            return;
+        }
+
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(content);
 
         Spannable spannable = EmojiDisplay.spannableFilter(tv_content.getContext(),

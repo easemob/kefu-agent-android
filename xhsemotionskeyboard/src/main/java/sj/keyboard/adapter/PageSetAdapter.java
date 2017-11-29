@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import sj.keyboard.data.PageEntity;
 import sj.keyboard.data.PageSetEntity;
 
-public class PageSetAdapter extends PagerAdapter {
+public class PageSetAdapter extends PagerAdapter{
 
     private final ArrayList<PageSetEntity> mPageSetEntityList = new ArrayList<>();
 

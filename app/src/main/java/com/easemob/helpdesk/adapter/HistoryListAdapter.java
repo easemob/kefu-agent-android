@@ -3,7 +3,7 @@ package com.easemob.helpdesk.adapter;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import com.hyphenate.kefusdk.bean.HistorySessionEntity;
+import com.hyphenate.kefusdk.entity.HistorySessionEntity;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 

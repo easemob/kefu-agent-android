@@ -199,11 +199,16 @@ public class CircleImageView extends ImageView{
             return;
         }
 
-        if (mBitmap == null) {
+        if (mBitmap == null || mBitmap.isRecycled()) {
             return;
         }
 
-        mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        try {
+            mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         mBitmapPaint.setAntiAlias(true);
         mBitmapPaint.setShader(mBitmapShader);

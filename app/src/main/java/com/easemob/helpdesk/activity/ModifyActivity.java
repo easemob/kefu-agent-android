@@ -113,7 +113,7 @@ public class ModifyActivity extends BaseActivity implements OnClickListener {
                 break;
             case PROFILE_MODIFY_PWD:
                 txtTitle.setText("密码");
-                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(18)});
+                etContent.setFilters(new InputFilter[]{new InputFilter.LengthFilter(22)});
                 etContent.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 break;
             case SCREENING_MODIFY_VISITORNAME:
@@ -157,8 +157,13 @@ public class ModifyActivity extends BaseActivity implements OnClickListener {
     private boolean checkInputError(String content) {
         switch (index) {
             case PROFILE_MODIFY_PWD:
-                if (content.length() < 6 || content.length() > 22) {
-                    Toast.makeText(this, " 有效长度6～22位", Toast.LENGTH_SHORT).show();
+                if (!content.matches("^[\\d\\D]{6,22}$")){
+                    Toast.makeText(this, "密码有效长度6~22位!", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+
+                if (!content.matches("^(?![A-Z]+$)(?![a-z]+$)(?!\\d+$)(?![\\W_]+$)\\S+$")){
+                    Toast.makeText(this, "密码至少包含大写字母,小写字母,数字,符号中两种!", Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 break;

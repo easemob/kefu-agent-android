@@ -1,6 +1,5 @@
 package me.leolin.shortcutbadger.impl;
 
-import android.app.Notification;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,7 @@ import me.leolin.shortcutbadger.util.BroadcastHelper;
 /**
  * @author Gernot Pansy
  */
-public class ApexHomeBadger extends Badger {
+public class ApexHomeBadger implements Badger {
 
     private static final String INTENT_UPDATE_COUNTER = "com.anddoes.launcher.COUNTER_CHANGED";
     private static final String PACKAGENAME = "package";
@@ -23,21 +22,8 @@ public class ApexHomeBadger extends Badger {
     private static final String CLASS = "class";
 
     @Override
-    public void executeBadge(Context context, ComponentName componentName, Notification notification, int notificationId, int thisNotificationCount, int badgeCount) throws ShortcutBadgeException {
-        setNotification(notification,notificationId, context);
-        Intent intent = new Intent(INTENT_UPDATE_COUNTER);
-        intent.putExtra(PACKAGENAME, componentName.getPackageName());
-        intent.putExtra(COUNT, badgeCount);
-        intent.putExtra(CLASS, componentName.getClassName());
-        if (BroadcastHelper.canResolveBroadcast(context, intent)) {
-            context.sendBroadcast(intent);
-        } else {
-            throw new ShortcutBadgeException("unable to resolve intent: " + intent.toString());
-        }
-    }
-
-    @Override
     public void executeBadge(Context context, ComponentName componentName, int badgeCount) throws ShortcutBadgeException {
+
         Intent intent = new Intent(INTENT_UPDATE_COUNTER);
         intent.putExtra(PACKAGENAME, componentName.getPackageName());
         intent.putExtra(COUNT, badgeCount);

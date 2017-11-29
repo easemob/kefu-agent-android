@@ -15,7 +15,7 @@ public interface IMainView {
 
     void tipCurrentUserDeleted();
 
-    void tipAgentRoleChange(boolean changeManager);
+    void tipAgentRoleChange();
 
     void tipSessionChangeTimeout();
 
@@ -24,4 +24,6 @@ public interface IMainView {
     void tipSessionTransferSuccess();
 
     void tipNoticeCenterRefresh();
+
+    void tipTransferSchedule();
 }

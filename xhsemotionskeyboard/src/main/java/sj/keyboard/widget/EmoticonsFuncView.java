@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import sj.keyboard.adapter.PageSetAdapter;
 import sj.keyboard.data.PageSetEntity;
 
-public class EmoticonsFuncView extends ViewPager {
+public class EmoticonsFuncView extends ViewPager{
 
     protected PageSetAdapter mPageSetAdapter;
     protected int mCurrentPagePosition;

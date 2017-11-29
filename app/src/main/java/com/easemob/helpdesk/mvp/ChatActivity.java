@@ -45,8 +45,8 @@ import com.github.angads25.filepicker.model.DialogProperties;
 import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.hyphenate.kefusdk.HDChatListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.HDCategorySummary;
-import com.hyphenate.kefusdk.bean.OptionEntity;
+import com.hyphenate.kefusdk.entity.HDCategorySummary;
+import com.hyphenate.kefusdk.entity.option.OptionEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
@@ -81,22 +81,22 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
 
     private final String TAG = this.getClass().getSimpleName();
 
-    public static final int REQUEST_CODE_SHORTCUT = 0x010;
-    public static final int REQUEST_CODE_TRANSFER = 0x011;
-    public static final int REQUEST_CODE_STOP_DIALOG = 0x012;
-    public static final int REQUEST_CODE_SEND_EVAL_INVIT = 0x015;
+    public static final int REQUEST_CODE_SHORTCUT = REQUEST_CODE_BASE_MAX + 0x10;
+    public static final int REQUEST_CODE_TRANSFER = REQUEST_CODE_BASE_MAX + 0x11;
+    public static final int REQUEST_CODE_STOP_DIALOG = REQUEST_CODE_BASE_MAX + 0x12;
+    public static final int REQUEST_CODE_SEND_EVAL_INVIT = REQUEST_CODE_BASE_MAX + 0x15;
 
     //打开相册
     //打开会话小结
-    public static final int REQUEST_CODE_CATEGORY_SHOW = 0x017;
+    public static final int REQUEST_CODE_CATEGORY_SHOW = REQUEST_CODE_BASE_MAX + 0x17;
     //打开用户详情
-    public static final int REQUEST_CODE_USER_DETAIL = 0x018;
+    public static final int REQUEST_CODE_USER_DETAIL = REQUEST_CODE_BASE_MAX +0x18;
 
     /**
      * 发送自定义消息
      * send custom message
      */
-    public static final int REQUEST_CODE_SEND_EXT_MSG = 0x019;
+    public static final int REQUEST_CODE_SEND_EXT_MSG = REQUEST_CODE_BASE_MAX+ 0x19;
 
     /**
      * 渠道显示的图标
@@ -362,10 +362,14 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                     public void run() {
                         if (TextUtils.isEmpty(value)) {
                             commentString = "";
-                            tvNote.setText("");
+                            if (tvNote != null) {
+                                tvNote.setText("");
+                            }
                         } else {
                             commentString = value;
-                            tvNote.setText(String.format(getString(R.string.tv_text_content), commentString));
+                            if (tvNote != null) {
+                                tvNote.setText(String.format(getString(R.string.tv_text_content), commentString));
+                            }
                         }
                     }
                 });
@@ -700,9 +704,13 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     private void notifyChangeUnreadMsgCount() {
         int unreadCount = HDApplication.getInstance().getUnReadMsgCount();
         if (unreadCount > 0) {
-            tvUnReadMsg.setText("(" + unreadCount + ")");
+            if (tvUnReadMsg != null) {
+                tvUnReadMsg.setText("(" + unreadCount + ")");
+            }
         } else {
-            tvUnReadMsg.setText("");
+            if (tvUnReadMsg != null) {
+                tvUnReadMsg.setText("");
+            }
         }
     }
 
@@ -777,7 +785,9 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     private void setTagViews(List<HDCategorySummary> list) {
         Tag tag;
         if (list == null || list.size() == 0) {
-            tagGroup.addTags(new java.util.ArrayList<Tag>());
+            if (tagGroup != null) {
+                tagGroup.addTags(new ArrayList<Tag>());
+            }
             return;
         }
 
@@ -802,11 +812,22 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
             tag.isDeletable = false;
             tags.add(tag);
         }
-        tagGroup.addTags(tags);
+        if (tagGroup != null) {
+            tagGroup.addTags(tags);
+        }
     }
 
     public void updateEvalStatus(String evalState) {
         isSendEvalState = evalState;
+        if (closeWindow == null) {
+            closeWindow = new SessionCloseWindow(this);
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                closeWindow.setEvalIcon(isSendEvalState.equalsIgnoreCase("over"));
+            }
+        });
     }
 
     @Override
@@ -879,8 +900,10 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
             startActivityForResult(evalIntent, REQUEST_CODE_SEND_EVAL_INVIT);
         } else if (isSendEvalState.equalsIgnoreCase("invited")) {
             Toast.makeText(getApplicationContext(), getString(R.string.info_sended_noresend), Toast.LENGTH_SHORT).show();
+            closeWindow.setEvalIcon(false);
         } else if (isSendEvalState.equalsIgnoreCase("over")) {
             Toast.makeText(getApplicationContext(), getString(R.string.has_evaled), Toast.LENGTH_SHORT).show();
+            closeWindow.setEvalIcon(true);
         }
     }
 
@@ -933,6 +956,17 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
             closeWindow = new SessionCloseWindow(this);
         }
         closeWindow.showPopupWindow(ibMenuMore);
+        sessionManager.getEvalStatus(toUser.getTenantId(), new HDDataCallBack<String>() {
+            @Override
+            public void onSuccess(String value) {
+                updateEvalStatus(value);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+
+            }
+        });
     }
 
     @OnClick(R.id.btn_up)
@@ -1138,6 +1172,15 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     public void onEvalEventListener(String sessionServiceId, String visitorUserId, String agentUserId) {
         if (sessionServiceId != null && sessionServiceId.equals(sessionId)) {
             isSendEvalState = "over";
+            if (closeWindow == null) {
+                closeWindow = new SessionCloseWindow(this);
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    closeWindow.setEvalIcon(true);
+                }
+            });
         }
     }
 
@@ -1275,26 +1318,30 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     }
 
     private void getSessionExtraInfo() {
-        sessionManager.getSessionExtraInfo(new HDDataCallBack<String>() {
-            @Override
-            public void onSuccess(final String value) {
-                if (isFinishing()){
-                    return;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (sessionExtraInfo != null)
-                            sessionExtraInfo.setText(value);
+        OptionEntity optionEntity = HDClient.getInstance().agentManager().getOptionEntity("sessionOpenNoticeEnable");
+
+        if (optionEntity != null && optionEntity.getOptionValue().equals("true")) {
+            sessionManager.getSessionExtraInfo(new HDDataCallBack<String>() {
+                @Override
+                public void onSuccess(final String value) {
+                    if (isFinishing()){
+                        return;
                     }
-                });
-            }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (sessionExtraInfo != null)
+                                sessionExtraInfo.setText(value);
+                        }
+                    });
+                }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+                @Override
+                public void onError(int error, String errorMsg) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
 

@@ -34,6 +34,7 @@ import com.easemob.helpdesk.activity.main.LeaveMessageGroupFragment;
 import com.easemob.helpdesk.activity.main.NoticeFragment;
 import com.easemob.helpdesk.activity.main.SessionFragment;
 import com.easemob.helpdesk.activity.main.WaitAccessFragment;
+import com.easemob.helpdesk.activity.manager.ManagerHomeActivity;
 import com.easemob.helpdesk.activity.visitor.CustomersCenterActivity;
 import com.easemob.helpdesk.adapter.FragmentViewPagerAdapter;
 import com.easemob.helpdesk.adapter.SlidingMenuListAdapter;
@@ -55,16 +56,15 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.HDEventListener;
 import com.hyphenate.kefusdk.HDNotifierEvent;
-import com.hyphenate.kefusdk.bean.OptionEntity;
+import com.hyphenate.kefusdk.entity.option.OptionEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.gsonmodel.main.ExpireInfo;
 import com.hyphenate.kefusdk.manager.session.CloseSessionManager;
 import com.hyphenate.kefusdk.manager.session.OverTimeSessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.liyuzhao.badger.BadgeUtil;
-import com.xiaomi.mipush.sdk.MiPushClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,12 +108,18 @@ public class MainActivity extends BaseActivity implements IMainView {
     /**
      * LeaveMessageFragment (MainTab)
      */
+    //private LeaveMessageFragment mLeaveMessageFragment;
     private LeaveMessageGroupFragment mLeaveMessageFragment;
 
     /**
      * alertdialog (info message)
      */
     private Dialog mAlertDialog;
+
+    /**
+     * 转接确认dialog
+     */
+    private Dialog mTransferConfirmDialog;
 
 
     private TextView tvDialogMessage;
@@ -127,7 +133,7 @@ public class MainActivity extends BaseActivity implements IMainView {
      */
     private List<Fragment> mFragments = new ArrayList<>();
 
-    private String[] mTitles = {"会话", "待接入", "通知", "留言"};
+    private String[] mTitles = {"会话", "待接入", "消息中心", "留言"};
 
     private int currentSelectedIndex = 0;
 
@@ -199,7 +205,10 @@ public class MainActivity extends BaseActivity implements IMainView {
 
     private MainPresenter mainPresenter = new MainPresenter(this);
 
+//    private HDMessageListener messageListener;
     private HDEventListener eventListener;
+
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,10 +250,11 @@ public class MainActivity extends BaseActivity implements IMainView {
             getExpireInfo();
         }
 
-        //remove mipush notification
-        try {
-            MiPushClient.clearNotification(this);
-        } catch (Exception ignored) {
+    }
+
+    private void updateMaxAccessButtonVisible () {
+        if (mySessionFragment != null) {
+            mySessionFragment.setSettingButtonVisible(MaxAccessPickerView.isModifiable());
         }
     }
 
@@ -436,10 +446,29 @@ public class MainActivity extends BaseActivity implements IMainView {
                             OverTimeSessionManager.getInstance().notifyListeners((String) data);
                             break;
                         case EventRoleChangeToAdmin:
-                            tipAgentRoleChange(true);
-                            break;
                         case EventRoleChangeToAgent:
-                            tipAgentRoleChange(false);
+                            tipAgentRoleChange();
+                            HDClient.getInstance().chatManager().getTenantOptions(new HDDataCallBack<String>() {
+                                @Override
+                                public void onSuccess(String value) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            updateSlidingMenu();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onError(int error, String errorMsg) {
+
+                                }
+
+                                @Override
+                                public void onAuthenticationException() {
+
+                                }
+                            });
                             break;
                         case EventTransferScheduleTimeout:
                             tipSessionChangeTimeout();
@@ -514,14 +543,39 @@ public class MainActivity extends BaseActivity implements IMainView {
                             if (data instanceof String) {
                                 String changedOption = (String) data;
                                 if (changedOption.equals("agentVisitorCenterVisible")) {
+                                    HDClient.getInstance().chatManager().getTenantOptions(new HDDataCallBack<String>() {
+                                        @Override
+                                        public void onSuccess(String value) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    updateSlidingMenu();
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onError(int error, String errorMsg) {
+
+                                        }
+
+                                        @Override
+                                        public void onAuthenticationException() {
+
+                                        }
+                                    });
+                                } else if (changedOption.equals("allowAgentChangeMaxSessions")) {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            updateSlidingMenu();
+                                            updateMaxAccessButtonVisible();
                                         }
                                     });
                                 }
                             }
+                            break;
+                        case EventTransferSchedule:
+                            tipTransferSchedule();
                             break;
                     }
 
@@ -543,7 +597,9 @@ public class MainActivity extends BaseActivity implements IMainView {
         menu.setMode(SlidingMenu.LEFT);
         //设置触摸屏幕的模式
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+//        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
         menu.setShadowWidthRes(R.dimen.shadow_width);
+//        menu.setShadowDrawable(R.color.colorAccent);
 
         //设置滑动菜单视图的宽度
         menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
@@ -555,6 +611,8 @@ public class MainActivity extends BaseActivity implements IMainView {
          * section of the SlidingMenu, while SLIDING_CONTENT does not.
          */
         menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        //为侧滑菜单设置布局
+//        menu.setMenu(R.layout.layout_left_menu);
 
         @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.layout_left_menu, null);
 
@@ -567,33 +625,42 @@ public class MainActivity extends BaseActivity implements IMainView {
 
         modelChangeLayout = (LinearLayout) view.findViewById(R.id.model_change_layout);
 
+        modelChangeLayout.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, ManagerHomeActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_MANAGE_HOME);
+            }
+        });
 
         OptionEntity centerVisible = HDClient.getInstance().agentManager().getOptionEntity("agentVisitorCenterVisible");
 //        List<SlidingMenuItemEntity> items = new ArrayList<>();
         items.clear();
         SlidingMenuItemEntity homeItem = new SlidingMenuItemEntity();
         homeItem.count = 0;
-        homeItem.icon = getResources().getDrawable(R.drawable.menu_icon_session);
+        homeItem.icon = getResourceDrawable(R.drawable.menu_icon_session);
         homeItem.title = "主界面";
         homeItem.id = R.id.slidingmenu_homeItem;
 
 
         SlidingMenuItemEntity historyItem = new SlidingMenuItemEntity();
         historyItem.count = 0;
-        historyItem.icon = getResources().getDrawable(R.drawable.menu_icon_history);
+        historyItem.icon = getResourceDrawable(R.drawable.menu_icon_history);
         historyItem.title = "历史会话";
         historyItem.id = R.id.slidingmenu_historyItem;
 
         SlidingMenuItemEntity customersCenterItem = new SlidingMenuItemEntity();
         customersCenterItem.count = 0;
-        customersCenterItem.icon = getResources().getDrawable(R.drawable.menu_icon_customers);
+        customersCenterItem.icon = getResourceDrawable(R.drawable.menu_icon_customers);
         customersCenterItem.title = "客户中心";
         customersCenterItem.id = R.id.slidingmenu_customerCenterItem;
 
 
         SlidingMenuItemEntity settingItem = new SlidingMenuItemEntity();
         settingItem.count = 0;
-        settingItem.icon = getResources().getDrawable(R.drawable.menu_icon_setting);
+        settingItem.icon = getResourceDrawable(R.drawable.menu_icon_setting);
         settingItem.title = "设置";
         settingItem.id = R.id.slidingmenu_settingItem;
 
@@ -606,6 +673,7 @@ public class MainActivity extends BaseActivity implements IMainView {
         menuAdapter = new SlidingMenuListAdapter(this, items);
         menuList.setAdapter(menuAdapter);
         menuList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//        menu.toggle();
         menuList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -618,7 +686,7 @@ public class MainActivity extends BaseActivity implements IMainView {
                     case R.id.slidingmenu_customerCenterItem:
                         startActivity(new Intent(MainActivity.this, CustomersCenterActivity.class));
                         break;
-                     case R.id.slidingmenu_settingItem:
+                    case R.id.slidingmenu_settingItem:
                         startActivity(new Intent(MainActivity.this, AgentProfileActivity.class));
                         break;
                 }
@@ -634,19 +702,9 @@ public class MainActivity extends BaseActivity implements IMainView {
                 if (ivAvatar != null) {
                     AvatarManager.getInstance(MainActivity.this).refreshAgentAvatar(MainActivity.this, ivAvatar);
                 }
-
-//                HDUser loginUser = HDClient.getInstance().getCurrentUser();
-//                if (loginUser != null && loginUser.getRoles() != null){
-//                    if (loginUser.getRoles().contains("admin")){
-//                        modelChangeLayout.setVisibility(View.VISIBLE);
-//                    }else{
-//                        modelChangeLayout.setVisibility(View.GONE);
-//                    }
-//                }
-
             }
         });
-
+        updateMaxAccessButtonVisible();
         refreshMenuNickAndStatus();
         refreshAllAvatar();
     }
@@ -658,29 +716,30 @@ public class MainActivity extends BaseActivity implements IMainView {
 
         SlidingMenuItemEntity homeItem = new SlidingMenuItemEntity();
         homeItem.count = 0;
-        homeItem.icon = getResources().getDrawable(R.drawable.menu_icon_session);
+        homeItem.icon = getResourceDrawable(R.drawable.menu_icon_session);
         homeItem.title = "主界面";
         homeItem.id = R.id.slidingmenu_homeItem;
 
 
         SlidingMenuItemEntity historyItem = new SlidingMenuItemEntity();
         historyItem.count = 0;
-        historyItem.icon = getResources().getDrawable(R.drawable.menu_icon_history);
+        historyItem.icon = getResourceDrawable(R.drawable.menu_icon_history);
         historyItem.title = "历史会话";
         historyItem.id = R.id.slidingmenu_historyItem;
 
         SlidingMenuItemEntity customersCenterItem = new SlidingMenuItemEntity();
         customersCenterItem.count = 0;
-        customersCenterItem.icon = getResources().getDrawable(R.drawable.menu_icon_customers);
+        customersCenterItem.icon = getResourceDrawable(R.drawable.menu_icon_customers);
         customersCenterItem.title = "客户中心";
         customersCenterItem.id = R.id.slidingmenu_customerCenterItem;
 
 
         SlidingMenuItemEntity settingItem = new SlidingMenuItemEntity();
         settingItem.count = 0;
-        settingItem.icon = getResources().getDrawable(R.drawable.menu_icon_setting);
+        settingItem.icon = getResourceDrawable(R.drawable.menu_icon_setting);
         settingItem.title = "设置";
         settingItem.id = R.id.slidingmenu_settingItem;
+
 
         items.add(homeItem);
         items.add(historyItem);
@@ -688,7 +747,17 @@ public class MainActivity extends BaseActivity implements IMainView {
             items.add(customersCenterItem);
         }
         items.add(settingItem);
-         menuAdapter.updateListItem(items);
+        menuAdapter.updateListItem(items);
+        updateMaxAccessButtonVisible();
+
+        HDUser loginUser = HDClient.getInstance().getCurrentUser();
+        if (loginUser != null && loginUser.getRoles() != null){
+            if (loginUser.getRoles().contains("admin")){
+                modelChangeLayout.setVisibility(View.VISIBLE);
+            }else{
+                modelChangeLayout.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -720,7 +789,12 @@ public class MainActivity extends BaseActivity implements IMainView {
         if (mySessionFragment != null) {
             totalCount += mySessionFragment.getSessionUnreadCount();
         }
-
+//        if (mWaitAccessFragment != null) {
+//            totalCount += mWaitAccessFragment.getWaitTotalCount();
+//        }
+//        if (mNoticeFragment != null) {
+//            totalCount += mNoticeFragment.getUnreadCount();
+//        }
         items.get(0).count = totalCount;
         menuAdapter.notifyDataSetChanged();
     }
@@ -824,24 +898,33 @@ public class MainActivity extends BaseActivity implements IMainView {
 
     public void refreshSessionUnreadCount() {
         if (mySessionFragment != null) {
+//            mySessionFragment.refreshUnReadMsgCount();
             int count = mySessionFragment.getSessionUnreadCount();
+//            refreshHomeCount(count);
             if (menu.isMenuShowing()) {
                 refreshHomeCount();
             }
             if (count > 0) {
                 //刷新应用角标
+//                ShortcutBadger.applyCount(this, count);
                 try{
                     BadgeUtil.sendBadgeNotification(null, 0, this, count, count);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+//                CommonUtils.handleBadge(this, count);
                 mTabLayout.showMsg(0, count);
                 mTabLayout.setMsgMargin(0, -10, -3);
+                //ff661a  or Color.rgb(255, 106, 0)
                 RoundTextView rtv_session = mTabLayout.getMsgView(0);
                 if (rtv_session != null) {
+//                    rtv_session.getDelegate().setBackgroundColor(Color.parseColor("#ff661a"));
                     rtv_session.getDelegate().setBackgroundColor(Color.rgb(255, 106, 0));
                 }
             } else {
+
+//                ShortcutBadger.removeCount(this);
+//                CommonUtils.handleBadge(this, 0);
                 mTabLayout.hideMsg(0);
                 try{
                     BadgeUtil.resetBadgeCount(getApplicationContext());
@@ -863,6 +946,7 @@ public class MainActivity extends BaseActivity implements IMainView {
                 mTabLayout.setMsgMargin(1, -10, -3);
                 RoundTextView rtv_agent = mTabLayout.getMsgView(1);
                 if (rtv_agent != null) {
+//                    rtv_agent.getDelegate().setBackgroundColor(Color.parseColor("#ff661a"));
                     rtv_agent.getDelegate().setBackgroundColor(Color.rgb(255, 106, 0));
                 }
             } else {
@@ -1019,6 +1103,8 @@ public class MainActivity extends BaseActivity implements IMainView {
     protected void onDestroy() {
         super.onDestroy();
         closeDialog();
+        closeTransferDialog();
+        closeRoleChangedDialog();
         if (maxAccessPickerView != null){
            maxAccessPickerView.dismiss();
         }
@@ -1034,7 +1120,6 @@ public class MainActivity extends BaseActivity implements IMainView {
         mLeaveMessageFragment = null;
         mViewPager.removeAllViews();
         mViewPager = null;
-        hideDialog();
         if (HDApplication.getInstance().avatarBitmap != null) {
             HDApplication.getInstance().avatarBitmap = null;
         }
@@ -1044,9 +1129,21 @@ public class MainActivity extends BaseActivity implements IMainView {
     /**
      * 隐藏dialog
      */
-    private void hideDialog() {
+    private void closeRoleChangedDialog() {
         if (mAlertDialog != null && mAlertDialog.isShowing()) {
             mAlertDialog.dismiss();
+        }
+    }
+
+    private void closeTransferDialog() {
+        if (mTransferConfirmDialog != null && mTransferConfirmDialog.isShowing()) {
+            mTransferConfirmDialog.dismiss();
+        }
+    }
+
+    private void closeDialog(){
+        if (dialog != null && dialog.isShowing()){
+            dialog.dismiss();
         }
     }
 
@@ -1075,143 +1172,67 @@ public class MainActivity extends BaseActivity implements IMainView {
         HDApplication.getInstance().logout();
     }
 
-    private Dialog dialog;
-
-
-    private void closeDialog(){
-        if (dialog != null && dialog.isShowing()){
-            dialog.dismiss();
-        }
-    }
-
     @Override
-    public void tipAgentRoleChange(boolean changeManager) {
-        if (changeManager) {
-            Activity topActivity = HDApplication.getInstance().getTopActivity();
-            if (topActivity == null) {
-                topActivity = MainActivity.this;
-            }
-            if (mAlertDialog == null) {
-                mAlertDialog = new Dialog(topActivity, R.style.MyDialogStyle);
-
-                @SuppressLint("InflateParams")  View view = LayoutInflater.from(topActivity).inflate(R.layout.dialog_alertview, null);
-                tvDialogMessage = (TextView) view.findViewById(R.id.dialog_message);
-                (view.findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mAlertDialog.dismiss();
-                    }
-                });
-                (view.findViewById(R.id.ok)).setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // 退出时必须有网
-                        dialog = DialogUtils.getLoadingDialog(mActivity, R.string.info_logouting);
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.setCancelable(false);
-                        dialog.show();
-                        HDClient.getInstance().logout(new HDDataCallBack() {
-                            @Override
-                            public void onSuccess(Object value) {
-                                if (isFinishing()){
-                                    return;
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        closeDialog();
-                                        HDApplication.getInstance().finishAllActivity();
-                                        Intent intent = new Intent(mActivity, LoginActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onError(int error, String errorMsg) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        closeDialog();
-                                        Toast.makeText(getApplicationContext(), "退出失败，请检查网络！", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-                mAlertDialog.setContentView(view);
-
-            }
-            tvDialogMessage.setText("您已经成为客服管理员,重新登录生效！");
-            mAlertDialog.show();
-
-        } else {
-            Activity topActivity = HDApplication.getInstance().getTopActivity();
-            if (topActivity == null) {
-                topActivity = MainActivity.this;
-            }
-            if (mAlertDialog == null) {
-                mAlertDialog = new Dialog(topActivity, R.style.MyDialogStyle);
-                @SuppressLint("InflateParams") View view = LayoutInflater.from(topActivity).inflate(R.layout.dialog_alertview, null);
-                (view.findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        mAlertDialog.dismiss();
-                    }
-                });
-                (view.findViewById(R.id.ok)).setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        // 退出时必须有网
-                        dialog = DialogUtils.getLoadingDialog(mActivity, R.string.info_logouting);
-                        dialog.setCanceledOnTouchOutside(false);
-                        dialog.setCancelable(false);
-                        dialog.show();
-                        HDClient.getInstance().logout(new HDDataCallBack() {
-                            @Override
-                            public void onSuccess(Object value) {
-                                if (isFinishing()){
-                                    return;
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        closeDialog();
-                                        HDApplication.getInstance().finishAllActivity();
-                                        Intent intent = new Intent(mActivity, LoginActivity.class);
-                                        startActivity(intent);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onError(int error, String errorMsg) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        closeDialog();
-                                        Toast.makeText(getApplicationContext(), "退出失败，请检查网络！", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-                tvDialogMessage = (TextView) view.findViewById(R.id.dialog_message);
-                mAlertDialog.setContentView(view);
-
-            }
-            tvDialogMessage.setText("您已转为客服,重新登录生效！");
-            mAlertDialog.show();
-
+    public void tipAgentRoleChange() {
+        closeRoleChangedDialog();
+        Activity topActivity = HDApplication.getInstance().getTopActivity();
+        if (topActivity == null) {
+            topActivity = MainActivity.this;
         }
+        mAlertDialog = new Dialog(topActivity, R.style.MyDialogStyle);
 
+        @SuppressLint("InflateParams")  View view = LayoutInflater.from(topActivity).inflate(R.layout.dialog_alertview, null);
+        tvDialogMessage = (TextView) view.findViewById(R.id.dialog_message);
+        ((TextView)view.findViewById(R.id.cancel)).setText("返回");
+        (view.findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                mAlertDialog.dismiss();
+            }
+        });
+        ((TextView)view.findViewById(R.id.ok)).setText("重新登录");
+        (view.findViewById(R.id.ok)).setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 // 退出时必须有网
+                 dialog = DialogUtils.getLoadingDialog(mActivity, R.string.info_logouting);
+                 dialog.setCanceledOnTouchOutside(false);
+                 dialog.setCancelable(false);
+                 dialog.show();
+                 HDClient.getInstance().logout(new HDDataCallBack() {
+                     @Override
+                     public void onSuccess(Object value) {
+                         if (isFinishing()){
+                             return;
+                         }
+                         runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+                                 closeDialog();
+                                 HDApplication.getInstance().finishAllActivity();
+                                 Intent intent = new Intent(mActivity, LoginActivity.class);
+                                 startActivity(intent);
+                             }
+                         });
+                     }
+
+                     @Override
+                     public void onError(int error, String errorMsg) {
+                         runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+                                 closeDialog();
+                                 Toast.makeText(getApplicationContext(), "退出失败，请检查网络！", Toast.LENGTH_SHORT).show();
+                             }
+                         });
+                     }
+                 });
+             }
+        });
+        mAlertDialog.setContentView(view);
+        tvDialogMessage.setText("您的权限发生了变更，某些功能重新登录生效");
+        mAlertDialog.show();
     }
 
     @Override
@@ -1248,5 +1269,39 @@ public class MainActivity extends BaseActivity implements IMainView {
         if (mNoticeFragment != null){
             mNoticeFragment.refreshChildDatas();
         }
+    }
+
+    @Override
+    public void tipTransferSchedule() {
+        closeTransferDialog();
+        if (HDClient.getInstance().chatManager().getTransferWaitListSize() <= 0) {
+            return;
+        }
+        Activity topActivity = HDApplication.getInstance().getTopActivity();
+        if (topActivity == null) {
+            topActivity = MainActivity.this;
+        }
+        mTransferConfirmDialog = new Dialog(topActivity, R.style.MyDialogStyle);
+
+        @SuppressLint("InflateParams")  View view = LayoutInflater.from(topActivity).inflate(R.layout.dialog_transfer_confirm_view, null);
+        tvDialogMessage = (TextView) view.findViewById(R.id.dialog_message);
+        (view.findViewById(R.id.cancel)).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                mTransferConfirmDialog.dismiss();
+                HDClient.getInstance().chatManager().transferAllSession(false);
+            }
+        });
+        (view.findViewById(R.id.ok)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTransferConfirmDialog.dismiss();
+                HDClient.getInstance().chatManager().transferAllSession(true);
+            }
+        });
+        mTransferConfirmDialog.setContentView(view);
+        tvDialogMessage.setText("收到" + HDClient.getInstance().chatManager().getTransferWaitListSize() + "个转接会话，是否接收？") ;
+        mTransferConfirmDialog.show();
     }
 }

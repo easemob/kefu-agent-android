@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.github.angads25.filepicker">
+    package="com.github.angads25.filepicker">
+
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
 
 </manifest>

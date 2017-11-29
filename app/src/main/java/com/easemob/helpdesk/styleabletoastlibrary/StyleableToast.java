@@ -1,7 +1,6 @@
 package com.easemob.helpdesk.styleabletoastlibrary;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +44,7 @@ import static com.easemob.helpdesk.styleabletoastlibrary.Utils.getTypedValueInDP
  * to the default boring grey ones. StyleableToast have 10 styling options.
  * <p>If a particular style option is not set, the option will fall back to the standard Android Toast style</p>
  */
-
+@SuppressWarnings("ResourceType")
 public class StyleableToast implements OnToastFinished {
 
     private static final String TAG = "StyleableToast";
@@ -239,7 +237,6 @@ public class StyleableToast implements OnToastFinished {
     /**
      * loads style attributes from styles.xml if a style resource is used.
      */
-    @SuppressWarnings(value={"unchecked","deprecation"})
     private void getToastShapeAttrs() {
         if (style > 0) {
 
@@ -374,7 +371,11 @@ public class StyleableToast implements OnToastFinished {
             int maxWidthVal = (int) getTypedValueInDP(context, 20);
 
             ImageView imageView = new ImageView(context);
-            imageView.setImageDrawable(context.getResources().getDrawable(drawable));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                imageView.setImageDrawable(context.getResources().getDrawable(drawable, null));
+            } else {
+                imageView.setImageDrawable(context.getResources().getDrawable(drawable));
+            }
             imageView.setAnimation(getAnimation());
             imageView.setMaxWidth(marginLeft + maxWidthVal);
             imageView.setMaxHeight(maxHeightVal);

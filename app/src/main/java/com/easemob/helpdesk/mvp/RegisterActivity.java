@@ -141,7 +141,7 @@ public class RegisterActivity  extends BaseActivity {
             Toast.makeText(this, "密码不能为空!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (!strPwd.matches("^[a-zA-Z0-9_,\\.;\\:\"'!*&]{6,22}$")){
+        if (!strPwd.matches("^[\\d\\D]{6,22}$")){
             Toast.makeText(this, "密码有效长度6~22位!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -169,7 +169,7 @@ public class RegisterActivity  extends BaseActivity {
             return;
         }
 
-        final String strPhoneNum = etPhoneNumber.getText().toString().trim();
+        String strPhoneNum = etPhoneNumber.getText().toString().trim();
         if (TextUtils.isEmpty(strPhoneNum)){
             Toast.makeText(this, "手机号不能为空!", Toast.LENGTH_SHORT).show();
             return;
@@ -186,9 +186,15 @@ public class RegisterActivity  extends BaseActivity {
             return;
         }
 
+        StringBuilder sbPhoneNum = new StringBuilder();
+        if(!strPhoneNum.startsWith("+")){
+            sbPhoneNum.append("+86");
+        }
+        sbPhoneNum.append(strPhoneNum);
+        final String strPhoneNumber = sbPhoneNum.toString();
         Map<String, Object> postBody = new HashMap<>();
         postBody.put("company", strCompanyName);
-        postBody.put("phone", strPhoneNum);
+        postBody.put("phone", strPhoneNumber);
         postBody.put("username", strEmail);
         postBody.put("password", strPwd);
         postBody.put("confirmPsw", strConPwd);
@@ -221,7 +227,7 @@ public class RegisterActivity  extends BaseActivity {
                                 intent.setClass(RegisterActivity.this, PhoneVerifyActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("company", strCompanyName);
-                                bundle.putString("phone", strPhoneNum);
+                                bundle.putString("phone", strPhoneNumber);
                                 bundle.putString("username", strEmail);
                                 bundle.putString("password", strPwd);
                                 bundle.putString("confirmPsw", strConPwd);
@@ -231,7 +237,7 @@ public class RegisterActivity  extends BaseActivity {
                                 intent.putExtra("code", rCodeId);
                                 startActivityForResult(intent, REQUEST_CODE_PHONE_VERIFY);
                             }
-                          } catch (JSONException e) {
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }

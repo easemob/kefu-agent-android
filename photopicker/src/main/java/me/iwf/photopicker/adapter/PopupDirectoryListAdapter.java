@@ -37,26 +37,22 @@ public class PopupDirectoryListAdapter extends BaseAdapter {
   }
 
 
-  @Override
-  public int getCount() {
+  @Override public int getCount() {
     return directories.size();
   }
 
 
-  @Override
-  public PhotoDirectory getItem(int position) {
+  @Override public PhotoDirectory getItem(int position) {
     return directories.get(position);
   }
 
 
-  @Override
-  public long getItemId(int position) {
+  @Override public long getItemId(int position) {
     return directories.get(position).hashCode();
   }
 
 
-  @Override
-  public View getView(int position, View convertView, ViewGroup parent) {
+  @Override public View getView(int position, View convertView, ViewGroup parent) {
     ViewHolder holder;
     if (convertView == null) {
       convertView = mLayoutInflater.inflate(R.layout.item_directory, parent, false);

@@ -20,7 +20,7 @@ import com.easemob.helpdesk.recorder.MediaManager;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDVoiceMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDVoiceMessageBody;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.io.File;

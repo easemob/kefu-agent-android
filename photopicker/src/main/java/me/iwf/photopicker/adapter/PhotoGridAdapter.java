@@ -45,22 +45,19 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
   }
 
 
-  @Override
-  public int getItemViewType(int position) {
+  @Override public int getItemViewType(int position) {
     return (showCamera() && position == 0) ? ITEM_TYPE_CAMERA : ITEM_TYPE_PHOTO;
   }
 
 
-  @Override
-  public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView = inflater.inflate(R.layout.item_photo, parent, false);
     PhotoViewHolder holder = new PhotoViewHolder(itemView);
     if (viewType == ITEM_TYPE_CAMERA) {
       holder.vSelected.setVisibility(View.GONE);
       holder.ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
       holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
           if (onCameraClickListener != null) {
             onCameraClickListener.onClick(view);
           }
@@ -71,8 +68,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
   }
 
 
-  @Override
-  public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
+  @Override public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
 
     if (getItemViewType(position) == ITEM_TYPE_PHOTO) {
 
@@ -99,16 +95,14 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       holder.ivPhoto.setSelected(isChecked);
 
       holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
           if (onPhotoClickListener != null) {
             onPhotoClickListener.onClick(view, position, showCamera());
           }
         }
       });
       holder.vSelected.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
 
           boolean isEnable = true;
 
@@ -129,8 +123,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
   }
 
 
-  @Override
-  public int getItemCount() {
+  @Override public int getItemCount() {
     int photosCount =
         photoDirectories.size() == 0 ? 0 : getCurrentPhotos().size();
     if (showCamera()) {

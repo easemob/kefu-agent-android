@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/bg_content_2"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_title_height"
+        android:background="@color/bg_top_bar_2">
+
+        <ImageButton
+            android:id="@+id/left"
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/icon_back_2"
+            android:onClick="back"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="个人信息"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/top_title_text_size" />
+
+    </RelativeLayout>
+
+    <View
+        style="@style/line_view"
+        android:layout_marginTop="20dp" />
+    <RelativeLayout
+        android:id="@+id/rl_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:paddingLeft="10dp"
+        android:background="#fff"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="头像："
+            android:textSize="16sp" />
+
+
+        <ImageButton
+            android:id="@+id/right_allow"
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_open"
+            tools:ignore="ContentDescription" />
+
+        <com.easemob.helpdesk.widget.imageview.RoundImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_toLeftOf="@id/right_allow"
+            android:src="@drawable/default_agent_avatar"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY"
+            />
+
+    </RelativeLayout>
+
+    <View style="@style/line_view" />
+    <RelativeLayout
+        android:id="@+id/rl_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:paddingLeft="10dp"
+        android:background="#fff"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="昵称："
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/et_nickname"
+            style="@style/profile_textview_style"
+            android:layout_toRightOf="@id/tv_nickname" />
+
+        <ImageButton
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_open"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
+
+    <View style="@style/line_view" />
+
+    <RelativeLayout
+        android:id="@+id/rl_truename"
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:paddingLeft="10dp"
+        android:background="#fff"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tv_truename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="名字："
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/et_truename"
+            style="@style/profile_textview_style"
+            android:layout_toRightOf="@id/tv_truename" />
+
+        <ImageButton
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_open"
+            tools:ignore="ContentDescription" />
+
+    </RelativeLayout>
+
+    <View style="@style/line_view" />
+
+    <RelativeLayout
+        android:id="@+id/rl_number"
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:paddingLeft="10dp"
+        android:background="#fff"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tv_nubmer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="编号："
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/et_number"
+            style="@style/profile_textview_style"
+            android:layout_toRightOf="@id/tv_nubmer" />
+
+        <ImageButton
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_open"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <View style="@style/line_view" />
+
+    <RelativeLayout
+        android:id="@+id/rl_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:paddingLeft="10dp"
+        android:background="#fff"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="手机："
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/et_mobile"
+            style="@style/profile_textview_style"
+            android:layout_toRightOf="@id/tv_mobile" />
+
+        <ImageButton
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_open"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <View style="@style/line_view" />
+
+    <RelativeLayout
+        android:id="@+id/rl_email"
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:paddingLeft="10dp"
+        android:background="#fff"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="邮箱："
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/et_email"
+            style="@style/profile_textview_style"
+            android:layout_toRightOf="@id/tv_email" />
+
+        <ImageButton
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            android:background="@drawable/icon_open"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <View style="@style/line_view" />
+
+    <RelativeLayout
+        android:id="@+id/rl_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="44dip"
+        android:paddingLeft="10dp"
+        android:background="#fff"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/tv_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="密码："
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/et_pwd"
+            style="@style/profile_textview_style"
+            android:layout_toRightOf="@id/tv_pwd"
+            android:text="******" />
+
+        <ImageButton
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_open"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <View style="@style/line_view" />
+
+</LinearLayout>

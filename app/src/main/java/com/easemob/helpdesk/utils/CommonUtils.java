@@ -3,7 +3,6 @@ package com.easemob.helpdesk.utils;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -16,7 +15,6 @@ import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.view.Display;
 import android.view.WindowManager;
@@ -25,22 +23,17 @@ import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDMessageUser;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDMessageUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.PathUtil;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
 public class CommonUtils {

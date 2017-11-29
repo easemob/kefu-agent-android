@@ -27,8 +27,8 @@ import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.ImageTools;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.AgentProfileEntity;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.agent.AgentProfileEntity;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.PathUtil;
 import com.kyleduo.switchbutton.SwitchButton;
@@ -154,7 +154,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        switchButton.setChecked(value);
+                    switchButton.setChecked(value);
                     }
                 });
             }
@@ -313,16 +313,16 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        closeDialog();
-                        if (result == null){
-                            return;
-                        }
-                        userInfo = result;
-                        userInfo.password = null;
-                        oldUserInfo = userInfo;
-                        if (userInfo != null) {
-                            refreshUI();
-                        }
+                    closeDialog();
+                    if (result == null){
+                        return;
+                    }
+                    userInfo = result;
+                    userInfo.password = null;
+                    oldUserInfo = userInfo;
+                    if (userInfo != null) {
+                        refreshUI();
+                    }
                     }
                 });
             }

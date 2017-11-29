@@ -14,8 +14,7 @@ public class PhotoDirectory {
   private long   dateAdded;
   private List<Photo> photos = new ArrayList<>();
 
-  @Override
-  public boolean equals(Object o) {
+  @Override public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof PhotoDirectory)) return false;
 
@@ -24,8 +23,7 @@ public class PhotoDirectory {
     return id.equals(directory.id) && name.equals(directory.name);
   }
 
-  @Override
-  public int hashCode() {
+  @Override public int hashCode() {
     int result = id.hashCode();
     result = 31 * result + name.hashCode();
     return result;

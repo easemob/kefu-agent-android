@@ -23,7 +23,7 @@ import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.gsonmodel.main.UnReadCountBean;
 import com.hyphenate.kefusdk.manager.main.NoticeManager;
 import com.hyphenate.kefusdk.utils.HDLog;
@@ -91,8 +91,8 @@ public class NoticeFragment extends Fragment {
         }
         loginUser = HDClient.getInstance().getCurrentUser();
         noticeManager = new NoticeManager();
-        for (int i = 0; i < mTabTitles.length; i++){
-            mTabEntities.add(new TabEntity(mTabTitles[i]));
+        for (String mTabTitle : mTabTitles) {
+            mTabEntities.add(new TabEntity(mTabTitle));
         }
         mFragmentManager = getChildFragmentManager();
         mTabLayout.setTabData(mTabEntities);
@@ -222,16 +222,21 @@ public class NoticeFragment extends Fragment {
                                     String type = bean.getType();
                                     int count = bean.getCount_unread();
                                     int pos = 0;
-                                    if (type.equals("all")){
-                                        pos = 0;
-                                        totalUnread = count;
-                                    }else if (type.equals("agent")){
-                                        pos = 1;
-                                    }else if (type.equals("system")){
-                                        pos = 2;
+                                    switch (type) {
+                                        case "all":
+                                            pos = 0;
+                                            totalUnread = count;
+                                            break;
+                                        case "agent":
+                                            pos = 1;
+                                            break;
+                                        case "system":
+                                            pos = 2;
+                                            break;
                                     }
                                     if (count > 0){
                                         mTabLayout.showMsg(pos, count);
+                                        mTabLayout.setMsgMargin(pos, -1, 2);
                                     }else{
                                         mTabLayout.hideMsg(pos);
                                     }

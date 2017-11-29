@@ -3,7 +3,7 @@ package com.easemob.helpdesk.adapter;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import com.hyphenate.kefusdk.bean.CustomerEntity;
+import com.hyphenate.kefusdk.gsonmodel.customer.CustomerEntity;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 

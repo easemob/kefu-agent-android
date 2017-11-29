@@ -42,8 +42,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
   private boolean showGif = false;
 
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     boolean showCamera = getIntent().getBooleanExtra(EXTRA_SHOW_CAMERA, true);
@@ -72,8 +71,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
     pickerFragment.getPhotoGridAdapter().setShowCamera(showCamera);
 
     pickerFragment.getPhotoGridAdapter().setOnItemCheckListener(new OnItemCheckListener() {
-      @Override
-      public boolean OnItemCheck(int position, Photo photo, final boolean isCheck, int selectedItemCount) {
+      @Override public boolean OnItemCheck(int position, Photo photo, final boolean isCheck, int selectedItemCount) {
 
         int total = selectedItemCount + (isCheck ? -1 : 1);
 
@@ -105,8 +103,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
    * Overriding this method allows us to run our exit animation first, then exiting
    * the activity when it complete.
    */
-  @Override
-  public void onBackPressed() {
+  @Override public void onBackPressed() {
     if (imagePagerFragment != null && imagePagerFragment.isVisible()) {
       imagePagerFragment.runExitAnimation(new Runnable() {
         public void run() {
@@ -130,8 +127,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
         .commitAllowingStateLoss();
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
     if (!menuIsInflated) {
       getMenuInflater().inflate(R.menu.menu_picker, menu);
       menuDoneItem = menu.findItem(R.id.done);

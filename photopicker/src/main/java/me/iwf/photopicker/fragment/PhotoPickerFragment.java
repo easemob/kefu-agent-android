@@ -46,8 +46,7 @@ public class PhotoPickerFragment extends Fragment {
   private List<PhotoDirectory> directories;
 
 
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
+  @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     directories = new ArrayList<>();
@@ -72,9 +71,8 @@ public class PhotoPickerFragment extends Fragment {
   }
 
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
 
     setRetainInstance(true);
 
@@ -103,8 +101,7 @@ public class PhotoPickerFragment extends Fragment {
     listPopupWindow.setAnimationStyle(R.style.Animation_AppCompat_DropDownUp);
 
     listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      @Override public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         listPopupWindow.dismiss();
 
         PhotoDirectory directory = directories.get(position);
@@ -117,8 +114,7 @@ public class PhotoPickerFragment extends Fragment {
     });
 
     photoGridAdapter.setOnPhotoClickListener(new OnPhotoClickListener() {
-      @Override
-      public void onClick(View v, int position, boolean showCamera) {
+      @Override public void onClick(View v, int position, boolean showCamera) {
         final int index = showCamera ? position - 1 : position;
 
         List<String> photos = photoGridAdapter.getCurrentPhotoPaths();
@@ -134,8 +130,7 @@ public class PhotoPickerFragment extends Fragment {
     });
 
     photoGridAdapter.setOnCameraClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View view) {
+      @Override public void onClick(View view) {
         try {
           Intent intent = captureManager.dispatchTakePictureIntent();
           startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
@@ -146,8 +141,7 @@ public class PhotoPickerFragment extends Fragment {
     });
 
     btSwitchDirectory.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
+      @Override public void onClick(View v) {
 
         if (listPopupWindow.isShowing()) {
           listPopupWindow.dismiss();
@@ -163,8 +157,7 @@ public class PhotoPickerFragment extends Fragment {
   }
 
 
-  @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == ImageCaptureManager.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
       captureManager.galleryAddPic();
       if (directories.size() > 0) {
@@ -183,15 +176,13 @@ public class PhotoPickerFragment extends Fragment {
   }
 
 
-  @Override
-  public void onSaveInstanceState(Bundle outState) {
+  @Override public void onSaveInstanceState(Bundle outState) {
     captureManager.onSaveInstanceState(outState);
     super.onSaveInstanceState(outState);
   }
 
 
-  @Override
-  public void onViewStateRestored(Bundle savedInstanceState) {
+  @Override public void onViewStateRestored(Bundle savedInstanceState) {
     captureManager.onRestoreInstanceState(savedInstanceState);
     super.onViewStateRestored(savedInstanceState);
   }

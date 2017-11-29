@@ -8,7 +8,6 @@ import java.io.IOException;
 /**
  * @author leolin
  */
-
 public class CloseHelper {
 
     public static void close(Cursor cursor) {
@@ -27,5 +26,4 @@ public class CloseHelper {
 
         }
     }
-
 }

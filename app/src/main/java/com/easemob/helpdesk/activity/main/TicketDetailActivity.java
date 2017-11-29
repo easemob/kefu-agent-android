@@ -40,8 +40,8 @@ import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
 import com.easemob.helpdesk.widget.recyclerview.MyRecyclerView;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDBaseUser;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDBaseUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.ISO8601DateFormat;
 import com.hyphenate.kefusdk.utils.PathUtil;
@@ -88,7 +88,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
 
     private LeaveMessageResponse.EntitiesBean ticketEntity;
     ISO8601DateFormat iso8601DateFormat = new ISO8601DateFormat();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
     private ArrayList<String> assigneeList = new ArrayList<>();
     private List<HDBaseUser> agentUsers = Collections.synchronizedList(new ArrayList<HDBaseUser>());

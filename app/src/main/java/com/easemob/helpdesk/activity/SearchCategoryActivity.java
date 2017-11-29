@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.widget.imageview.CircleDrawable;
-import com.hyphenate.kefusdk.bean.HDCategorySummary;
+import com.hyphenate.kefusdk.entity.HDCategorySummary;
 import com.hyphenate.kefusdk.manager.main.CategorySummaryManager;
 
 import org.json.JSONArray;

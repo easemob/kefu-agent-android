@@ -20,13 +20,13 @@ import com.easemob.helpdesk.emoticon.utils.SimpleCommonUtils;
 import com.easemob.helpdesk.listener.OnItemClickListener;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DateUtils;
-import com.hyphenate.kefusdk.bean.HDSession;
-import com.hyphenate.kefusdk.entity.HDImageMessageBody;
+import com.hyphenate.kefusdk.entity.HDSession;
+import com.hyphenate.kefusdk.messagebody.HDImageMessageBody;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDNormalFileMessageBody;
-import com.hyphenate.kefusdk.entity.HDTextMessageBody;
-import com.hyphenate.kefusdk.entity.HDVideoMessageBody;
-import com.hyphenate.kefusdk.entity.HDVoiceMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDNormalFileMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDTextMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDVideoMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDVoiceMessageBody;
 import com.hyphenate.kefusdk.manager.session.CurrentSessionManager;
 import com.hyphenate.kefusdk.utils.MessageUtils;
 
@@ -261,14 +261,31 @@ public class SessionAdapter extends RecyclerView.Adapter<SessionAdapter.MyViewHo
 				final ArrayList<HDSession> newValues = new ArrayList<HDSession>();
 				for (int i = 0; i < count; i++) {
 					final HDSession value = mOriginalValues.get(i);
-					String valueText = null;
-					if (!TextUtils.isEmpty(value.getUser().getNicename())) {
-						valueText = value.getUser().getNicename().toLowerCase(Locale.US);
+					HDSession.CustomerInfo customerInfo = value.getCustomerInfo();
+					String nickName = null;
+					String trueName = null;
+					if (customerInfo != null) {
+						if (customerInfo.customerNiceName != null) {
+							nickName = customerInfo.customerNiceName.toLowerCase(Locale.US);
+						}
+						if (customerInfo.customerTrueName != null) {
+							trueName = customerInfo.customerTrueName.toLowerCase(Locale.US);
+						}
+
+						if ((nickName != null && nickName.contains(prefixString))
+								|| (trueName != null && trueName.contains(prefixString))) {
+							newValues.add(value);
+						}
 					} else {
-						valueText = value.getUser().getUserId().toLowerCase(Locale.US);
-					}
-					if (valueText.contains(prefixString)) {
-						newValues.add(value);
+						String valueText;
+						if (!TextUtils.isEmpty(value.getUser().getNicename())) {
+							valueText = value.getUser().getNicename().toLowerCase(Locale.US);
+						} else {
+							valueText = value.getUser().getUserId().toLowerCase(Locale.US);
+						}
+						if (valueText.contains(prefixString)) {
+							newValues.add(value);
+						}
 					}
 
 				}

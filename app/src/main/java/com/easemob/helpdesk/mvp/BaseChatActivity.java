@@ -37,8 +37,8 @@ import com.github.angads25.filepicker.model.DialogProperties;
 import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDMessageUser;
-import com.hyphenate.kefusdk.entity.HDTextMessageBody;
+import com.hyphenate.kefusdk.entity.user.HDMessageUser;
+import com.hyphenate.kefusdk.messagebody.HDTextMessageBody;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
 import com.hyphenate.kefusdk.utils.PathUtil;
 
@@ -64,27 +64,28 @@ public abstract class BaseChatActivity extends BaseActivity {
 	protected static final String TAG = "BaseChatActivity";
 
 	//打开相册
-	private static final int REQUEST_CODE_CHOOSE_PICTURE = 0x001;
+	private static final int REQUEST_CODE_CHOOSE_PICTURE = 0x01;
 
-	public static final int REQUEST_CODE_SELECT_FILE = 0x002;
+	public static final int REQUEST_CODE_SELECT_FILE = 0x02;
 
-	private static final int REQUEST_CODE_PERMISSIONS_CAMERA = 0x003;
+	private static final int REQUEST_CODE_PERMISSIONS_CAMERA = 0x03;
 
-	private static final int REQUEST_CODE_PERMISSIONS_RECORD = 0x004;
+	private static final int REQUEST_CODE_PERMISSIONS_RECORD = 0x04;
 
-	private static final int REQUEST_CODE_PERMISSIONS_CAMERA_VIDEO = 0x005;
+	private static final int REQUEST_CODE_PERMISSIONS_CAMERA_VIDEO = 0x05;
 
-	private static final int REQUEST_CODE_SELECT_VIDEO = 0x006;
+	private static final int REQUEST_CODE_SELECT_VIDEO = 0x06;
 
 	//重发的RequestCode
-	public static final int REQUEST_CODE_RESEND = 0x010;
+	public static final int REQUEST_CODE_RESEND = 0x10;
 
 	//copy message for contextmenu
-	public static final int REQUEST_CODE_CONTEXT_MENU = 0x011;
+	public static final int REQUEST_CODE_CONTEXT_MENU = 0x11;
 
-	public static final int RESULT_CODE_COPY_AND_PASTE = 0x012;
-	public static final int RESULT_CODE_RECALL = 0x013;
+	public static final int RESULT_CODE_COPY_AND_PASTE = 0x12;
+	public static final int RESULT_CODE_RECALL = 0x13;
 
+	public static final int REQUEST_CODE_BASE_MAX = 0x100;
 
 	/**
 	 * 会话ID
@@ -123,6 +124,10 @@ public abstract class BaseChatActivity extends BaseActivity {
 	public static int resendPos;
 
 	protected Unbinder unbinder;
+
+	public HDMessageUser getToUser() {
+		return toUser;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

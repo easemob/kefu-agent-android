@@ -30,8 +30,7 @@ public class PhotoPagerActivity extends AppCompatActivity {
 
   private ActionBar actionBar;
 
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_photo_pager);
@@ -58,18 +57,15 @@ public class PhotoPagerActivity extends AppCompatActivity {
     }
 
     pagerFragment.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+      @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         updateActionBarTitle();
       }
 
-      @Override
-      public void onPageSelected(int i) {
+      @Override public void onPageSelected(int i) {
 
       }
 
-      @Override
-      public void onPageScrollStateChanged(int i) {
+      @Override public void onPageScrollStateChanged(int i) {
 
       }
     });
@@ -77,15 +73,13 @@ public class PhotoPagerActivity extends AppCompatActivity {
   }
 
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.menu_preview, menu);
     return true;
   }
 
 
-  @Override
-  public void onBackPressed() {
+  @Override public void onBackPressed() {
 
     Intent intent = new Intent();
     intent.putExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS, pagerFragment.getPaths());
@@ -118,16 +112,14 @@ public class PhotoPagerActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
             .setTitle(R.string.confirm_to_delete)
             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialogInterface, int i) {
+              @Override public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 setResult(RESULT_OK);
                 finish();
               }
             })
             .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-              @Override
-              public void onClick(DialogInterface dialogInterface, int i) {
+              @Override public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
               }
             })
@@ -143,8 +135,7 @@ public class PhotoPagerActivity extends AppCompatActivity {
       }
 
       snackbar.setAction(R.string.undo, new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+        @Override public void onClick(View view) {
           if (pagerFragment.getPaths().size() > 0) {
             pagerFragment.getPaths().add(index, deletedPath);
           } else {

@@ -335,7 +335,48 @@
 			<View style="@style/line_view" />
 
 			<RelativeLayout
-				android:id="@+id/rl_channel"
+			android:id="@+id/rl_channel"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="#fff">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_marginBottom="16dp"
+				android:layout_marginLeft="12dp"
+				android:layout_marginTop="16dp"
+				android:text="渠道"
+				android:textColor="#000000"
+				android:textSize="16sp" />
+
+			<ImageView
+				android:id="@+id/iv_icon_right_channel"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:layout_centerVertical="true"
+				android:background="@drawable/arrow_status_black_right"/>
+
+			<TextView
+				android:id="@+id/tv_channel_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_marginBottom="16dp"
+				android:layout_marginRight="8dp"
+				android:layout_marginTop="16dp"
+				android:layout_toLeftOf="@id/iv_icon_right_channel"
+				android:textColor="#000000"
+				android:textSize="16sp" />
+
+		</RelativeLayout>
+
+			<View style="@style/line_view" />
+
+			<RelativeLayout
+				android:id="@+id/rl_create_source"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:background="#fff">
@@ -347,12 +388,12 @@
 					android:layout_marginBottom="16dp"
 					android:layout_marginLeft="12dp"
 					android:layout_marginTop="16dp"
-					android:text="渠道"
+					android:text="留言方式"
 					android:textColor="#000000"
 					android:textSize="16sp" />
 
 				<ImageView
-					android:id="@+id/iv_icon_right_channel"
+					android:id="@+id/iv_icon_right_create_source"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_alignParentRight="true"
@@ -360,14 +401,14 @@
 					android:background="@drawable/arrow_status_black_right"/>
 
 				<TextView
-					android:id="@+id/tv_channel_text"
+					android:id="@+id/tv_create_source_text"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_centerVertical="true"
 					android:layout_marginBottom="16dp"
 					android:layout_marginRight="8dp"
 					android:layout_marginTop="16dp"
-					android:layout_toLeftOf="@id/iv_icon_right_channel"
+					android:layout_toLeftOf="@id/iv_icon_right_create_source"
 					android:textColor="#000000"
 					android:textSize="16sp" />
 

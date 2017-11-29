@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.hyphenate.kefusdk.entity.AgentQueue;
+import com.hyphenate.kefusdk.entity.agent.AgentQueue;
 
 import java.util.ArrayList;
 import java.util.List;

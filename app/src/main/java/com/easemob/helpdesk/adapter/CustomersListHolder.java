@@ -4,7 +4,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.hyphenate.kefusdk.bean.CustomerEntity;
+import com.hyphenate.kefusdk.gsonmodel.customer.CustomerEntity;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 import java.text.SimpleDateFormat;
@@ -32,8 +32,8 @@ public class CustomersListHolder extends BaseViewHolder<CustomerEntity.EntitiesB
 		if(data == null){
 			return;
 		}
-		tvNick.setText(data.getNicename());
+		tvNick.setText(data.getNickname());
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-		tvCreateDate.setText(dateFormat.format(new Date(data.getCreateDateTime())));
+		tvCreateDate.setText(dateFormat.format(new Date(data.getCreated_at())));
 	}
 }

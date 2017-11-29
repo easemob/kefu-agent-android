@@ -13,7 +13,7 @@ import com.easemob.helpdesk.emoticon.utils.SimpleCommonUtils;
 import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDTextMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDTextMessageBody;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 
@@ -70,20 +70,36 @@ public class TxtViewHolder extends BaseViewHolder {
 			setMessageSendCallback(message);
 			switch (message.getStatus()) {
 				case SUCCESS: // 发送成功
-					pb.setVisibility(View.GONE);
-					ivStatus.setVisibility(View.GONE);
+					if (pb != null) {
+						pb.setVisibility(View.GONE);
+					}
+					if (ivStatus != null) {
+						ivStatus.setVisibility(View.GONE);
+					}
 					break;
 				case FAIL: // 发送失败
-					pb.setVisibility(View.GONE);
-					ivStatus.setVisibility(View.VISIBLE);
+					if (pb != null) {
+						pb.setVisibility(View.GONE);
+					}
+					if (ivStatus != null) {
+						ivStatus.setVisibility(View.VISIBLE);
+					}
 					break;
 				case INPROGRESS: // 发送中
-					pb.setVisibility(View.VISIBLE);
-					ivStatus.setVisibility(View.GONE);
+					if (pb != null) {
+						pb.setVisibility(View.VISIBLE);
+					}
+					if (ivStatus != null) {
+						ivStatus.setVisibility(View.GONE);
+					}
 					break;
 				case CREATE:
-					pb.setVisibility(View.GONE);
-					ivStatus.setVisibility(View.VISIBLE);
+					if (pb != null) {
+						pb.setVisibility(View.GONE);
+					}
+					if (ivStatus != null) {
+						ivStatus.setVisibility(View.VISIBLE);
+					}
 					break;
 			}
 		}

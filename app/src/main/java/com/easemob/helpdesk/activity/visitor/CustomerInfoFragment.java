@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.DigitsKeyListener;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,6 +32,7 @@ import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.gsonmodel.customer.CustomerInfoResponse;
 import com.hyphenate.kefusdk.utils.HDLog;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,31 +88,31 @@ public class CustomerInfoFragment extends Fragment{
         for (final CustomerInfoResponse.EntityBean.ColumnValuesBean bean : customerInfo.getColumnValues()){
             final CustomerInfoResponse.EntityBean.ColumnValuesBean.ColumnTypeBean columnType = bean.getColumnType();
 //            if (columnType.getTypeName().equals("TEXT_STRING")){
-            if (!bean.isVisible()){
-                continue;
-            }
+                if (!bean.isVisible()){
+                    continue;
+                }
 
-            LinearLayout itemLayout = new LinearLayout(getContext());
-            itemLayout.setOrientation(LinearLayout.HORIZONTAL);
+                LinearLayout itemLayout = new LinearLayout(getContext());
+                itemLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-            TextView leftTv = new TextView(getContext());
-            leftTv.setGravity(Gravity.CENTER_VERTICAL);
-            leftTv.setText(bean.getDisplayName());
-            leftTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
-            leftTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                TextView leftTv = new TextView(getContext());
+                leftTv.setGravity(Gravity.CENTER_VERTICAL);
+                leftTv.setText(bean.getDisplayName());
+                leftTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
+                leftTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
-            final TextView rightTv = new TextView(getContext());
-            rightTv.setGravity(Gravity.CENTER_VERTICAL);
-            rightTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
-            rightTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            if (bean.getColumnDescribe() != null){
-                rightTv.setHint(bean.getColumnDescribe());
-            }
+                final TextView rightTv = new TextView(getContext());
+                rightTv.setGravity(Gravity.CENTER_VERTICAL);
+                rightTv.setTextColor(getResources().getColor(R.color.text_color_4c4c4c));
+                rightTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                if (bean.getColumnDescribe() != null){
+                    rightTv.setHint(bean.getColumnDescribe());
+                }
 
-            String valueString = null;
-            if (bean.getValues() != null && !bean.getValues().isEmpty()){
-                valueString = bean.getValues().get(0);
-            }
+               String valueString = null;
+                if (bean.getValues() != null && !bean.getValues().isEmpty()){
+                    valueString = bean.getValues().get(0).toString();
+                }
 
 
             if (!bean.isReadonly()) {
@@ -117,94 +121,148 @@ public class CustomerInfoFragment extends Fragment{
                     @Override
                     public void onClick(View v) {
                         String columnTypeName = columnType.getTypeName();
-                        if (columnTypeName.equals("TEXT_STRING")) {
-                            final EditText et = new EditText(getContext());
-                            et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 68)));
-                            et.setLines(1);
-                            et.setEllipsize(TextUtils.TruncateAt.END);
-                            et.setSingleLine(true);
-                            if (!TextUtils.isEmpty(defaultTxt)){
-                                et.setText(defaultTxt);
-                            }
-                            if (!TextUtils.isEmpty(bean.getColumnDescribe())){
-                                et.setHint(bean.getColumnDescribe());
-                            }
-                            et.setSelection(et.getText().length());
+                        switch (columnTypeName) {
+                            case "TEXT_STRING": {
+                                final EditText et = new EditText(getContext());
+                                et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 68)));
+                                et.setLines(1);
+                                et.setEllipsize(TextUtils.TruncateAt.END);
+                                et.setSingleLine(true);
+                                if (!TextUtils.isEmpty(defaultTxt)) {
+                                    et.setText(defaultTxt);
+                                }
+                                if (!TextUtils.isEmpty(bean.getColumnDescribe())) {
+                                    et.setHint(bean.getColumnDescribe());
+                                }
+                                et.setSelection(et.getText().length());
+                                et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(256)});
 
-                            new AlertDialog.Builder(getContext()).setTitle("更新" + bean.getDisplayName())
-                                    .setView(et)
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfo.getCustomerId());
-                                        }
-                                    })
-                                    .setNegativeButton("取消", null).show();
-                        } else if (columnTypeName.equals("SELECT_STRING")) {
-                            dismissDialog();
-                            final ArrayList<String> list = new ArrayList<String>();
-                            List<String> datas = bean.getOptions();
-                            if (datas != null && !datas.isEmpty()){
-                                list.addAll(datas);
+
+                                new AlertDialog.Builder(getContext()).setTitle("更新" + bean.getDisplayName())
+                                        .setView(et)
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfo.getCustomerId());
+                                            }
+                                        })
+                                        .setNegativeButton("取消", null).show();
+                                break;
                             }
-                            pickerView = new OptionsPickerView<String>(getContext());
-                            ((OptionsPickerView)pickerView).setPicker(list);
-                            pickerView.setCancelable(true);
-                            ((OptionsPickerView)pickerView).setTitle("请选择");
-                            ((OptionsPickerView)pickerView).setCyclic(false);
-                            ((OptionsPickerView)pickerView).setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
-                                @Override
-                                public void onOptionsSelect(int options1, int option2, int options3) {
-                                    if (!list.isEmpty()){
-                                        String value = list.get(options1);
-                                        updateColumnValue(rightTv, bean.getColumnName(), value, customerInfo.getCustomerId());
+                            case "SELECT_STRING":
+                                dismissDialog();
+                                final ArrayList<String> list = new ArrayList<String>();
+                                List<String> datas = bean.getOptions();
+                                if (datas != null && !datas.isEmpty()) {
+                                    list.addAll(datas);
+                                }
+                                pickerView = new OptionsPickerView<String>(getContext());
+                                ((OptionsPickerView) pickerView).setPicker(list);
+                                pickerView.setCancelable(true);
+                                ((OptionsPickerView) pickerView).setTitle("请选择");
+                                ((OptionsPickerView) pickerView).setCyclic(false);
+                                ((OptionsPickerView) pickerView).setOnoptionsSelectListener(new OptionsPickerView.OnOptionsSelectListener() {
+                                    @Override
+                                    public void onOptionsSelect(int options1, int option2, int options3) {
+                                        if (!list.isEmpty()) {
+                                            String value = list.get(options1);
+                                            updateColumnValue(rightTv, bean.getColumnName(), value, customerInfo.getCustomerId());
+                                        }
+                                    }
+                                });
+                                pickerView.show();
+
+
+                                break;
+                            case "DATE":
+                                dismissDialog();
+                                pickerView = new TimePickerView(getContext(), TimePickerView.Type.YEAR_MONTH_DAY);
+                                ((TimePickerView) pickerView).setCyclic(false);
+                                pickerView.setCancelable(true);
+	                            String tempString = null;
+	                            try {
+		                            tempString = new BigDecimal(defaultTxt).setScale(0, BigDecimal.ROUND_UNNECESSARY).toString();
+	                            } catch (Exception e) {
+		                            e.printStackTrace();
+	                            }
+	                            if (TextUtils.isEmpty(tempString)) {
+		                            ((TimePickerView) pickerView).setTime(new Date());
+	                            } else {
+		                            ((TimePickerView) pickerView).setTime(new Date(Long.parseLong(tempString)));
+	                            }
+
+                                ((TimePickerView) pickerView).setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
+                                    @Override
+                                    public void onTimeSelect(Date date) {
+                                        updateColumnValue(rightTv, bean.getColumnName(), date.getTime(), customerInfo.getCustomerId(), true);
+                                    }
+                                });
+                                pickerView.show();
+
+
+                                break;
+                            case "TEXTAREA_STRING": {
+                                final EditText et = new EditText(getContext());
+                                et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 200)));
+                                et.setLines(3);
+                                et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(1000)});
+
+                                if (!TextUtils.isEmpty(defaultTxt)) {
+                                    et.setText(defaultTxt);
+                                }
+                                if (!TextUtils.isEmpty(bean.getColumnDescribe())) {
+                                    et.setHint(bean.getColumnDescribe());
+                                }
+                                et.setSelection(et.getText().length());
+                                new AlertDialog.Builder(getContext()).setTitle("更新" + bean.getDisplayName())
+                                        .setView(et)
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfo.getCustomerId());
+                                            }
+                                        })
+                                        .setNegativeButton("取消", null).show();
+
+                                break;
+                            }
+                            case "TEXT_NUMBER": {
+                                final EditText et = new EditText(getContext());
+                                et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 200)));
+                                et.setLines(1);
+                                et.setEllipsize(TextUtils.TruncateAt.END);
+                                et.setSingleLine(true);
+                                et.setInputType(InputType.TYPE_CLASS_NUMBER);
+                                et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+                                if (!TextUtils.isEmpty(defaultTxt)) {
+	                                String tempString2 = null;
+                                    try {
+                                        tempString2 = new BigDecimal(defaultTxt).setScale(0, BigDecimal.ROUND_UNNECESSARY).toString();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (TextUtils.isEmpty(tempString2)) {
+                                        et.setText(defaultTxt);
+                                    } else {
+                                        et.setText(tempString2);
                                     }
                                 }
-                            });
-                            pickerView.show();
-
-
-                        } else if (columnTypeName.equals("DATE")){
-                            dismissDialog();
-                            pickerView = new TimePickerView(getContext(), TimePickerView.Type.YEAR_MONTH_DAY);
-                            ((TimePickerView) pickerView).setCyclic(false);
-                            pickerView.setCancelable(true);
-                            if (!TextUtils.isEmpty(defaultTxt)){
-                                ((TimePickerView) pickerView).setTime(new Date(Long.parseLong(defaultTxt)));
-                            }else{
-                                ((TimePickerView) pickerView).setTime(new Date());
-                            }
-
-                            ((TimePickerView) pickerView).setOnTimeSelectListener(new TimePickerView.OnTimeSelectListener() {
-                                @Override
-                                public void onTimeSelect(Date date) {
-                                    updateColumnValue(rightTv, bean.getColumnName(), date.getTime(), customerInfo.getCustomerId(), true);
+                                if (!TextUtils.isEmpty(bean.getColumnDescribe())) {
+                                    et.setHint(bean.getColumnDescribe());
                                 }
-                            });
-                            pickerView.show();
-
-
-                        }else if (columnTypeName.equals("TEXTAREA_STRING")){
-                            final EditText et = new EditText(getContext());
-                            et.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 200)));
-                            et.setLines(3);
-                            if (!TextUtils.isEmpty(defaultTxt)){
-                                et.setText(defaultTxt);
+                                et.setSelection(et.getText().length());
+                                et.setKeyListener(new DigitsKeyListener());
+                                new AlertDialog.Builder(getContext()).setTitle("更新" + bean.getDisplayName())
+                                        .setView(et)
+                                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfo.getCustomerId());
+                                            }
+                                        })
+                                        .setNegativeButton("取消", null).show();
+                                break;
                             }
-                            if (!TextUtils.isEmpty(bean.getColumnDescribe())){
-                                et.setHint(bean.getColumnDescribe());
-                            }
-                            et.setSelection(et.getText().length());
-                            new AlertDialog.Builder(getContext()).setTitle("更新" + bean.getDisplayName())
-                                    .setView(et)
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            updateColumnValue(rightTv, bean.getColumnName(), et.getText().toString(), customerInfo.getCustomerId());
-                                        }
-                                    })
-                                    .setNegativeButton("取消", null).show();
-
                         }
 
 
@@ -213,26 +271,46 @@ public class CustomerInfoFragment extends Fragment{
             }
 
             if (!TextUtils.isEmpty(valueString)) {
-                if (columnType.getTypeName().equals("DATE")) {
-                    try {
-                        long millonSecond = Long.parseLong(valueString);
-                        String dateValueStr = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(new Date(millonSecond));
-                        rightTv.setText(dateValueStr);
-                    } catch (Exception e) {
+                switch (columnType.getTypeName()) {
+                    case "DATE":
+                        try {
+	                        try {
+		                        valueString = new BigDecimal(valueString).setScale(0, BigDecimal.ROUND_UNNECESSARY).toString();
+	                        } catch (NumberFormatException e) {
+		                        e.printStackTrace();
+	                        }
+	                        long millonSecond = Long.parseLong(valueString);
+	                        String dateValueStr = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA).format(new Date(millonSecond));
+                            rightTv.setText(dateValueStr);
+                        } catch (Exception e) {
+                            rightTv.setText(valueString);
+                        }
+                        break;
+                    case "TEXT_NUMBER":
+                        try {
+                            valueString = new BigDecimal(valueString).setScale(0, BigDecimal.ROUND_UNNECESSARY).toString();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                         rightTv.setText(valueString);
-                    }
-                } else {
-                    rightTv.setText(valueString);
+                        break;
+                    case "CASCADE_SELECT_STRING":
+                    	int subStartIndex = valueString.lastIndexOf("value=") + "value=".length();
+	                    rightTv.setText(valueString.substring(subStartIndex, valueString.length() - 1));
+	                    break;
+                    default:
+                        rightTv.setText(valueString);
+                        break;
                 }
             }
 
-            itemLayout.addView(leftTv, CommonUtils.convertDip2Px(getContext(), 90), ViewGroup.LayoutParams.MATCH_PARENT);
-            itemLayout.addView(rightTv, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                itemLayout.addView(leftTv, CommonUtils.convertDip2Px(getContext(), 90), ViewGroup.LayoutParams.MATCH_PARENT);
+                itemLayout.addView(rightTv, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
-            llContainer.addView(itemLayout, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 44));
-            View lineView = new View(getContext());
-            lineView.setBackgroundColor(getResources().getColor(R.color.line_color_2));
-            llContainer.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 0.5f));
+                llContainer.addView(itemLayout, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 44));
+                View lineView = new View(getContext());
+                lineView.setBackgroundColor(getResources().getColor(R.color.line_color_2));
+                llContainer.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, CommonUtils.convertDip2Px(getContext(), 0.5f));
 
 //            }
         }
@@ -312,7 +390,7 @@ public class CustomerInfoFragment extends Fragment{
         dismissDialog();
         dialog = DialogUtils.getLoadingDialog(getContext(), "信息更新中...");
 
-        //putCustomerDetailInfo
+         //putCustomerDetailInfo
         HDClient.getInstance().visitorManager().putCustomerDetailInfo(tenantId, customerId, columnName, updateValue, new HDDataCallBack<String>() {
             @Override
             public void onSuccess(String value) {

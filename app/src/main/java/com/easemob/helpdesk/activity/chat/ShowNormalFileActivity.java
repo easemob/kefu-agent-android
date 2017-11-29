@@ -12,7 +12,7 @@ import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.FileUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDFileMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDFileMessageBody;
 import com.hyphenate.kefusdk.entity.HDMessage;
 
 import java.io.File;

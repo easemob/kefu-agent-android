@@ -101,9 +101,23 @@
         </activity>
         <activity android:name=".activity.BaseActivity"/>
         <activity
+            android:name=".activity.test.CommonTabActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".activity.test.SegmentTabActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
             android:name=".activity.ScreeningActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".activity.main.SearchNoticeActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.visitor.VisitorDetailActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.visitor.CustomerDetailActivity"
             android:screenOrientation="portrait"/>
@@ -129,6 +143,9 @@
             android:name=".activity.chat.AddShortCutActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".activity.visitor.UserDetailsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.history.HistoryChatActivity"
             android:label="@string/title_activity_history_chat"
             android:launchMode="singleTask"
@@ -142,6 +159,16 @@
         <activity
             android:name=".activity.ModifyActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.visitor.UserProfileActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.chat.SkillGroupsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.visitor.CustomerUpdateActivity"
+            android:screenOrientation="portrait"/>
+
         <!-- photopicker start -->
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
@@ -156,6 +183,9 @@
             android:screenOrientation="portrait"/>
 
 
+        <activity
+            android:name=".activity.agent.AgentUserListActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.AlertDialog"
             android:screenOrientation="portrait"
@@ -177,10 +207,43 @@
             android:theme="@style/Transparent"
             android:windowSoftInputMode="adjustResize|stateVisible"/>
         <activity
+            android:name=".activity.history.HistorySessionDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".activity.chat.ShowNormalFileActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.chat.CustomWebViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.manager.ManagerHomeActivity"
+            android:screenOrientation="portrait">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".activity.manager.ManagerChatActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.manager.OverviewActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.manager.HomeFilterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.manager.VisitorsFilterActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.manager.WorkloadFilter"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.manager.HistoryFilter"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.manager.CurrentSessionFilter"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.main.TicketDetailActivity"
@@ -215,12 +278,39 @@
         <activity
             android:name=".activity.chat.ShowVideoActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.chat.ImageGridActivity"
+        <activity
+            android:name=".activity.chat.ImageGridActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.chat.RecorderVideoActivity"
+        <activity
+            android:name=".activity.chat.RecorderVideoActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.visitor.CustomersScreeningActivity"
+        <activity
+            android:name=".activity.visitor.CustomersScreeningActivity"
             android:screenOrientation="portrait"/>
+
+        <!-- 设置环信应用的appkey -->
+        <!--
+			 <meta-data
+			 android:name="EASEMOB_APPKEY"
+			 android:value="easemob-demo#chatdemoui" />
+		-->
+        <!-- 声明sdk所需的service -->
+        <!-- <service -->
+        <!-- android:name="com.easemob.chat.EMChatService" -->
+        <!-- android:exported="true" /> -->
+        <!-- 声明sdk所需的receiver -->
+        <!-- <receiver android:name="com.easemob.chat.EMMonitorReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.PACKAGE_REMOVED" /> -->
+        <!-- <data android:scheme="package" /> -->
+        <!-- </intent-filter> -->
+        <!-- &lt;!&ndash; 可选filter &ndash;&gt; -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- <action android:name="android.intent.action.USER_PRESENT" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
 
         <!-- 声明SDK所需的service SDK核心功能 -->
         <service
@@ -240,42 +330,30 @@
             </intent-filter>
         </receiver>
 
-        <!-- huawei push 第三方相关:接收Push消息 -->
-        <receiver
-            android:name="com.hyphenate.chat.EMHuaweiPushReceiver"
-            android:exported="true">
+        <!--华为 HMS Config-->
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="10620345"/>
+        <!--华为推送 start-->
+        <receiver android:name="com.hyphenate.chat.EMHWPushReceiver">
             <intent-filter>
-
-                <!-- 必须,用于接收token -->
+                <!-- 必须,用于接收 TOKEN -->
                 <action android:name="com.huawei.android.push.intent.REGISTRATION"/>
-                <!-- 必须,用于接收消息 -->
+                <!-- 必须，用于接收消息 -->
                 <action android:name="com.huawei.android.push.intent.RECEIVE"/>
+                <!-- 可选，用于点击通知栏或通知栏上的按钮后触发 onEvent 回调 -->
+                <action android:name="com.huawei.android.push.intent.CLICK"/>
+                <!-- 可选，查看 PUSH 通道是否连接，不查看则不需要 -->
+                <action android:name="com.huawei.intent.action.PUSH_STATE"/>
             </intent-filter>
-            />
-            <meta-data
-                android:name="CS_cloud_ablitity"
-                android:value="successRateAnalytics"/>
         </receiver>
 
-        <!-- PushSDK:PushSDK接收外部请求事件入口 -->
-        <receiver
-            android:name="com.huawei.android.pushagent.PushEventReceiver"
-            android:exported="true"
-            android:process=":pushservice">
+        <receiver android:name="com.huawei.hms.support.api.push.PushEventReceiver">
             <intent-filter>
-                <action android:name="com.huawei.android.push.intent.REFRESH_PUSH_CHANNEL"/>
+                <!-- 接收通道发来的通知栏消息，兼容老版本 PUSH -->
                 <action android:name="com.huawei.intent.action.PUSH"/>
-                <action android:name="com.huawei.intent.action.PUSH_ON"/>
-                <action android:name="com.huawei.android.push.PLUGIN"/>
             </intent-filter>
         </receiver>
-
-        <!-- PushSDK:Push服务 -->
-        <service
-            android:name="com.huawei.android.pushagent.PushService"
-            android:process=":pushservice">
-        </service>
-
         <!-- huawei push end -->
 
 
@@ -302,6 +380,31 @@
             </intent-filter>
         </receiver>
         <!-- xiaomi push end -->
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.xiaomi.push.service.receivers.PingReceiver"
+            android:exported="false"
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.xiaomi.push.PING_TIMER"/>
+            </intent-filter>
+        </receiver>
+        <provider
+            android:authorities="com.easemob.helpdesk"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

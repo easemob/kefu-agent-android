@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.hyphenate.kefusdk.bean.TechChannel;
+import com.hyphenate.kefusdk.entity.TechChannel;
 
 import java.util.List;
 

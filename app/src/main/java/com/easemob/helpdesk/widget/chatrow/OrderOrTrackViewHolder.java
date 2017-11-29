@@ -18,9 +18,9 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.adapter.ChatAdapter;
 import com.easemob.helpdesk.emoticon.utils.SimpleCommonUtils;
 import com.easemob.helpdesk.utils.CommonUtils;
-import com.hyphenate.kefusdk.bean.MsgTypeOrderEntity;
+import com.hyphenate.kefusdk.entity.MsgTypeOrderEntity;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDTextMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDTextMessageBody;
 import com.hyphenate.kefusdk.utils.JsonUtils;
 
 /**
@@ -62,7 +62,9 @@ public class OrderOrTrackViewHolder extends BaseViewHolder {
 	public void handleViewMessage(HDMessage message, int position) {
 		if (message.direct() == HDMessage.Direct.SEND) {
 			// 设置内容
-			SimpleCommonUtils.spannableEmoticonFilter(tv, CommonUtils.convertStringByMessageText(((HDTextMessageBody) message.getBody()).getMessage()));
+			if (tv != null) {
+				SimpleCommonUtils.spannableEmoticonFilter(tv, CommonUtils.convertStringByMessageText(((HDTextMessageBody) message.getBody()).getMessage()));
+			}
 		} else {
 			MsgTypeOrderEntity entty = JsonUtils.getMsgOrderFromJson(message.getExtJson());
 			if (entty != null) {

@@ -101,7 +101,7 @@ public class XhsEmoticonsKeyBoard_backup extends AutoHeightLayout implements Vie
     }
 
     protected void initEditView() {
-        mEtChat.setOnTouchListener(new View.OnTouchListener() {
+        mEtChat.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (!mEtChat.isFocused()) {

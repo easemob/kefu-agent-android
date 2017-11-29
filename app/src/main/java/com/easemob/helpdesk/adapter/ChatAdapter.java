@@ -3,6 +3,7 @@ package com.easemob.helpdesk.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +11,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.easemob.helpdesk.R;
+import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.widget.chatrow.BaseViewHolder;
 import com.easemob.helpdesk.widget.chatrow.FileViewHolder;
+import com.easemob.helpdesk.widget.chatrow.FormViewHolder;
 import com.easemob.helpdesk.widget.chatrow.ImageViewHolder;
 import com.easemob.helpdesk.widget.chatrow.OrderOrTrackViewHolder;
 import com.easemob.helpdesk.widget.chatrow.RecallViewHolder;
@@ -21,6 +24,7 @@ import com.easemob.helpdesk.widget.chatrow.RobotMenuViewHolder;
 import com.easemob.helpdesk.widget.chatrow.TxtViewHolder;
 import com.easemob.helpdesk.widget.chatrow.VideoViewHolder;
 import com.easemob.helpdesk.widget.chatrow.VoiceViewHolder;
+import com.hyphenate.kefusdk.entity.user.HDBaseUser;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
 import com.hyphenate.kefusdk.utils.MessageUtils;
@@ -49,6 +53,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 	private static final int MESSAGE_TYPE_RECALL_MESSAGE = 12;
 	private static final int MESSAGE_TYPE_SENT_VIDEO = 13;
 	private static final int MESSAGE_TYPE_RECV_VIDEO = 14;
+	private static final int MESSAGE_TYPE_SENT_FORM = 15;
+	private static final int MESSAGE_TYPE_RECV_FORM = 16;
 
 	private LayoutInflater inflater;
 	private Activity mActivity;
@@ -172,6 +178,14 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 				convertView = inflater.inflate(R.layout.row_received_video, parent, false);
 				holder = new VideoViewHolder(mActivity, this, convertView);
 				break;
+			case MESSAGE_TYPE_SENT_FORM:
+				convertView = inflater.inflate(R.layout.row_sent_form, parent, false);
+				holder = new FormViewHolder(mActivity, this, convertView);
+				break;
+			case MESSAGE_TYPE_RECV_FORM:
+				convertView = inflater.inflate(R.layout.row_received_message, parent, false);
+				holder = new FormViewHolder(mActivity, this, convertView);
+				break;
 		}
 		//noinspection ConstantConditions
 		convertView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -191,7 +205,13 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 		if (holder.ivAvatar != null && !AvatarManager.getInstance(mActivity).asyncGetMessageAvatar(message, mActivity, holder.ivAvatar)) {
 			if (message.direct() == HDMessage.Direct.RECEIVE) {
 				if (sessionManager.isAgentChat()) {
-					holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
+					HDBaseUser user = (HDBaseUser) ((BaseChatActivity)mActivity).getToUser();
+					String remoteUrl = AvatarManager.getInstance(mActivity).recombineUrl(user.getAvatar());
+					if (user.getUserId().equals(message.getFromUser().getUserId()) && !TextUtils.isEmpty(remoteUrl)) {
+						AvatarManager.getInstance(mActivity).asyncGetAvatar(holder.ivAvatar, remoteUrl, mActivity);
+					} else {
+						holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
+					}
 				} else {
 					holder.ivAvatar.setImageResource(R.drawable.default_customer_avatar);
 				}
@@ -291,6 +311,12 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 					return MESSAGE_TYPE_SENT_TXT;
 				} else {
 					return MESSAGE_TYPE_RECV_ORDER;
+				}
+			} else if (MessageUtils.isFormMessage(message)) {
+				if (isSend) {
+					return MESSAGE_TYPE_SENT_FORM;
+				} else {
+					return MESSAGE_TYPE_RECV_FORM;
 				}
 			} else {
 				if (isSend) {

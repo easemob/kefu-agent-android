@@ -1,5 +1,7 @@
 package com.easemob.helpdesk;
 
+import android.content.Intent;
+
 import com.easemob.helpdesk.utils.HDNotifier;
 import com.hyphenate.kefusdk.HDEventListener;
 import com.hyphenate.kefusdk.HDNotifierEvent;
@@ -49,6 +51,12 @@ public class IMHelper {
                         case EventNewSession:
                             if (HDApplication.getInstance().isNoActivity()){
                                 HDNotifier.getInstance().notifiChatMsg(null);
+                            }
+                            if (HDApplication.getInstance().isBroadcastUnreadCount()){
+                                Intent intent = new Intent();
+                                intent.setAction("com.easemob.helpdesk.newmessage");
+                                intent.putExtra("com.easemob.helpdesk.unreadcount", HDApplication.getInstance().getUnReadMsgCount());
+                                HDApplication.getInstance().sendBroadcast(intent);
                             }
                             break;
                     }

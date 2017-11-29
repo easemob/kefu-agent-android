@@ -10,7 +10,7 @@ import com.easemob.helpdesk.activity.SearchWaitAccessActivity;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.hyphenate.kefusdk.gsonmodel.main.WaitQueueResponse;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 

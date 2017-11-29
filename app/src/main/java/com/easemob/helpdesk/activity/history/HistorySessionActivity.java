@@ -20,10 +20,10 @@ import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.HistorySessionEntity;
-import com.hyphenate.kefusdk.bean.TechChannel;
-import com.hyphenate.kefusdk.entity.HDVisitorUser;
-import com.hyphenate.kefusdk.entity.HistorySessionScreenEntity;
+import com.hyphenate.kefusdk.entity.HistorySessionEntity;
+import com.hyphenate.kefusdk.entity.TechChannel;
+import com.hyphenate.kefusdk.entity.user.HDVisitorUser;
+import com.hyphenate.kefusdk.entity.option.HistorySessionScreenEntity;
 import com.hyphenate.kefusdk.manager.session.HistorySessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -267,8 +267,10 @@ public class HistorySessionActivity extends BaseActivity {
             if (requestCode == REQUEST_CODE_SCREENING) {
                 HistorySessionScreenEntity screenEntity = new HistorySessionScreenEntity();
                 currentTimeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
-                screenEntity.startTime = currentTimeInfo.getStartTime();
-                screenEntity.endTime = currentTimeInfo.getEndTime();
+                if (currentTimeInfo != null) {
+                    screenEntity.startTime = currentTimeInfo.getStartTime();
+                    screenEntity.endTime = currentTimeInfo.getEndTime();
+                }
                 if(data.hasExtra("originType")){
                     screenEntity.currentOriginType = data.getStringExtra("originType");
                 }
@@ -305,7 +307,9 @@ public class HistorySessionActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        mWeakHandler.removeCallbacksAndMessages(null);
+        if (mWeakHandler != null) {
+            mWeakHandler.removeCallbacksAndMessages(null);
+        }
         super.onDestroy();
     }
 

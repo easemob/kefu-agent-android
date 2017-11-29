@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.hyphenate.kefusdk.bean.HDPhrase;
+import com.hyphenate.kefusdk.entity.HDPhrase;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 /**

@@ -52,7 +52,7 @@ public class ExtensionFilter implements FileFilter {
         if (file.isDirectory()&&file.canRead())
         {   return true;
         }
-        else if(properties.selection_type== DialogConfigs.DIR_SELECT)
+        else if(properties.selection_type==DialogConfigs.DIR_SELECT)
         {   /*  True for files, If the selection type is Directory type, ie.
              *  Only directory has to be selected from the list, then all files are
              *  ignored.

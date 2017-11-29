@@ -17,8 +17,8 @@ import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDUser;
-import com.hyphenate.kefusdk.chat.LeaveMessageManager;
+import com.hyphenate.kefusdk.entity.user.HDUser;
+import com.hyphenate.kefusdk.manager.main.LeaveMessageManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -145,143 +145,163 @@ public class LeaveMessageGroupFragment extends Fragment {
 		getCustomFilterTicketsCount();
 	}
 
-	private void getPendingTicketsCount() {
+    private void getPendingTicketsCount() {
 
 
-		pendingTicketsLayout.setClickable(false);
+	    pendingTicketsLayout.setClickable(false);
 
-		HDClient.getInstance().leaveMessageManager().getPendingTicketsCount(new HDDataCallBack<String>() {
-			@Override
-			public void onSuccess(final String value) {
-				if (getActivity() == null) {
-					return;
-				}
-				getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						pendingTicketsCounts.setText(value);
-						pendingTicketsLayout.setClickable(true);
-					}
-				});
-			}
+	    HDClient.getInstance().leaveMessageManager().getPendingTicketsCount(new HDDataCallBack<String>() {
+		    @Override
+		    public void onSuccess(final String value) {
+			    if (getActivity() == null) {
+				    return;
+			    }
+			    getActivity().runOnUiThread(new Runnable() {
+				    @Override
+				    public void run() {
+					    if (pendingTicketsCounts != null) {
+						    pendingTicketsCounts.setText(value);
+					    }
+					    if (pendingTicketsLayout != null) {
+						    pendingTicketsLayout.setClickable(true);
+					    }
+				    }
+			    });
+		    }
 
-			@Override
-			public void onError(int error, String errorMsg) {
+		    @Override
+		    public void onError(int error, String errorMsg) {
 
-			}
-		});
+		    }
+	    });
 
-	}
+    }
 
-	private void getSolvedTicketsCount() {
-		mysolvedTicketsLayout.setClickable(false);
+    private void getSolvedTicketsCount() {
+	    mysolvedTicketsLayout.setClickable(false);
 
-		HDClient.getInstance().leaveMessageManager().getSolvedTicketsCount(new HDDataCallBack<String>() {
-			@Override
-			public void onSuccess(final String value) {
-				if (getActivity() == null) {
-					return;
-				}
-				getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						mySolvedTicketsCounts.setText(value);
-						mysolvedTicketsLayout.setClickable(true);
-					}
-				});
-			}
+	    HDClient.getInstance().leaveMessageManager().getSolvedTicketsCount(new HDDataCallBack<String>() {
+		    @Override
+		    public void onSuccess(final String value) {
+			    if (getActivity() == null) {
+				    return;
+			    }
+			    getActivity().runOnUiThread(new Runnable() {
+				    @Override
+				    public void run() {
+					    if (mySolvedTicketsCounts != null) {
+						    mySolvedTicketsCounts.setText(value);
+					    }
+					    if (mysolvedTicketsLayout != null) {
+						    mysolvedTicketsLayout.setClickable(true);
+					    }
+				    }
+			    });
+		    }
 
-			@Override
-			public void onError(int error, String errorMsg) {
+		    @Override
+		    public void onError(int error, String errorMsg) {
 
-			}
-		});
-	}
+		    }
+	    });
+    }
 
-	private void getOpenTicketsCount() {
+    private void getOpenTicketsCount() {
 
-		myOpenTicketsLayout.setClickable(false);
+	    myOpenTicketsLayout.setClickable(false);
 
-		HDClient.getInstance().leaveMessageManager().getOpenTicketsCount(new HDDataCallBack<String>() {
-			@Override
-			public void onSuccess(final String value) {
-				openedLeaveMessageCount = Integer.parseInt(value);
-				if (getActivity() == null) {
-					return;
-				}
-				getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						((MainActivity)getActivity()).refreshOpenedLeaveMessageCount();
-						myOpenTicketsCounts.setText(value);
-						myOpenTicketsLayout.setClickable(true);
-					}
-				});
-			}
+	    HDClient.getInstance().leaveMessageManager().getOpenTicketsCount(new HDDataCallBack<String>() {
+		    @Override
+		    public void onSuccess(final String value) {
+			    openedLeaveMessageCount = Integer.parseInt(value);
+			    if (getActivity() == null) {
+				    return;
+			    }
+		        getActivity().runOnUiThread(new Runnable() {
+			        @Override
+			        public void run() {
+				        ((MainActivity)getActivity()).refreshOpenedLeaveMessageCount();
+				        if (myOpenTicketsCounts != null) {
+					        myOpenTicketsCounts.setText(value);
+				        }
+				        if (myOpenTicketsLayout != null) {
+					        myOpenTicketsLayout.setClickable(true);
+				        }
+			        }
+		        });
+		    }
 
-			@Override
-			public void onError(int error, String errorMsg) {
+		    @Override
+		    public void onError(int error, String errorMsg) {
 
-			}
-		});
-	}
+		    }
+	    });
+    }
 
-	public int getOpenTicketsCountResult() {
-		return openedLeaveMessageCount;
-	}
+    public int getOpenTicketsCountResult() {
+	    return openedLeaveMessageCount;
+    }
 
-	private void getUnassigneeTicketsCount() {
-		unassignedTicketsLayout.setClickable(false);
+    private void getUnassigneeTicketsCount() {
+	    unassignedTicketsLayout.setClickable(false);
 
-		HDClient.getInstance().leaveMessageManager().getUnassignedTicketCounts(new HDDataCallBack<String>() {
-			@Override
-			public void onSuccess(final String value) {
-				if (getActivity() == null) {
-					return;
-				}
-				getActivity().runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						unassignedTicketsCounts.setText(value);
-						unassignedTicketsLayout.setClickable(true);
-					}
-				});
-			}
+	    HDClient.getInstance().leaveMessageManager().getUnassignedTicketCounts(new HDDataCallBack<String>() {
+		    @Override
+		    public void onSuccess(final String value) {
+			    if (getActivity() == null) {
+				    return;
+			    }
+			    getActivity().runOnUiThread(new Runnable() {
+				    @Override
+				    public void run() {
+					    if (unassignedTicketsCounts != null) {
+						    unassignedTicketsCounts.setText(value);
+					    }
+					    if (unassignedTicketsLayout != null) {
+						    unassignedTicketsLayout.setClickable(true);
+					    }
+				    }
+			    });
+		    }
 
-			@Override
-			public void onError(int error, String errorMsg) {
+		    @Override
+		    public void onError(int error, String errorMsg) {
 
-			}
-		});
-	}
+		    }
+	    });
+    }
 
-	private void getCustomFilterTicketsCount() {
-		int count = getActivity().getSharedPreferences("screeningCount", MODE_PRIVATE).getInt("screeningCount", -1);
-		if(count >= 0) {
-			customFilterTicketsCounts.setText(String.valueOf(count));
-			customFilterTicketsLayout.setClickable(true);
-		} else {
-			customFilterTicketsLayout.setClickable(false);
-			HDClient.getInstance().leaveMessageManager().getAllCurrentAgentTicketsCount(new HDDataCallBack<String>() {
-				@Override
-				public void onSuccess(final String value) {
-					if (getActivity() == null) {
-						return;
-					}
-					getActivity().runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							customFilterTicketsCounts.setText(value);
-							customFilterTicketsLayout.setClickable(true);
-						}
-					});
-				}
+    private void getCustomFilterTicketsCount() {
+	    int count = getActivity().getSharedPreferences("screeningCount", MODE_PRIVATE).getInt("screeningCount", -1);
+	    if(count >= 0) {
+		   customFilterTicketsCounts.setText(String.valueOf(count));
+		   customFilterTicketsLayout.setClickable(true);
+	    } else {
+		    customFilterTicketsLayout.setClickable(false);
+		    HDClient.getInstance().leaveMessageManager().getAllCurrentAgentTicketsCount(new HDDataCallBack<String>() {
+			    @Override
+			    public void onSuccess(final String value) {
+				    if (getActivity() == null) {
+					    return;
+				    }
+				    getActivity().runOnUiThread(new Runnable() {
+					    @Override
+					    public void run() {
+						    if (customFilterTicketsCounts != null) {
+							    customFilterTicketsCounts.setText(value);
+						    }
+						    if (customFilterTicketsLayout != null) {
+							    customFilterTicketsLayout.setClickable(true);
+						    }
+					    }
+				    });
+			    }
 
-				@Override
-				public void onError(int error, String errorMsg) {
+			    @Override
+			    public void onError(int error, String errorMsg) {
 
-				}
-			});
-		}
-	}
+			    }
+		    });
+	    }
+    }
 }

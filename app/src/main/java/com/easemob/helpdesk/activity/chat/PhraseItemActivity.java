@@ -20,7 +20,7 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.adapter.PhraseItemAdapter;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
-import com.hyphenate.kefusdk.bean.HDPhrase;
+import com.hyphenate.kefusdk.entity.HDPhrase;
 import com.hyphenate.kefusdk.chat.HDClient;
 
 import java.util.ArrayList;

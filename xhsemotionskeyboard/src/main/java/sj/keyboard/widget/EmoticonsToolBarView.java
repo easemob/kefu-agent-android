@@ -10,6 +10,9 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,15 +77,23 @@ public class EmoticonsToolBarView extends RelativeLayout {
 
     protected void initItemToolBtn(View toolBtnView, int rec, final PageSetEntity pageSetEntity, OnClickListener onClickListener){
         ImageView iv_icon = (ImageView) toolBtnView.findViewById(R.id.iv_icon);
+        TextView tv_icon = (TextView) toolBtnView.findViewById(R.id.tv_icon);
         if (rec > 0) {
             iv_icon.setImageResource(rec);
         }
         LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(mBtnWidth, LayoutParams.MATCH_PARENT);
         iv_icon.setLayoutParams(imgParams);
         if (pageSetEntity != null) {
-            iv_icon.setTag(R.id.id_tag_pageset, pageSetEntity);
             try {
-                ImageLoader.getInstance(mContext).displayImage(pageSetEntity.getIconUri(), iv_icon);
+                if (!TextUtils.isEmpty(pageSetEntity.getIconUri())) {
+                    ImageLoader.getInstance(mContext).displayImage(pageSetEntity.getIconUri(), iv_icon);
+                    iv_icon.setTag(R.id.id_tag_pageset, pageSetEntity);
+                } else {
+                    iv_icon.setVisibility(GONE);
+                    tv_icon.setText(pageSetEntity.getmSetName());
+                    tv_icon.setVisibility(VISIBLE);
+                    tv_icon.setTag(R.id.id_tag_pageset, pageSetEntity);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -99,6 +110,10 @@ public class EmoticonsToolBarView extends RelativeLayout {
 
     protected View getToolBgBtn(View parentView) {
         return  parentView.findViewById(R.id.iv_icon);
+    }
+
+    protected View getToolBgTxtBtn(View parentView) {
+        return  parentView.findViewById(R.id.tv_icon);
     }
 
     public void addFixedToolItemView(boolean isRight, int rec, final PageSetEntity pageSetEntity, OnClickListener onClickListener) {
@@ -132,7 +147,11 @@ public class EmoticonsToolBarView extends RelativeLayout {
         View toolBtnView = getCommonItemToolBtn();
         initItemToolBtn(toolBtnView, rec, pageSetEntity, onClickListener);
         ly_tool.addView(toolBtnView);
-        mToolBtnList.add(getToolBgBtn(toolBtnView));
+        if (!TextUtils.isEmpty(pageSetEntity.getIconUri())) {
+            mToolBtnList.add(getToolBgBtn(toolBtnView));
+        } else {
+            mToolBtnList.add(getToolBgTxtBtn(toolBtnView));
+        }
     }
 
     public void setToolBtnSelect(String uuid) {

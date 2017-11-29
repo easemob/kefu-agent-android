@@ -21,7 +21,7 @@ import com.easemob.helpdesk.activity.AlertDialog;
 import com.easemob.helpdesk.adapter.AgentQueueAdapter;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.AgentQueue;
+import com.hyphenate.kefusdk.entity.agent.AgentQueue;
 import com.hyphenate.kefusdk.utils.HDLog;
 
 import java.util.ArrayList;

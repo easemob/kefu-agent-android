@@ -43,13 +43,11 @@ public class MediaStoreHelper {
       this.resultCallback = resultCallback;
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
       return new PhotoDirectoryLoader(context, args.getBoolean(EXTRA_SHOW_GIF, false));
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    @Override public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
       if (data == null)  return;
       List<PhotoDirectory> directories = new ArrayList<>();
@@ -88,8 +86,7 @@ public class MediaStoreHelper {
       }
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    @Override public void onLoaderReset(Loader<Cursor> loader) {
 
     }
   }

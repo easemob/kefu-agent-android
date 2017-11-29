@@ -18,7 +18,7 @@ import android.support.v4.app.NotificationCompat;
 import com.easemob.helpdesk.ChannelConfig;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.mvp.ChatActivity;
-import com.hyphenate.kefusdk.bean.HDSession;
+import com.hyphenate.kefusdk.entity.HDSession;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.manager.session.CurrentSessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;

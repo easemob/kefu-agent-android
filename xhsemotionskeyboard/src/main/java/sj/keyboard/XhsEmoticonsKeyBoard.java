@@ -102,7 +102,7 @@ public class XhsEmoticonsKeyBoard extends AutoHeightLayout implements View.OnCli
     }
 
     protected void initEditView() {
-        mEtChat.setOnTouchListener(new View.OnTouchListener() {
+        mEtChat.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (!mEtChat.isFocused()) {
@@ -150,10 +150,6 @@ public class XhsEmoticonsKeyBoard extends AutoHeightLayout implements View.OnCli
 
     public void addFuncView(View view, int appNum) {
         this.appNum = appNum;
-        mLyKvml.addFuncView(FUNC_TYPE_APPPS, view);
-    }
-
-    public void addFuncView(View view) {
         mLyKvml.addFuncView(FUNC_TYPE_APPPS, view);
     }
 

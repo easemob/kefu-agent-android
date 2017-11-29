@@ -27,6 +27,10 @@ public class PageSetEntity<T extends PageEntity> implements Serializable {
         return mIconUri;
     }
 
+    public String getmSetName() {
+        return mSetName;
+    }
+
     public int getPageCount() {
         return mPageEntityList == null ? 0 : mPageEntityList.size();
     }

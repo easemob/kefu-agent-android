@@ -181,7 +181,7 @@ public class FilePickerPreference extends Preference implements
                 properties.selection_mode=tarr.getInteger(R.styleable.FilePickerPreference_selection_mode, DialogConfigs.SINGLE_MODE);
             }
             else if (attr == R.styleable.FilePickerPreference_selection_type) {
-                properties.selection_type=tarr.getInteger(R.styleable.FilePickerPreference_selection_type, DialogConfigs.FILE_SELECT);
+                properties.selection_type=tarr.getInteger(R.styleable.FilePickerPreference_selection_type,DialogConfigs.FILE_SELECT);
             }
             else if (attr == R.styleable.FilePickerPreference_root_dir) {
                 String root_dir=tarr.getString(R.styleable.FilePickerPreference_root_dir);

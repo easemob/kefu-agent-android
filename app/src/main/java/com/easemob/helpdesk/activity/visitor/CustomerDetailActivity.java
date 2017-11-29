@@ -22,7 +22,7 @@ import com.easemob.helpdesk.utils.DialogUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.HDSession;
+import com.hyphenate.kefusdk.entity.HDSession;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.utils.HDLog;
 

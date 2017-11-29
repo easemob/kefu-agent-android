@@ -16,7 +16,7 @@ import com.easemob.helpdesk.adapter.ChatAdapter;
 import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.widget.BubbleImageView;
-import com.hyphenate.kefusdk.entity.HDImageMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDImageMessageBody;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.utils.HDLog;
 
@@ -50,6 +50,11 @@ public class ImageViewHolder extends BaseViewHolder {
 
 	@Override
 	public void handleViewMessage(final HDMessage message, final int position) {
+		if (!(message.getBody() instanceof HDImageMessageBody)){
+			HDLog.e("imageViewHolder", "body is not HDImageMessageBody");
+			return;
+		}
+
 		final HDImageMessageBody imgBody = (HDImageMessageBody) message.getBody();
 		if (imgBody == null) {
 			HDLog.e("imageViewHolder", "imgBody is null");

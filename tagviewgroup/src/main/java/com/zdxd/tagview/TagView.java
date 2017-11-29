@@ -294,14 +294,14 @@ public class TagView extends RelativeLayout {
 	 * @param tag
 	 */
 	public void addTag(Tag tag) {
-
 		mTags.add(tag);
-        drawTags();
+		resortTags();
+		drawTags();
 	}
 
     public void addTags(ArrayList<Tag> tags){
         if (tags==null)return;
-		mTags = new ArrayList<>();
+		mTags = Collections.synchronizedList(new ArrayList<Tag>());
 		if (tags.size() == 0)
 			drawTags();
         for(Tag item:tags){
@@ -417,6 +417,19 @@ public class TagView extends RelativeLayout {
 	 */
 	public void setOnTagDeleteListener(OnTagDeleteListener deleteListener) {
 		mDeleteListener = deleteListener;
+	}
+
+	private synchronized void resortTags() {
+		for (int i = 0; i < mTags.size() - 1; i++) {
+			Tag aTag = mTags.get(i);
+			for (int j = i + 1; j < mTags.size(); j++) {
+				Tag bTag = mTags.get(j);
+				if (bTag.id < aTag.id) {
+					mTags.set(i, bTag);
+					mTags.set(j, aTag);
+				}
+			}
+		}
 	}
 
 }

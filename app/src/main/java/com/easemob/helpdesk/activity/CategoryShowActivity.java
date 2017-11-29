@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.HDCategorySummary;
+import com.hyphenate.kefusdk.entity.HDCategorySummary;
 import com.hyphenate.kefusdk.manager.main.CategorySummaryManager;
 import com.zdxd.tagview.OnTagDeleteListener;
 import com.zdxd.tagview.Tag;

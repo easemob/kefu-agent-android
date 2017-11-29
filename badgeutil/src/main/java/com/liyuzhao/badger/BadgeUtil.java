@@ -1,6 +1,7 @@
 package com.liyuzhao.badger;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,7 +44,9 @@ public class BadgeUtil {
 //        }
 //        badger.executeBadge(context, notification, notifyID, thisNotifyCount, count);
 
-        ShortcutBadger.applyCount(context, notification, notifyID, thisNotifyCount, count);
+        setNotification(notification, notifyID, context, count);
+
+        ShortcutBadger.applyCount(context, count);
     }
 
 
@@ -73,4 +76,12 @@ public class BadgeUtil {
 
     }
 
+    static void setNotification(Notification notification, int notificationId, Context context, int count){
+        if (notification != null){
+            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.cancel(notificationId);
+            ShortcutBadger.applyNotification(context, notification, count);
+            mNotificationManager.notify(notificationId, notification);
+        }
+    }
 }

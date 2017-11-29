@@ -43,7 +43,7 @@
         tl:tl_iconVisible="false"
         tl:tl_textSelectColor="#15A2FC"
         tl:tl_textUnselectColor="@android:color/black"
-        tl:tl_textsize="15sp"/>
+        tl:tl_textsize="14sp"/>
 
     <FrameLayout
         android:id="@+id/framelayout"

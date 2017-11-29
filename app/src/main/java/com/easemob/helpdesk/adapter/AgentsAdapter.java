@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.transfer.TransferActivity;
-import com.hyphenate.kefusdk.entity.AgentUser;
+import com.hyphenate.kefusdk.entity.agent.AgentUser;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.hyphenate.kefusdk.chat.HDClient;
 

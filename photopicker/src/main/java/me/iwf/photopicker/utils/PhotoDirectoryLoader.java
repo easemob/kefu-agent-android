@@ -40,7 +40,7 @@ public class PhotoDirectoryLoader extends CursorLoader {
 
 
   private PhotoDirectoryLoader(Context context, Uri uri, String[] projection, String selection,
-                               String[] selectionArgs, String sortOrder) {
+      String[] selectionArgs, String sortOrder) {
     super(context, uri, projection, selection, selectionArgs, sortOrder);
   }
 

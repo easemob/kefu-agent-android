@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DateUtils;
-import com.hyphenate.kefusdk.bean.HistorySessionEntity;
-import com.hyphenate.kefusdk.bean.Summary;
+import com.hyphenate.kefusdk.entity.HistorySessionEntity;
+import com.hyphenate.kefusdk.entity.Summary;
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 
 import java.text.ParseException;

@@ -7,6 +7,13 @@ public class TimeInfo implements Serializable{
 	private long startTime;
 	private long endTime;
 
+	public TimeInfo() {}
+
+	public TimeInfo(long start, long end) {
+		startTime = start;
+		endTime = end;
+	}
+
 	public long getStartTime() {
 		return startTime;
 	}

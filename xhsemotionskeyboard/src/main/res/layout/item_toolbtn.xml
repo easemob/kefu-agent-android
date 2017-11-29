@@ -12,5 +12,14 @@
         android:paddingBottom="6dp"
         android:paddingTop="6dp" />
 
+    <TextView
+        android:id="@+id/tv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:visibility="gone"/>
+
     <include layout="@layout/ic_spitview_vertical" />
 </LinearLayout>

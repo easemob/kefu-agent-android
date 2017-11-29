@@ -17,11 +17,14 @@ import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.pickerview.SimplePickerView;
+import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.gsonmodel.ticket.CreateSourceResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -34,6 +37,8 @@ public class TicketsScreeningActivity extends BaseActivity
 	private ArrayList<String> agent = new ArrayList<>();
 	private ArrayList<String> status = new ArrayList<>();
 	private ArrayList<String> channels = new ArrayList<>();
+	private ArrayList<String> createSources = new ArrayList<>();
+	private ArrayList<CreateSourceResponse.EntitiesBean> createSourcesEntities = new ArrayList<>();
 
 
 	private RelativeLayout rlTimeLayout;
@@ -42,6 +47,7 @@ public class TicketsScreeningActivity extends BaseActivity
 	private RelativeLayout rlAgentLayout;
 	private RelativeLayout rlStatusLayout;
 	private RelativeLayout rlChannelLayout;
+	private RelativeLayout rlCreateSourceLayout;
 
 	private View ibtnBack;
 	private TextView tvAction;
@@ -52,6 +58,7 @@ public class TicketsScreeningActivity extends BaseActivity
 	private TextView tvStatus;
 	private TextView tvChannel;
 	private EditText etCreateBy;
+	private TextView tvCreateSource;
 
 	private Button button;
 
@@ -65,6 +72,8 @@ public class TicketsScreeningActivity extends BaseActivity
 	private int agentIndex = 1;
 	private int statusIndex = 0;
 	private int channelIndex = 0;
+	private int createSourceId = -1;
+	private int createSourceIndex = 0;
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
 	private Context mContext;
@@ -101,6 +110,9 @@ public class TicketsScreeningActivity extends BaseActivity
 		rlChannelLayout = $(R.id.rl_channel);
 		tvChannel = $(R.id.tv_channel_text);
 
+		rlCreateSourceLayout = $(R.id.rl_create_source);
+		tvCreateSource = $(R.id.tv_create_source_text);
+
 		etCreateBy = $(R.id.et_created_by_text);
 		button = $(R.id.btn_reset);
 
@@ -122,6 +134,7 @@ public class TicketsScreeningActivity extends BaseActivity
 		rlAgentLayout.setOnClickListener(new RlClickListener());
 		rlStatusLayout.setOnClickListener(new RlClickListener());
 		rlChannelLayout.setOnClickListener(new RlClickListener());
+		rlCreateSourceLayout.setOnClickListener(new RlClickListener());
 	}
 
 	private void initData(){
@@ -162,6 +175,38 @@ public class TicketsScreeningActivity extends BaseActivity
 			channelIndex = 0;
 		}
 		tvChannel.setText(channels.get(channelIndex));
+
+		createSources.add("全部");
+		tvCreateSource.setText("全部");
+		HDClient.getInstance().leaveMessageManager().getgetLeaveMsgCreateSource(new HDDataCallBack<List<CreateSourceResponse.EntitiesBean>>() {
+			@Override
+			public void onSuccess(List<CreateSourceResponse.EntitiesBean> value) {
+				createSourcesEntities.clear();
+				createSourcesEntities.addAll(value);
+				createSources.clear();
+				createSources.add("全部");
+				for (int i = 0; i < value.size(); i++) {
+					CreateSourceResponse.EntitiesBean bean = value.get(i);
+					createSources.add(bean.getName());
+					if (bean.getId() == createSourceId) {
+						createSourceIndex = i + 1; // 前面多了全部所以+1
+					}
+				}
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						if (tvCreateSource != null) {
+							tvCreateSource.setText(createSources.get(createSourceIndex));
+						}
+					}
+				});
+			}
+
+			@Override
+			public void onError(int error, String errorMsg) {
+
+			}
+		});
 	}
 
 	class RlClickListener implements View.OnClickListener{
@@ -193,6 +238,12 @@ public class TicketsScreeningActivity extends BaseActivity
 				case R.id.rl_channel:
 					currentPickCategory = PickCategory.CHANNEL;
 					simplePickerView = new SimplePickerView(mContext, channels);
+					simplePickerView.setCancelable(true);
+					simplePickerView.show();
+					break;
+				case R.id.rl_create_source:
+					currentPickCategory = PickCategory.CREATESOURCE;
+					simplePickerView = new SimplePickerView(mContext, createSources);
 					simplePickerView.setCancelable(true);
 					simplePickerView.show();
 					break;
@@ -282,9 +333,12 @@ public class TicketsScreeningActivity extends BaseActivity
 				tvAgent.setText(agent.get(1));
 				etCreateBy.setText("");
 				statusIndex = 0;
-				tvStatus.setText("全部留言");
+				tvStatus.setText(status.get(statusIndex));
 				channelIndex = 0;
-				tvChannel.setText("全部渠道");
+				tvChannel.setText(channels.get(channelIndex));
+				createSourceIndex = 0;
+				createSourceId = -1;
+				tvCreateSource.setText(createSources.get(createSourceIndex));
 				saveScreeningValue();
 				setTicketsResult();
 				break;
@@ -300,13 +354,14 @@ public class TicketsScreeningActivity extends BaseActivity
 		data.putExtra("CreateBy", etCreateBy.getText().toString());
 		data.putExtra("Status", statusIndex);
 		data.putExtra("Channel", channelIndex);
+		data.putExtra("CreateSourceId", createSourceId);
 		setResult(RESULT_OK, data);
 	}
 
 	private void loadScreeningValue() {
 		SharedPreferences sp = getSharedPreferences("ticketScreening", MODE_PRIVATE);
 		if (currentTimeInfo == null) {
-			currentTimeInfo = new TimeInfo();
+			currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
 		}
 		currentTimeInfo.setStartTime(sp.getLong("TimeInfoStart", 0));
 		currentTimeInfo.setEndTime(sp.getLong("TimeInfoEnd", 0));
@@ -318,6 +373,7 @@ public class TicketsScreeningActivity extends BaseActivity
 		}
 		statusIndex = sp.getInt("Status", 0);
 		channelIndex = sp.getInt("Channel", 0);
+		createSourceId = sp.getInt("CreateSourceId", -1);
 	}
 
 	private void saveScreeningValue() {
@@ -330,6 +386,7 @@ public class TicketsScreeningActivity extends BaseActivity
 		editor.putString("CreateBy", etCreateBy.getText().toString());
 		editor.putInt("Status", statusIndex);
 		editor.putInt("Channel", channelIndex);
+		editor.putInt("CreateSourceId", createSourceId);
 		editor.apply();
 	}
 
@@ -387,6 +444,14 @@ public class TicketsScreeningActivity extends BaseActivity
 		} else if (currentPickCategory == PickCategory.CHANNEL) {
 			tvChannel.setText(channels.get(position));
 			channelIndex = position;
+		} else if (currentPickCategory == PickCategory.CREATESOURCE) {
+			tvCreateSource.setText(createSources.get(position));
+			createSourceIndex = position;
+			if (createSourceIndex > 0) {
+				createSourceId = createSourcesEntities.get(createSourceIndex - 1).getId();
+			} else {
+				createSourceId = -1;
+			}
 		}
 	}
 
@@ -426,7 +491,8 @@ public class TicketsScreeningActivity extends BaseActivity
 		TIME,
 		AGENT,
 		STATUS,
-		CHANNEL
+		CHANNEL,
+		CREATESOURCE
 	}
 
 	public enum PickTime{

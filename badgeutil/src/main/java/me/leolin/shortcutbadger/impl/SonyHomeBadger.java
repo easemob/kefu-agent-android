@@ -1,6 +1,5 @@
 package me.leolin.shortcutbadger.impl;
 
-import android.app.Notification;
 import android.content.AsyncQueryHandler;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -8,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ProviderInfo;
 import android.net.Uri;
+import android.os.Looper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,11 +15,12 @@ import java.util.List;
 import me.leolin.shortcutbadger.Badger;
 import me.leolin.shortcutbadger.ShortcutBadgeException;
 
+
 /**
  * @author Leo Lin
  */
+public class SonyHomeBadger implements Badger {
 
-public class SonyHomeBadger extends Badger {
     private static final String INTENT_ACTION = "com.sonyericsson.home.action.UPDATE_BADGE";
     private static final String INTENT_EXTRA_PACKAGE_NAME = "com.sonyericsson.home.intent.extra.badge.PACKAGE_NAME";
     private static final String INTENT_EXTRA_ACTIVITY_NAME = "com.sonyericsson.home.intent.extra.badge.ACTIVITY_NAME";
@@ -33,18 +34,7 @@ public class SonyHomeBadger extends Badger {
     private static final String SONY_HOME_PROVIDER_NAME = "com.sonymobile.home.resourceprovider";
     private final Uri BADGE_CONTENT_URI = Uri.parse(PROVIDER_CONTENT_URI);
 
-
     private AsyncQueryHandler mQueryHandler;
-
-    @Override
-    public void executeBadge(Context context, ComponentName componentName, Notification notification, int notificationId, int thisNotificationCount, int badgeCount) throws ShortcutBadgeException {
-        setNotification(notification, notificationId, context);
-        if (sonyBadgeContentProviderExists(context)) {
-            executeBadgeByContentProvider(context, componentName, badgeCount);
-        } else {
-            executeBadgeByBroadcast(context, componentName, badgeCount);
-        }
-    }
 
     @Override
     public void executeBadge(Context context, ComponentName componentName,
@@ -58,7 +48,7 @@ public class SonyHomeBadger extends Badger {
 
     @Override
     public List<String> getSupportLaunchers() {
-        return Arrays.asList("com.sonyericsson.home");
+        return Arrays.asList("com.sonyericsson.home", "com.sonymobile.home");
     }
 
     private static void executeBadgeByBroadcast(Context context, ComponentName componentName,
@@ -84,39 +74,66 @@ public class SonyHomeBadger extends Badger {
             return;
         }
 
-        if (mQueryHandler == null) {
-            mQueryHandler = new AsyncQueryHandler(
-                    context.getApplicationContext().getContentResolver()) {
-            };
+        final ContentValues contentValues = createContentValues(badgeCount, componentName);
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            // We're in the main thread. Let's ensure the badge update happens in a background
+            // thread by using an AsyncQueryHandler and an async update.
+            if (mQueryHandler == null) {
+                mQueryHandler = new AsyncQueryHandler(
+                        context.getApplicationContext().getContentResolver()) {
+                };
+            }
+            insertBadgeAsync(contentValues);
+        } else {
+            // Already in a background thread. Let's update the badge synchronously. Otherwise,
+            // if we use the AsyncQueryHandler, this thread may already be dead by the time the
+            // async execution finishes, which will lead to an IllegalStateException.
+            insertBadgeSync(context, contentValues);
         }
-        insertBadgeAsync(badgeCount, componentName.getPackageName(), componentName.getClassName());
     }
 
     /**
-     * Insert a badge associated with the specified package and activity names
-     * asynchronously. The package and activity names must correspond to an
-     * activity that holds an intent filter with action
-     * "android.intent.action.MAIN" and category
-     * "android.intent.category.LAUNCHER" in the manifest. Also, it is not
-     * allowed to publish badges on behalf of another client, so the package and
+     * Asynchronously inserts the badge counter.
+     *
+     * @param contentValues Content values containing the badge count, package and activity names
+     */
+    private void insertBadgeAsync(final ContentValues contentValues) {
+        mQueryHandler.startInsert(0, null, BADGE_CONTENT_URI, contentValues);
+    }
+
+    /**
+     * Synchronously inserts the badge counter.
+     *
+     * @param context       Caller context
+     * @param contentValues Content values containing the badge count, package and activity names
+     */
+    private void insertBadgeSync(final Context context, final ContentValues contentValues) {
+        context.getApplicationContext().getContentResolver()
+                .insert(BADGE_CONTENT_URI, contentValues);
+    }
+
+    /**
+     * Creates a ContentValues object to be used in the badge counter update. The package and
+     * activity names must correspond to an activity that holds an intent filter with action
+     * "android.intent.action.MAIN" and category android.intent.category.LAUNCHER" in the manifest.
+     * Also, it is not allowed to publish badges on behalf of another client, so the package and
      * activity names must belong to the process from which the insert is made.
      * To be able to insert badges, the app must have the PROVIDER_INSERT_BADGE
      * permission in the manifest file. In case these conditions are not
      * fulfilled, or any content values are missing, there will be an unhandled
      * exception on the background thread.
      *
-     * @param badgeCount   the badge count
-     * @param packageName  the package name
-     * @param activityName the activity name
+     * @param badgeCount    the badge count
+     * @param componentName the component name from which package and class name will be extracted
+     *
      */
-    private void insertBadgeAsync(int badgeCount, String packageName, String activityName) {
+    private ContentValues createContentValues(final int badgeCount,
+            final ComponentName componentName) {
         final ContentValues contentValues = new ContentValues();
         contentValues.put(PROVIDER_COLUMNS_BADGE_COUNT, badgeCount);
-        contentValues.put(PROVIDER_COLUMNS_PACKAGE_NAME, packageName);
-        contentValues.put(PROVIDER_COLUMNS_ACTIVITY_NAME, activityName);
-
-        // The badge must be inserted on a background thread
-        mQueryHandler.startInsert(0, null, BADGE_CONTENT_URI, contentValues);
+        contentValues.put(PROVIDER_COLUMNS_PACKAGE_NAME, componentName.getPackageName());
+        contentValues.put(PROVIDER_COLUMNS_ACTIVITY_NAME, componentName.getClassName());
+        return contentValues;
     }
 
     /**
@@ -133,5 +150,4 @@ public class SonyHomeBadger extends Badger {
         }
         return exists;
     }
-
 }

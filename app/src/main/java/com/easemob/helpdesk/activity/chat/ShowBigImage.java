@@ -32,7 +32,7 @@ import com.easemob.helpdesk.widget.PhotoViewAttacher.OnPhotoTapListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
-import com.hyphenate.kefusdk.entity.HDImageMessageBody;
+import com.hyphenate.kefusdk.messagebody.HDImageMessageBody;
 
 import java.io.File;
 import java.lang.ref.SoftReference;

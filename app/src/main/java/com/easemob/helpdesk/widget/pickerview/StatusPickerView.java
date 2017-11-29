@@ -12,13 +12,14 @@ import com.bigkoo.pickerview.adapter.ArrayWheelAdapter;
 import com.bigkoo.pickerview.lib.WheelView;
 import com.bigkoo.pickerview.view.BasePickerView;
 import com.easemob.helpdesk.R;
+import com.easemob.helpdesk.activity.manager.ManagerHomeActivity;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.EMToast;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.chat.AgentManager;
+import com.hyphenate.kefusdk.manager.main.AgentManager;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,6 +72,8 @@ public class StatusPickerView extends BasePickerView implements View.OnClickList
     private void refreshUI(String status) {
         if (mContext instanceof MainActivity) {
             ((MainActivity) mContext).agentStatusUpdated(status);
+        } else if (mContext instanceof ManagerHomeActivity) {
+            ((ManagerHomeActivity) mContext).agentStatusUpdated(status);
         }
     }
 

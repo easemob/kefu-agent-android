@@ -27,7 +27,8 @@ import com.easemob.helpdesk.activity.SearchWaitAccessActivity;
 import com.easemob.helpdesk.activity.transfer.TransferActivity;
 import com.easemob.helpdesk.adapter.WaitAccessAdapter;
 import com.easemob.helpdesk.utils.AvatarManager;
-import com.hyphenate.kefusdk.entity.WaitAccessScreenEntity;
+import com.easemob.helpdesk.utils.DateUtils;
+import com.hyphenate.kefusdk.entity.option.WaitAccessScreenEntity;
 import com.hyphenate.kefusdk.gsonmodel.main.SkillGroupResponse;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.CommonUtils;
@@ -36,9 +37,9 @@ import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.bean.TechChannel;
+import com.hyphenate.kefusdk.entity.TechChannel;
 import com.hyphenate.kefusdk.gsonmodel.main.WaitQueueResponse;
-import com.hyphenate.kefusdk.entity.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.manager.main.WaitAccessManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -110,6 +111,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
         callback = this;
         mWeakHandler = new WeakHandler(this);
         waitAccessManager = new WaitAccessManager();
@@ -305,13 +307,13 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     return;
                 }
                 getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                        @Override
+                        public void run() {
                         closeDialog();
                         adapter.remove(bean);
                         updateListCount();
                     }
-                });
+                    });
             }
 
             @Override
@@ -321,12 +323,12 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                 }
                 (getActivity()).runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                        @Override
+                        public void run() {
                         closeDialog();
                         Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
                     }
-                });
+                    });
             }
 
             @Override
@@ -336,12 +338,12 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                 }
                 (getActivity()).runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                        @Override
+                        public void run() {
                         closeDialog();
                         HDApplication.getInstance().logout();
                     }
-                });
+                    });
             }
         });
     }
@@ -570,8 +572,13 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
             }else if(requestCode == REQUEST_CODE_SCREENING){
                 WaitAccessScreenEntity screenEntity = new WaitAccessScreenEntity();
                 currentTimeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
-                screenEntity.startTime = currentTimeInfo.getStartTime();
-                screenEntity.endTime = currentTimeInfo.getEndTime();
+                if (currentTimeInfo == null){
+                    screenEntity.startTime = -1;
+                    screenEntity.endTime = -1;
+                }else {
+                    screenEntity.startTime = currentTimeInfo.getStartTime();
+                    screenEntity.endTime = currentTimeInfo.getEndTime();
+                }
                 if(data.hasExtra("originType")){
                     screenEntity.currentOriginType = data.getStringExtra("originType");
                 }
@@ -623,7 +630,9 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
 
     @Override
     public void onDestroy() {
-        mWeakHandler.removeCallbacksAndMessages(null);
+        if (mWeakHandler != null) {
+            mWeakHandler.removeCallbacksAndMessages(null);
+        }
         super.onDestroy();
         callback = null;
     }
@@ -723,7 +732,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
 
             @Override
             public void onAuthenticationException() {
-            }
+             }
         });
     }
 
