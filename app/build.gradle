@@ -44,8 +44,8 @@ dependencies {
     //methodCount more than 65535, split dex
     compile 'com.android.support:multidex:1.0.0'
     // kefu agent sdk
-       compile(name:'kefu-agentsdk-android-debug',ext:'aar')
-//    compile 'com.easemob:kefu-agentsdk-android:1.0.3'
+//       compile(name:'kefu-agentsdk-android-debug',ext:'aar')
+    compile 'com.easemob:kefu-agentsdk-android:1.0.4'
     // http request library, sdk required
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
     // show picture library , ui required
