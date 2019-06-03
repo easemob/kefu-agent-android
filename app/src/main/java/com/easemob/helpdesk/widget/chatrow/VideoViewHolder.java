@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.ContextMenu;
 import com.easemob.helpdesk.activity.chat.ShowVideoActivity;
@@ -84,17 +85,19 @@ public class VideoViewHolder extends BaseViewHolder {
 			}
 		});
 
+		RequestOptions requestOptions = RequestOptions.errorOf(R.drawable.default_image);
+		requestOptions.override(CommonUtils.convertDip2Px(activity, 120));
+
 		if (message.isServerMsg()) {
+			requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
 			Glide.with(activity).load(videoMessageBody.getThumbRemoteUrl())
-					.diskCacheStrategy(DiskCacheStrategy.SOURCE).error(R.drawable.default_image)
-					.override(CommonUtils.convertDip2Px(activity, 120), CommonUtils.convertDip2Px(activity, 120))
+					.apply(requestOptions)
 					.into(imageView);
 		} else {
 			//发送方向
 			if (message.direct() == HDMessage.Direct.SEND) {
 				// 发送的消息
-				Glide.with(activity).load(videoMessageBody.getLocalPath()).error(R.drawable.default_image)
-						.override(CommonUtils.convertDip2Px(activity, 120), CommonUtils.convertDip2Px(activity, 120))
+				Glide.with(activity).load(videoMessageBody.getLocalPath()).apply(requestOptions)
 						.into(imageView);
 				setMessageSendCallback(message);
 			}

@@ -137,11 +137,29 @@ public class CommonUtils {
 		return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 	}
 	
+//	public static boolean isAppRunningForeground(Context ctx) {
+//		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+//        List<RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
+//        return ctx.getPackageName().equalsIgnoreCase(tasks.get(0).baseActivity.getPackageName());
+//    }
+
+//	public static boolean isAppRunningForeground(Context ctx) {
+//		if (ctx == null) return false;
+//		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+//		List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+//		for (ActivityManager.RunningAppProcessInfo processInfo : processes) {
+//			if (processInfo.processName.equals(ctx.getPackageName())) {
+//				if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
+
 	public static boolean isAppRunningForeground(Context ctx) {
-		ActivityManager activityManager = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-        List<RunningTaskInfo> tasks = activityManager.getRunningTasks(1);
-        return ctx.getPackageName().equalsIgnoreCase(tasks.get(0).baseActivity.getPackageName());
-    }
+		return ActivityUtils.getInstance().isForeground();
+	}
 
 	public static String getTopActivity(Context context) {
 		ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -346,84 +364,6 @@ public class CommonUtils {
 		return inSampleSize;
 	}
 
-	
-	
-//	private static boolean isConnectionFast(int type, int subType) {
-//	    if(type==ConnectivityManager.TYPE_WIFI){
-//            return true;
-//        }else if(type==ConnectivityManager.TYPE_MOBILE){
-//            switch(subType){
-//            case TelephonyManager.NETWORK_TYPE_1xRTT:
-//                return false; // ~ 50-100 kbps
-//            case TelephonyManager.NETWORK_TYPE_CDMA:
-//                return false; // ~ 14-64 kbps
-//            case TelephonyManager.NETWORK_TYPE_EDGE:
-//                return false; // ~ 50-100 kbps
-//            case TelephonyManager.NETWORK_TYPE_EVDO_0:
-//                return true; // ~ 400-1000 kbps
-//            case TelephonyManager.NETWORK_TYPE_EVDO_A:
-//                return true; // ~ 600-1400 kbps
-//            case TelephonyManager.NETWORK_TYPE_GPRS:
-//                return false; // ~ 100 kbps
-//            case TelephonyManager.NETWORK_TYPE_HSDPA:
-//                return true; // ~ 2-14 Mbps
-//            case TelephonyManager.NETWORK_TYPE_HSPA:
-//                return true; // ~ 700-1700 kbps
-//            case TelephonyManager.NETWORK_TYPE_HSUPA:
-//                return true; // ~ 1-23 Mbps
-//            case TelephonyManager.NETWORK_TYPE_UMTS:
-//                return true; // ~ 400-7000 kbps
-//            }
-//
-//            if(android.os.Build.VERSION.SDK_INT >= 11) {
-//                if (subType == TelephonyManager.NETWORK_TYPE_EHRPD || //1-2Mbps
-//                        subType == TelephonyManager.NETWORK_TYPE_LTE) { //10+ Mbps
-//                    return true;
-//                }
-//            }
-//            if (android.os.Build.VERSION.SDK_INT >= 9) {
-//                if (subType == TelephonyManager.NETWORK_TYPE_EVDO_B) { // 5Mbps
-//                    return true;
-//                }
-//            }
-//
-//            if (android.os.Build.VERSION.SDK_INT >= 8) {
-//                if (subType == TelephonyManager.NETWORK_TYPE_IDEN) { // 25 kbps
-//                    return false;
-//                }
-//            }
-//        }
-//        return false;
-//	}
-	
-	
-
-//	public static int getDownloadBufSize(Context context) {
-//        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo info = cm.getActiveNetworkInfo();
-//        if (info != null && info.getType() == ConnectivityManager.TYPE_WIFI) {
-//            return 1024*100;
-//        }
-//        if (info != null && isConnectionFast(info.getType(), info.getSubtype())) {
-//            return 1024*30;
-//        }
-//        return 2024;
-//    }
-//	public static String getImagePath(String remoteUrl) {
-//		String imageName= remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length());
-//		String path = PathUtil.getInstance().getImagePath()+"/"+imageName;
-//        HDLog.d("msg", " image path:" + path);
-//        return path;
-//    }
-//
-//
-//	public static String getVoicePath(String remoteUrl){
-//		String voiceName= remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length());
-//		String path =PathUtil.getInstance().getVoicePath()+"/"+voiceName;
-//        HDLog.d(TAG, " voice path:" + path);
-//        return path;
-//	}
-
 	public static String getFilePath(String remoteUrl, String fileName) {
 		String filePath = remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length());
 		String path = PathUtil.getInstance().getFilePath() + "/" + filePath;
@@ -480,54 +420,7 @@ public class CommonUtils {
 	public static String convertStringByMessageText(String messageText){
 		return messageText.replaceAll("&lt;", "<").replaceAll("&#39;", "'").replaceAll("&amp;","&");
 	}
-	
-//	/**
-//     * 获取控件的高度，如果获取的高度为0，则重新计算尺寸后再返回高度
-//     *
-//     * @param view
-//     * @return
-//     */
-//    public static int getViewMeasuredHeight(View view) {
-//        calcViewMeasure(view);
-//        return view.getMeasuredHeight();
-//    }
-    /**
-//     * 测量控件的尺寸
-//     *
-//     * @param view
-//     */
-//    public static void calcViewMeasure(View view) {
-//        int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//        int expandSpec = View.MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2, View.MeasureSpec.AT_MOST);
-//        view.measure(width, expandSpec);
-//    }
 
-//
-//    public static String getLogFileName(){
-//    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-//		return format.format(new Date(System.currentTimeMillis()));
-//    }
-//
-//    public static String getDateEN(){
-//    	SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-//		return format.format(new Date(System.currentTimeMillis()));
-//    }
-//
-//
-//    public static int getVersionCode(Context context){
-//		try {
-//			PackageManager manager = context.getPackageManager();
-//			PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-//			return info.versionCode;
-//		} catch (Exception ignored) {
-//		}
-//		return 0;
-//    }
-//
-    
-    
-    
-    
     @SuppressLint("NewApi")
 	public static Bitmap getScaleBitmap(Context ctx, String filePath){
 		BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -621,30 +514,6 @@ public class CommonUtils {
 	}
 
 
-//	public static boolean isRobotMenuMessage(HDMessage messageEntity){
-//		JSONObject jsonExt = messageEntity.extJson;
-//		if(jsonExt == null || !jsonExt.has("msgtype")){
-//			return false;
-//		}
-//		try {
-//			JSONObject jsonMsgType = jsonExt.getJSONObject("msgtype");
-//			if(jsonMsgType == null || !jsonMsgType.has("choice")){
-//				return false;
-//			}
-//			JSONObject jsonChoice = jsonMsgType.getJSONObject("choice");
-//			if(jsonChoice == null){
-//				return false;
-//			}
-//			if(jsonChoice.has("items") || jsonChoice.has("list")){
-//				return true;
-//			}
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//
-//		return false;
-//	}
-
 	public static String getTitleFromUrlParam(String url) {
 		if (TextUtils.isEmpty(url)) {
 			return null;
@@ -701,17 +570,17 @@ public class CommonUtils {
 			return;
 		}
 		if (TextUtils.isEmpty(status) || status.equals("Hidden")){
-			imageView.setImageResource(R.drawable.hiding);
+			imageView.setBackgroundResource(R.drawable.icon_status_hiding);
 		}else if (status.equals("Online")){
-			imageView.setImageResource(R.drawable.free);
+			imageView.setBackgroundResource(R.drawable.online_icon);
 		}else if (status.equals("Busy")){
-			imageView.setImageResource(R.drawable.busy);
+			imageView.setBackgroundResource(R.drawable.icon_status_busy);
 		}else if (status.equals("Leave")){
-			imageView.setImageResource(R.drawable.leave);
+			imageView.setBackgroundResource(R.drawable.state_gray);
 		}else if(status.equals("Offline")){
-			imageView.setImageResource(R.drawable.state_gray);
+			imageView.setBackgroundResource(R.drawable.state_gray);
 		}else {
-			imageView.setImageResource(R.drawable.hiding);
+			imageView.setBackgroundResource(R.drawable.icon_status_hiding);
 		}
 	}
 

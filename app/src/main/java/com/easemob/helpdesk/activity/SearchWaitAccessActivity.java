@@ -11,9 +11,12 @@ import android.widget.ImageButton;
 
 import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
+import com.easemob.helpdesk.activity.history.HistoryChatActivity;
 import com.easemob.helpdesk.activity.transfer.TransferActivity;
 import com.easemob.helpdesk.adapter.WaitAccessAdapter;
+import com.easemob.helpdesk.listener.OnDataItemClickListener;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
+import com.hyphenate.kefusdk.entity.user.HDVisitorUser;
 import com.hyphenate.kefusdk.gsonmodel.main.WaitQueueResponse;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -78,15 +81,24 @@ public class SearchWaitAccessActivity extends BaseActivity {
         recyclerView.addItemDecoration(dividerLine);
 
         recyclerView.setAdapterWithProgress(mAdapter = new WaitAccessAdapter(this));
-        mAdapter.setOnItemClickListener(new RecyclerArrayAdapter.OnItemClickListener() {
+        mAdapter.setOnDataItemClickListener(new OnDataItemClickListener<WaitQueueResponse.ItemsBean>() {
             @Override
-            public void onItemClick(int position) {
-//                Intent intent = new Intent(SearchWaitAccessActivity.this, AlertDialog.class);
-//                intent.putExtra("position", position);
-//                intent.putExtra("msg", "您确认要接待此会话么？");
-//                intent.putExtra("okString", "确认");
-//                startActivityForResult(intent, REQUEST_CODE_ALERT_DIALOG);
+            public void onClick(View itemView, WaitQueueResponse.ItemsBean data) {
+                String sessionId = data.getSessionId();
 
+                HDVisitorUser toUser = new HDVisitorUser();
+                toUser.setUserId(data.getVisitorId());
+                toUser.setUsername(data.getVisitorName());
+                toUser.setNicename(data.getVisitorName());
+                Intent intent = new Intent();
+                intent.setClass(SearchWaitAccessActivity.this, HistoryChatActivity.class);
+                intent.putExtra("user", toUser);
+                intent.putExtra("visitorid", sessionId);
+                intent.putExtra("originType", data.getOriginType());
+                intent.putExtra("techChannelName", data.getChanneName());
+                intent.putExtra("isWait", true);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -209,8 +221,8 @@ public class SearchWaitAccessActivity extends BaseActivity {
         query = query.toLowerCase();
         final List<WaitQueueResponse.ItemsBean> filteredModelList = new ArrayList<WaitQueueResponse.ItemsBean>();
         for (WaitQueueResponse.ItemsBean model : models) {
-            final String text = model.getUserName();
-            if (text.contains(query)) {
+            final String text = model.getVisitorName();
+            if (text != null && text.contains(query)) {
                 filteredModelList.add(model);
             }
         }

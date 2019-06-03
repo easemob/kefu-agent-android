@@ -16,29 +16,23 @@ import com.easemob.helpdesk.utils.CommonUtils;
 public class HistorySessionMore extends BasePopupWindow {
     private Context mContext;
 
-
     public HistorySessionMore(Context context) {
         this.mContext = context;
         View contentView = LayoutInflater.from(context).inflate(R.layout.popup_session_history_more, null);
         this.setContentView(contentView);
-        this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        this.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        this.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setFocusable(true);
         setOutsideTouchable(true);
         this.update();
-        ColorDrawable cDraw = new ColorDrawable(Color.argb(POPUPWINDOW_BG_ALPHA_HALF, 0, 0, 0));
-        this.setBackgroundDrawable(cDraw);
-
-
+        this.setBackgroundDrawable(new ColorDrawable(00000000));
     }
 
     public void showPopupWindow(View parent) {
         if (!this.isShowing()) {
-            this.showAsDropDown(parent, CommonUtils.convertDip2Px(mContext, -10),CommonUtils.convertDip2Px(mContext, -10));
+            this.showAsDropDown(parent, CommonUtils.convertDip2Px(mContext, -10), CommonUtils.convertDip2Px(mContext, -10));
         } else {
             this.dismiss();
         }
     }
-
-
 }

@@ -32,7 +32,7 @@ public class VisitorsFilterActivity extends BaseActivity implements SimplePicker
 
     private static final String TAG = VisitorsFilterActivity.class.getSimpleName();
 
-    private static final String[] dataStrings = {"昨天", "本周", "本月", "上月"};
+    private static final String[] dataStrings = {"今天", "昨天", "本周", "本月", "上月"};
 
     private static final String[] channelString = {"按渠道", "按关联", "按访客标签", "按访问次数"};
 //    private static final String[] channelStringValue = {"ORIGIN", "TECH_CHANNEL", "USER_TAG"};
@@ -225,7 +225,9 @@ public class VisitorsFilterActivity extends BaseActivity implements SimplePicker
     }
 
     private void timeMatch(TimeInfo info1) {
-        if (timeEqual(info1, DateUtils.getYesterdayStartAndEndTime())) {
+        if (timeEqual(info1, DateUtils.getTodayStartAndEndTime())) {
+            tvTimeText.setText("今天");
+        } else if (timeEqual(info1, DateUtils.getYesterdayStartAndEndTime())) {
             tvTimeText.setText("昨天");
         } else if (timeEqual(info1, DateUtils.getTimeInfoByCurrentWeek())) {
             tvTimeText.setText("本周");
@@ -256,17 +258,20 @@ public class VisitorsFilterActivity extends BaseActivity implements SimplePicker
                 return;
             }
             tvTimeText.setText(dataStrings[position]);
-            switch (position){//昨天", "本周", "本月", "上月
+            switch (position){//"今天"，"昨天", "本周", "本月", "上月
                 case 0:
-                    currentTimeInfo = DateUtils.getYesterdayStartAndEndTime();
+                    currentTimeInfo = DateUtils.getTodayStartAndEndTime();
                     break;
                 case 1:
-                    currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
+                    currentTimeInfo = DateUtils.getYesterdayStartAndEndTime();
                     break;
                 case 2:
-                    currentTimeInfo = DateUtils.getTimeInfoByCurrentMonth();
+                    currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
                     break;
                 case 3:
+                    currentTimeInfo = DateUtils.getTimeInfoByCurrentMonth();
+                    break;
+                case 4:
                     currentTimeInfo = DateUtils.getTimeInfoByLastMonth();
                     break;
             }

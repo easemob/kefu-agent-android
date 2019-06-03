@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.transfer.TransferActivity;
 import com.hyphenate.kefusdk.entity.agent.AgentUser;
@@ -143,10 +144,18 @@ public class AgentsAdapter extends BaseAdapter {
 					if (!avatarUrl.startsWith("http")){
 						avatarUrl = "http:" + avatarUrl;
 					}
-					Glide.with(mContext).load(avatarUrl).placeholder(R.drawable.default_agent_avatar).into(viewHolder.avatar);
+					if (viewHolder.avatar != null){
+						Glide.with(mContext).load(avatarUrl)
+								.apply(RequestOptions.placeholderOf(R.drawable.default_agent_avatar))
+								.into(viewHolder.avatar);
+					}
 				}else if (avatarUrl.startsWith("/ossimages")){
 					avatarUrl = HDClient.getInstance().getKefuServerAddress() + avatarUrl;
-					Glide.with(mContext).load(avatarUrl).placeholder(R.drawable.default_agent_avatar).into(viewHolder.avatar);
+					if (viewHolder.avatar != null){
+						Glide.with(mContext).load(avatarUrl)
+								.apply(RequestOptions.placeholderOf(R.drawable.default_agent_avatar))
+								.into(viewHolder.avatar);
+					}
 				}
 			}
 		}catch (Exception e){
@@ -230,11 +239,6 @@ public class ChatHistoryFilter extends Filter{
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			userList = (List<AgentUser>) results.values;
 			refresh();
-//			if(results.count>0){
-//				notifyDataSetChanged();
-//			}else{
-//				notifyDataSetInvalidated();
-//			}
 		}
 	}
 	

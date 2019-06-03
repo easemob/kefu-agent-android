@@ -35,39 +35,31 @@ public class AvatarManager {
 	private static final int DISK_CACHE_SIZE = 1024 * 1024 * 20; // 20MB
 	private static final String DISK_CACHE_SUBDIR = "diskCache";
 	public DiskLruCache mDiskCache;
-	private static Application application;
-
 	/** 图片请求列表，用于存放已发送的请求。 */
 	private Hashtable<String ,ImageRef> mRequestQueue = new Hashtable<>();
 
-	/**
-	 * @param context
-	 * @return
-	 */
-	public static AvatarManager getInstance(Context context) {
+	@Deprecated
+	public static AvatarManager getInstance(Context appContext) {
+		return getInstance();
+	}
 
-		if (application == null) {
-			application = (Application) context.getApplicationContext();
-		}
-
+	public static AvatarManager getInstance() {
 		if (instance == null){
 			synchronized (AvatarManager.class){
 				if (instance == null){
-					instance = new AvatarManager(application);
+					instance = new AvatarManager();
 				}
 			}
 		}
-
 		return instance;
 	}
 
 	/**
 	 * 私有构造函数，保证单例模式
-	 *
-	 * @param context
 	 */
-	private AvatarManager(Context context) {
-		int memClass = ((ActivityManager) context
+	private AvatarManager() {
+		Context appContext = HDClient.getInstance().getContext();
+		int memClass = ((ActivityManager) appContext
 				.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
 		memClass = memClass > 32 ? 32 : memClass;
 		// 使用可用内存的1/64作为图片缓存
@@ -78,12 +70,11 @@ public class AvatarManager {
 			protected int sizeOf(String key, Bitmap bitmap) {
 				return bitmap.getRowBytes() * bitmap.getHeight();
 			}
-
 		};
 
 		File cacheDir = DiskLruCache
-				.getDiskCacheDir(context, DISK_CACHE_SUBDIR);
-		mDiskCache = DiskLruCache.openCache(context, cacheDir, DISK_CACHE_SIZE);
+				.getDiskCacheDir(appContext, DISK_CACHE_SUBDIR);
+		mDiskCache = DiskLruCache.openCache(appContext, cacheDir, DISK_CACHE_SIZE);
 
 	}
 
@@ -190,11 +181,6 @@ public class AvatarManager {
 		if (TextUtils.isEmpty(remoteUrl) || remoteUrl.equals("null")) {
 			return "";
 		}
-
-		if (remoteUrl.contains("/ossimages/null")){
-			return "";
-		}
-
 		if (remoteUrl.startsWith("//")) {
 			remoteUrl = "http:" + remoteUrl;
 		}
@@ -202,15 +188,6 @@ public class AvatarManager {
 		if(remoteUrl.contains("/images/uikit/")){
 			return "";
 		}
-
-		if(remoteUrl.startsWith("\\/\\/")) {
-			remoteUrl.replace("\\/\\/", "https://kefu.easemob.com/ossimages/");
-		}
-
-		if(remoteUrl.contains("\\/")) {
-			remoteUrl.replace("\\/", "\\");
-		}
-
 		if (remoteUrl.startsWith("/v1/Tenant/")) {
 			remoteUrl = HDClient.getInstance().getKefuServerAddress() + remoteUrl;
 		}
@@ -296,7 +273,7 @@ public class AvatarManager {
 
 		// 从内存cache获取
 		Bitmap bitmap = mMemoryCache.get(url);
-		if (bitmap != null) {
+		if (bitmap != null && bitmap.isRecycled()) {
 			setImageBitmap(imageView, bitmap, false);
 			return;
 		}
@@ -375,23 +352,6 @@ public class AvatarManager {
 				});
 			}
 
-			@Override
-			public void onAuthenticationException() {
-				mRequestQueue.remove(imageRef.url);
-				File file = new File(imageRef.filePath);
-				if (file.exists()) {
-					file.delete();
-				}
-				if (imageRef.activity == null || imageRef.activity.isFinishing()) {
-					return;
-				}
-				imageRef.activity.runOnUiThread(new Runnable() {
-					@Override
-					public synchronized void run() {
-						imageRef.setDefaultImageViews();
-					}
-				});
-			}
 		});
 
 	}

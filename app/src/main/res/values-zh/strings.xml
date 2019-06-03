@@ -14,7 +14,7 @@
 	<string name="toast_account_notIsNull">账号不能为空！</string>
 	<string name="toast_pwd_notIsNull">密码不能为空！</string>
 	<string name="toast_network_isnot_available">网络不可用！</string>
-	<string name="loading_login">登录中&#8230;</string>
+	<string name="loading_login">请稍后&#8230;</string>
 	<string name="hint_loginAccount">客服账号</string>
 	<string name="hint_pwd">密码</string>
 	<string name="btn_login">登录</string>
@@ -132,6 +132,7 @@
     <string name="str_recorder_normal">按住录音</string>
     <string name="str_recorder_recording">松开结束</string>
     <string name="str_recorder_want_cancel">松开手指,取消录音</string>
+    <string name="str_not_support">暂不支持</string>
 
 
     <!-- multi reference start-->

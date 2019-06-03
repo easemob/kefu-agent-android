@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f2f2f2"
+    android:background="#ffffff"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/rl_back"
@@ -21,19 +21,29 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_back_2"
+                android:src="@drawable/back_icon"
                 />
         </RelativeLayout>
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/gray_1"
+            android:layout_toRightOf="@id/rl_back"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"/>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="筛选界面"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
+            android:layout_toRightOf="@id/view_divider"
+            android:layout_centerVertical="true"
             android:textSize="@dimen/top_title_text_size" />
 
         <TextView
@@ -44,6 +54,7 @@
             android:layout_centerVertical="true"
             android:padding="5dp"
             android:text="筛选"
+            android:layout_marginRight="10dp"
             android:textColor="#19a3ff"
             android:textSize="15sp" />
 

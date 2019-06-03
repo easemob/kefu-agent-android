@@ -2,6 +2,7 @@ package com.easemob.helpdesk.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.helpdesk.mvp.ChatActivity;
 import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.widget.chatrow.BaseViewHolder;
+import com.easemob.helpdesk.widget.chatrow.CustomEmojViewHolder;
 import com.easemob.helpdesk.widget.chatrow.FileViewHolder;
 import com.easemob.helpdesk.widget.chatrow.FormViewHolder;
 import com.easemob.helpdesk.widget.chatrow.ImageViewHolder;
@@ -24,6 +26,7 @@ import com.easemob.helpdesk.widget.chatrow.RobotMenuViewHolder;
 import com.easemob.helpdesk.widget.chatrow.TxtViewHolder;
 import com.easemob.helpdesk.widget.chatrow.VideoViewHolder;
 import com.easemob.helpdesk.widget.chatrow.VoiceViewHolder;
+import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.user.HDBaseUser;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
@@ -55,6 +58,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 	private static final int MESSAGE_TYPE_RECV_VIDEO = 14;
 	private static final int MESSAGE_TYPE_SENT_FORM = 15;
 	private static final int MESSAGE_TYPE_RECV_FORM = 16;
+	private static final int MESSAGE_TYPE_SENT_CUS_EMOJ = 17;
+	private static final int MESSAGE_TYPE_RECV_CUS_EMOJ = 18;
 
 	private LayoutInflater inflater;
 	private Activity mActivity;
@@ -112,6 +117,35 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 		}
 	}
 
+	/**
+	 * 返回底部显示的最后一个元素距离列表最后元素的距离
+	 * @return
+	 */
+	public int srollBottomPosition(){
+		return srollBottomPosition(mRecyclerView);
+	}
+
+	/**
+	 * 返回底部显示的最后一个元素距离列表最后元素的距离
+	 * @param recyclerView
+	 * @return
+	 */
+	public int srollBottomPosition(RecyclerView recyclerView){
+		LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+		//屏幕中最后一个可见子项的position
+		int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+		//当前屏幕所看到的子项个数
+		int visibleItemCount = layoutManager.getChildCount();
+		//当前RecyclerView的所有子项个数
+		int totalItemCount = layoutManager.getItemCount();
+		//RecyclerView的滑动状态
+		int state = recyclerView.getScrollState();
+		if(visibleItemCount > 0 && state == RecyclerView.SCROLL_STATE_IDLE){
+			return totalItemCount - lastVisibleItemPosition - 1;
+		}else {
+			return 0;
+		}
+	}
 
 	@Override
 	public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -186,6 +220,14 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 				convertView = inflater.inflate(R.layout.row_received_message, parent, false);
 				holder = new FormViewHolder(mActivity, this, convertView);
 				break;
+			case MESSAGE_TYPE_SENT_CUS_EMOJ:
+				convertView = inflater.inflate(R.layout.row_sent_cus_emoj, parent, false);
+				holder = new CustomEmojViewHolder(mActivity, this, convertView);
+				break;
+			case MESSAGE_TYPE_RECV_CUS_EMOJ:
+				convertView = inflater.inflate(R.layout.row_received_cus_emoj, parent, false);
+				holder = new CustomEmojViewHolder(mActivity, this, convertView);
+				break;
 		}
 		//noinspection ConstantConditions
 		convertView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -202,13 +244,13 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 		if (holder == null){
 			return;
 		}
-		if (holder.ivAvatar != null && !AvatarManager.getInstance(mActivity).asyncGetMessageAvatar(message, mActivity, holder.ivAvatar)) {
+		if (holder.ivAvatar != null && !AvatarManager.getInstance().asyncGetMessageAvatar(message, mActivity, holder.ivAvatar)) {
 			if (message.direct() == HDMessage.Direct.RECEIVE) {
 				if (sessionManager.isAgentChat()) {
 					HDBaseUser user = (HDBaseUser) ((BaseChatActivity)mActivity).getToUser();
-					String remoteUrl = AvatarManager.getInstance(mActivity).recombineUrl(user.getAvatar());
+					String remoteUrl = AvatarManager.getInstance().recombineUrl(user.getAvatar());
 					if (user.getUserId().equals(message.getFromUser().getUserId()) && !TextUtils.isEmpty(remoteUrl)) {
-						AvatarManager.getInstance(mActivity).asyncGetAvatar(holder.ivAvatar, remoteUrl, mActivity);
+						AvatarManager.getInstance().asyncGetAvatar(holder.ivAvatar, remoteUrl, mActivity);
 					} else {
 						holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
 					}
@@ -217,35 +259,21 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 				}
 			} else {
 				if (message.getFromUser().isSelf()) {
-					AvatarManager.getInstance(mActivity).refreshAgentAvatar(mActivity, holder.ivAvatar);
+					AvatarManager.getInstance().refreshAgentAvatar(mActivity, holder.ivAvatar);
 				} else {
-					holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
+					if (message.getFromUser().getNicename() != null && message.getFromUser().getNicename().equals("调度员")) {
+						String tenantAvatar = HDClient.getInstance().chatManager().getTenantAvatar();
+						if (tenantAvatar != null) {
+							AvatarManager.getInstance().asyncGetAvatar(holder.ivAvatar, tenantAvatar, mActivity);
+						} else {
+							holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
+						}
+					} else {
+						holder.ivAvatar.setImageResource(R.drawable.default_agent_avatar);
+					}
 				}
 			}
 		}
-
-//        holder.ivAvatar.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                if (isSend) {
-//                    return;
-//                }
-//                if (message.fromUser.userType.equals("Agent")) {
-//                    return;
-//                }
-//                //单击头像
-//                Intent intent = new Intent();
-//                intent.putExtra("visitorId", visitorId);
-//                intent.putExtra("user", message.fromUser);
-//                intent.setClass(mActivity, UserDetailsActivity.class);
-//                if(mActivity instanceof ChatActivity){
-//                    ((ChatActivity)mActivity).startActivityForResult(intent, ChatActivity.REQUEST_CODE_USER_DETAIL);
-//                }else{
-//                    mActivity.startActivity(intent);
-//                }
-//            }
-//        });
 
 		holder.handleMessage(message, position);
 
@@ -317,6 +345,12 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 					return MESSAGE_TYPE_SENT_FORM;
 				} else {
 					return MESSAGE_TYPE_RECV_FORM;
+				}
+			} else if (MessageUtils.isCustomEmojMessage(message)) {
+				if (isSend) {
+					return MESSAGE_TYPE_SENT_CUS_EMOJ;
+				} else {
+					return MESSAGE_TYPE_RECV_CUS_EMOJ;
 				}
 			} else {
 				if (isSend) {

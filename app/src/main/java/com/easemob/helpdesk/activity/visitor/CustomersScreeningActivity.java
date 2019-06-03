@@ -79,6 +79,8 @@ public class CustomersScreeningActivity extends BaseActivity implements View.OnC
 		super.onCreate(savedInstanceState);
 		AppConfig.setFitWindowMode(this);
 		setContentView(R.layout.activity_customers_screening);
+		Intent intent = getIntent();
+		currentTimeInfo = (TimeInfo) intent.getSerializableExtra("timeinfo");
 		mContext = this;
 		initView();
 		initListener();
@@ -170,8 +172,6 @@ public class CustomersScreeningActivity extends BaseActivity implements View.OnC
 	}
 
 	private void initData() {
-		Intent intent = getIntent();
-		currentTimeInfo = (TimeInfo) intent.getSerializableExtra("timeinfo");
 		if (currentTimeInfo != null) {
 			timeMatch(currentTimeInfo);
 			tvBeginTime.setText(dateFormat.format(new Date(currentTimeInfo.getStartTime())));
@@ -314,7 +314,7 @@ public class CustomersScreeningActivity extends BaseActivity implements View.OnC
 				finish();
 				break;
 			case R.id.screen_clear:
-				currentTimeInfo = null;
+				currentTimeInfo = DateUtils.getTimeInfoByCurrentWeek();
 				initData();
 				tvCusTag.setText(tagsStrings.get(0));
 				tagsSelectedIndex = 0;

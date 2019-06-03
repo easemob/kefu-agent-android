@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
-import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.mvp.MainActivity;
+import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
@@ -37,7 +37,6 @@ public class LeaveMessageGroupFragment extends Fragment {
 	protected ImageView ivAvatar;
 	@BindView(R.id.iv_status)
 	protected ImageView ivStatus;
-
 	@BindView(R.id.my_open_item_count)
 	protected TextView myOpenTicketsCounts;
 	@BindView(R.id.pending_item_count)
@@ -64,6 +63,8 @@ public class LeaveMessageGroupFragment extends Fragment {
 
 	private Unbinder unbinder;
 
+	@BindView(R.id.iv_notification) public ImageView ivNotification;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_ticket_new, container, false);
@@ -89,6 +90,16 @@ public class LeaveMessageGroupFragment extends Fragment {
 		super.onDestroyView();
 		if (unbinder != null){
 			unbinder.unbind();
+		}
+	}
+
+	public void showNotification(boolean isShow) {
+		if (ivNotification != null) {
+			if (isShow) {
+				ivNotification.setImageResource(R.drawable.tip_audio_unread);
+			} else {
+				ivNotification.setImageResource(0);
+			}
 		}
 	}
 
@@ -123,7 +134,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 
 	public void refreshAgentAvatar() {
 		if(ivAvatar != null)
-			AvatarManager.getInstance(getContext()).refreshAgentAvatar(getActivity(), ivAvatar);
+			AvatarManager.getInstance().refreshAgentAvatar(getActivity(), ivAvatar);
 	}
 
 	public void refreshOnline(String status) {
@@ -137,7 +148,7 @@ public class LeaveMessageGroupFragment extends Fragment {
 		}
 	}
 
-	private void refleshTicketsCount() {
+	public void refleshTicketsCount() {
 		getOpenTicketsCount();
 		getPendingTicketsCount();
 		getSolvedTicketsCount();
@@ -207,7 +218,6 @@ public class LeaveMessageGroupFragment extends Fragment {
     }
 
     private void getOpenTicketsCount() {
-
 	    myOpenTicketsLayout.setClickable(false);
 
 	    HDClient.getInstance().leaveMessageManager().getOpenTicketsCount(new HDDataCallBack<String>() {
@@ -220,20 +230,18 @@ public class LeaveMessageGroupFragment extends Fragment {
 		        getActivity().runOnUiThread(new Runnable() {
 			        @Override
 			        public void run() {
+			        	if (getActivity() == null){
+			        		return;
+				        }
 				        ((MainActivity)getActivity()).refreshOpenedLeaveMessageCount();
-				        if (myOpenTicketsCounts != null) {
-					        myOpenTicketsCounts.setText(value);
-				        }
-				        if (myOpenTicketsLayout != null) {
-					        myOpenTicketsLayout.setClickable(true);
-				        }
+				        myOpenTicketsCounts.setText(value);
+				        myOpenTicketsLayout.setClickable(true);
 			        }
 		        });
 		    }
 
 		    @Override
 		    public void onError(int error, String errorMsg) {
-
 		    }
 	    });
     }

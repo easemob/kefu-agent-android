@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment {
 
     public void refreshAgentAvatar() {
         if (ivAvatar != null) {
-            AvatarManager.getInstance(getContext()).refreshAgentAvatar(getActivity(), ivAvatar);
+            AvatarManager.getInstance().refreshAgentAvatar(getActivity(), ivAvatar);
         }
     }
 

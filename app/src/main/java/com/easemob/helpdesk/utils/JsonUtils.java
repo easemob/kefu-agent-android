@@ -4,7 +4,6 @@ import android.support.v4.util.Pair;
 
 import com.easemob.helpdesk.entity.WorkQualityAgent;
 import com.easemob.helpdesk.entity.WorkloadAgent;
-import com.hyphenate.kefusdk.entity.user.HDUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,13 +12,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hyphenate.kefusdk.utils.JsonUtils.getMessageFromJson;
-
 
 public class JsonUtils {
-	
-	private static final String TAG = JsonUtils.class.getSimpleName();
-
 	public static android.support.v4.util.Pair<Integer, List<WorkloadAgent>> getWorkloadAgentsFromJson(String jsonStr){
 		List<WorkloadAgent> workloadAgents = new ArrayList<>();
 		int total_elements = 0;
@@ -52,24 +46,24 @@ public class JsonUtils {
 				 */
 				WorkloadAgent workloadAgent = new WorkloadAgent();
 				JSONObject jsonAgent = jsonEntities.getJSONObject(i);
-				workloadAgent.setSum_am(getLongFromJson(jsonAgent, "sum_am"));
-				workloadAgent.setCnt_svc(getLongFromJson(jsonAgent, "cnt_svc"));
-				workloadAgent.setSum_vm(getLongFromJson(jsonAgent, "sum_vm"));
-				workloadAgent.setSum_sm(getLongFromJson(jsonAgent, "sum_sm"));
-				workloadAgent.setCnt_sdc(getLongFromJson(jsonAgent, "cnt_sdc"));
-				workloadAgent.setCnt_tc(getLongFromJson(jsonAgent, "cnt_tc"));
-				workloadAgent.setRealName(getStringFromJson(jsonAgent, "realName"));
-				workloadAgent.setCnt_sc(getLongFromJson(jsonAgent, "cnt_sc"));
-				workloadAgent.setCnt_sac(getLongFromJson(jsonAgent, "cnt_sac"));
-				workloadAgent.setCnt_tic(getLongFromJson(jsonAgent, "cnt_tic"));
-				workloadAgent.setAvg_mc(getLongFromJson(jsonAgent, "avg_mc"));
-				workloadAgent.setMax_wt(getLongFromJson(jsonAgent, "max_wt"));
-				workloadAgent.setName(getStringFromJson(jsonAgent, "name"));
-				workloadAgent.setKey(getStringFromJson(jsonAgent, "key"));
-				workloadAgent.setMax_mc(getLongFromJson(jsonAgent, "max_mc"));
-				workloadAgent.setCnt_oc(getLongFromJson(jsonAgent, "cnt_oc"));
-				workloadAgent.setAvg_wt(getLongFromJson(jsonAgent, "avg_wt"));
-				workloadAgent.setCnt_toc(getLongFromJson(jsonAgent, "cnt_toc"));
+				workloadAgent.setSum_am(jsonAgent.optLong( "sum_am"));
+				workloadAgent.setCnt_svc(jsonAgent.optLong( "cnt_svc"));
+				workloadAgent.setSum_vm(jsonAgent.optLong("sum_vm"));
+				workloadAgent.setSum_sm(jsonAgent.optLong( "sum_sm"));
+				workloadAgent.setCnt_sdc(jsonAgent.optLong( "cnt_sdc"));
+				workloadAgent.setCnt_tc(jsonAgent.optLong( "cnt_tc"));
+				workloadAgent.setRealName(jsonAgent.optString("realName", ""));
+				workloadAgent.setCnt_sc(jsonAgent.optLong( "cnt_sc"));
+				workloadAgent.setCnt_sac(jsonAgent.optLong( "cnt_sac"));
+				workloadAgent.setCnt_tic(jsonAgent.optLong( "cnt_tic"));
+				workloadAgent.setAvg_mc(jsonAgent.optLong( "avg_mc"));
+				workloadAgent.setMax_wt(jsonAgent.optLong( "max_wt"));
+				workloadAgent.setName(jsonAgent.optString( "name", ""));
+				workloadAgent.setKey(jsonAgent.optString( "key", ""));
+				workloadAgent.setMax_mc(jsonAgent.optLong( "max_mc"));
+				workloadAgent.setCnt_oc(jsonAgent.optLong( "cnt_oc"));
+				workloadAgent.setAvg_wt(jsonAgent.optLong( "avg_wt"));
+				workloadAgent.setCnt_toc(jsonAgent.optLong( "cnt_toc"));
 				workloadAgents.add(workloadAgent);
 			}
 		}catch (JSONException e){
@@ -87,22 +81,22 @@ public class JsonUtils {
 		try{
 			JSONObject jsonObject = new JSONObject(jsonStr);
 			JSONArray jsonEntities = jsonObject.getJSONArray("entities");
-			total_elements = getIntFromJson(jsonObject, "totalElements");
+			total_elements = jsonObject.optInt("totalElements");
 			for (int i = 0; i < jsonEntities.length(); i++){
 				WorkQualityAgent workQualityAgent = new WorkQualityAgent();
 				JSONObject jsonAgent = jsonEntities.getJSONObject(i);
-				workQualityAgent.max_ar = getIntFromJson(jsonAgent, "max_ar");
-				workQualityAgent.cnt_ea = getIntFromJson(jsonAgent, "cnt_ea");
-				workQualityAgent.max_fr = getIntFromJson(jsonAgent, "max_fr");
-				workQualityAgent.avg_ar = jsonAgent.getDouble("avg_ar");
-				workQualityAgent.avg_fr = jsonAgent.getDouble("avg_fr");
-				workQualityAgent.avg_vm = jsonAgent.getDouble("avg_vm");
-				workQualityAgent.cnt_ua = getIntFromJson(jsonAgent, "cnt_ua");
-				workQualityAgent.name = getStringFromJson(jsonAgent, "name");
-				workQualityAgent.pct_vm = getStringFromJson(jsonAgent, "pct_vm");
-				workQualityAgent.key = getStringFromJson(jsonAgent, "key");
-				if (jsonAgent.has("markList")){
-					JSONObject jsonMark = jsonAgent.getJSONObject("markList");
+				workQualityAgent.max_ar = jsonAgent.optInt( "max_ar");
+				workQualityAgent.cnt_ea = jsonAgent.optInt(  "cnt_ea");
+				workQualityAgent.max_fr = jsonAgent.optInt("max_fr");
+				workQualityAgent.avg_ar = jsonAgent.optDouble("avg_ar");
+				workQualityAgent.avg_fr = jsonAgent.optDouble("avg_fr");
+				workQualityAgent.avg_vm = jsonAgent.optDouble("avg_vm");
+				workQualityAgent.cnt_ua = jsonAgent.optInt( "cnt_ua");
+				workQualityAgent.name = jsonAgent.optString( "name", "");
+				workQualityAgent.pct_vm = jsonAgent.optString(  "pct_vm", "");
+				workQualityAgent.key = jsonAgent.optString( "key", "");
+				JSONObject jsonMark = jsonAgent.optJSONObject("markList");
+				if (jsonMark != null){
 					workQualityAgent.markList = jsonMark.toString();
 				}
 				workQualityAgents.add(workQualityAgent);
@@ -113,60 +107,39 @@ public class JsonUtils {
 		return new android.support.v4.util.Pair(total_elements, workQualityAgents);
 	}
 
-	public static HDUser getEMUserFromJson(JSONObject jsonUser){
-		
-		HDUser user = new HDUser();
-		try {
-			user.setTenantId(getLongFromJson(jsonUser,"tenantId"));
-			user.setUserId(jsonUser.getString("userId"));
-			if(jsonUser.has("userType")){
-				user.setUserType(getStringFromJson(jsonUser, "userType"));
-			}else{
-				user.setUserType("Agent");
-			}
-			user.setNicename(jsonUser.getString("nicename"));
-			user.setUsername(getStringFromJson(jsonUser,"username"));
-			user.password = getStringFromJson(jsonUser,"password");
-			user.setRoles(getStringFromJson(jsonUser,"roles"));
-			user.setStatus(getStringFromJson(jsonUser,"status"));
-			user.setOnLineState(getStringFromJson(jsonUser,"onLineState"));
-			if(jsonUser.has("maxServiceSessionCount")){
-				user.maxServiceSessionCount = jsonUser.getInt("maxServiceSessionCount");
-			}
-			user.setAvatar(getStringFromJson(jsonUser,"avatar"));
-			user.setTrueName(getStringFromJson(jsonUser,"trueName"));
-			user.setMobilePhone(getStringFromJson(jsonUser,"mobilePhone"));
-			user.agentNumber = getLongFromJson(jsonUser,"agentNumber");
-			user.lastUpdateDateTime = getStringFromJson(jsonUser, "lastUpdateDateTime");
-			user.welcomeMessage = getStringFromJson(jsonUser,"welcomeMessage");
-			user.currentOnLineState = getStringFromJson(jsonUser,"currentOnLineState");
-			user.instanceId = getStringFromJson(jsonUser,"instanceId");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return user;
-	}
-
-
-	private static int getIntFromJson(JSONObject jsonObj,String jsonName) throws JSONException{
-		if(jsonObj.has(jsonName)){
-			return jsonObj.getInt(jsonName);
-		}
-		return 0;
-	}
-
-	private static String getStringFromJson(JSONObject jsonObj,String jsonName) throws JSONException{
-		if(jsonObj.has(jsonName) && !jsonObj.isNull(jsonName)){
-			return jsonObj.getString(jsonName);
-		}
-		return null;
-	}
-	private static Long getLongFromJson(JSONObject jsonObj,String jsonName) throws JSONException{
-		if(jsonObj.has(jsonName)){
-			return jsonObj.getLong(jsonName);
-		}
-		return 0L;
-	}
+//	public static HDUser getEMUserFromJson(JSONObject jsonUser){
+//
+//		HDUser user = new HDUser();
+//		try {
+//			user.setTenantId(getLongFromJson(jsonUser,"tenantId"));
+//			user.setUserId(jsonUser.getString("userId"));
+//			if(jsonUser.has("userType")){
+//				user.setUserType(getStringFromJson(jsonUser, "userType"));
+//			}else{
+//				user.setUserType("Agent");
+//			}
+//			user.setNicename(jsonUser.getString("nicename"));
+//			user.setUsername(getStringFromJson(jsonUser,"username"));
+//			user.password = getStringFromJson(jsonUser,"password");
+//			user.setRoles(getStringFromJson(jsonUser,"roles"));
+//			user.setStatus(getStringFromJson(jsonUser,"status"));
+//			user.setOnLineState(getStringFromJson(jsonUser,"onLineState"));
+//			if(jsonUser.has("maxServiceSessionCount")){
+//				user.maxServiceSessionCount = jsonUser.getInt("maxServiceSessionCount");
+//			}
+//			user.setAvatar(getStringFromJson(jsonUser,"avatar"));
+//			user.setTrueName(getStringFromJson(jsonUser,"trueName"));
+//			user.setMobilePhone(getStringFromJson(jsonUser,"mobilePhone"));
+//			user.agentNumber = getLongFromJson(jsonUser,"agentNumber");
+//			user.lastUpdateDateTime = getStringFromJson(jsonUser, "lastUpdateDateTime");
+//			user.welcomeMessage = getStringFromJson(jsonUser,"welcomeMessage");
+//			user.currentOnLineState = getStringFromJson(jsonUser,"currentOnLineState");
+//			user.instanceId = getStringFromJson(jsonUser,"instanceId");
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		return user;
+//	}
 
 
 }

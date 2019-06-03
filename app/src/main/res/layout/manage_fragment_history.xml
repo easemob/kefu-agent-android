@@ -4,42 +4,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_content_2"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      android:background="@color/white"
+      >
 
-        <include layout="@layout/top_bar_avatar_layout" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="历史会话"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/top_title_text_size" />
-
-        <ImageView
-            android:id="@+id/tv_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/icon_screening"
-            />
-
-    </RelativeLayout>
-    <com.jude.easyrecyclerview.EasyRecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_empty="@layout/view_empty"
-        app:layout_progress="@layout/view_progress"
+    <include
+        layout="@layout/top_bar_back_layout"
+        android:id="@+id/back_layout"
         />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/back_layout"
+        android:text="历史会话"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/title_text_size"
+        />
+
+    <ImageView
+        android:id="@+id/tv_filter"
+        android:layout_width="@dimen/item_icon_size"
+        android:layout_height="@dimen/item_icon_size"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/screening_icon"
+        />
+
+  </RelativeLayout>
+  <com.jude.easyrecyclerview.EasyRecyclerView
+      android:id="@+id/recyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_empty="@layout/view_empty"
+      app:layout_progress="@layout/view_progress"
+      />
 
 
 </LinearLayout>

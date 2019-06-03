@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignParentLeft="true"
-    android:layout_centerVertical="true"
-    android:layout_marginLeft="10dp" >
+    android:layout_height="match_parent"
+    >
 
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="12dp"
+      >
 
     <com.easemob.helpdesk.widget.CircleImageView
         android:id="@+id/iv_avatar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="@dimen/avatar_width"
+        android:layout_height="@dimen/avatar_height"
         android:layout_centerVertical="true"
         android:onClick="menutoggle"
-        android:src="@drawable/default_agent_avatar" />
+        android:src="@drawable/default_agent_avatar"
+        />
+    <View
+        android:layout_width="1dp"
+        android:layout_height="29dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/iv_avatar"
+        android:background="#EEEEEE"
+        />
+
 
     <ImageView
-        android:id="@+id/iv_status"
-        android:layout_width="8dip"
-        android:layout_height="8dip"
-        android:layout_alignBottom="@id/iv_avatar"
+        android:id="@+id/iv_notification"
+        android:layout_width="10dip"
+        android:layout_height="10dip"
         android:layout_alignRight="@id/iv_avatar"
-        tools:ignore="ContentDescription" />
+        android:layout_alignTop="@id/iv_avatar"
+        tools:ignore="ContentDescription"
+        />
+    <ImageView
+        android:id="@+id/iv_status"
+        android:layout_width="wrap_content"
+        android:layout_height="5dp"
+        android:layout_alignLeft="@id/iv_avatar"
+        android:layout_alignRight="@id/iv_avatar"
+        android:layout_below="@id/iv_avatar"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        tools:ignore="ContentDescription"
+        />
+  </RelativeLayout>
 
-</RelativeLayout>
 
-
-
+</LinearLayout>

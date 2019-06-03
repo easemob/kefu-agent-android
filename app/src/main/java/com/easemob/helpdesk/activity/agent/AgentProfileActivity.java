@@ -23,6 +23,7 @@ import com.easemob.helpdesk.activity.ModifyActivity;
 import com.easemob.helpdesk.image.ImageHandleUtils;
 import com.easemob.helpdesk.mvp.LoginActivity;
 import com.easemob.helpdesk.utils.AvatarManager;
+import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.ImageTools;
 import com.hyphenate.kefusdk.HDDataCallBack;
@@ -101,11 +102,19 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
     protected SwitchButton stNotiAlertSound;
     @BindView(R.id.st_noti_alert_vibrate)
     protected SwitchButton stNotiAlertVibrate;
+    @BindView(R.id.st_noti_alarm)
+    protected SwitchButton stNotiAlarm;
+
     @BindView(R.id.ll_noti_alert_sound)
     protected LinearLayout llNotiAlertSound;
     @BindView(R.id.ll_noti_alert_vibrate)
     protected LinearLayout llNotiAlertVibrate;
+    @BindView(R.id.ll_noti_alarm)
+    protected LinearLayout llNotiAlarm;
 
+
+    @BindView(R.id.tv_version)
+    protected TextView tvVersion;
 
     private Dialog dialog;
     private AgentProfileEntity userInfo = new AgentProfileEntity();
@@ -124,9 +133,19 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
         if (HDApplication.getInstance().isNewMsgNotiStatus()) {
             llNotiAlertSound.setVisibility(View.VISIBLE);
             llNotiAlertVibrate.setVisibility(View.VISIBLE);
+            if (loginUser != null && loginUser.getRoles() != null){
+                if (loginUser.getRoles().contains("admin")){
+                    llNotiAlarm.setVisibility(View.VISIBLE);
+                }else{
+                    llNotiAlarm.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                llNotiAlarm.setVisibility(View.INVISIBLE);
+            }
         } else {
             llNotiAlertSound.setVisibility(View.INVISIBLE);
             llNotiAlertVibrate.setVisibility(View.INVISIBLE);
+            llNotiAlarm.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -137,10 +156,20 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_agent_profile);
         ButterKnife.bind(this);
         loginUser = HDClient.getInstance().getCurrentUser();
+        setVersionText();
         initListener();
         getAgentInfo();
         getAgentGreetingEnable();
         getAgentGreetingContent();
+    }
+
+
+    private void setVersionText(){
+        //设置版本号
+        String versionName = CommonUtils.getAppVersionNameFromApp(this);
+        if (!TextUtils.isEmpty(versionName)){
+            tvVersion.setText("v" + versionName);
+        }
     }
 
     private void getAgentGreetingEnable(){
@@ -233,6 +262,9 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
 
         stNotiAlertVibrate.setChecked(HDApplication.getInstance().isNotiAlertVibrateStatus());
         stNotiAlertVibrate.setOnCheckedChangeListener(notiAlertVibrateListener);
+
+        stNotiAlarm.setChecked(HDApplication.getInstance().isNotiAlertAlarmStatus());
+        stNotiAlarm.setOnCheckedChangeListener(notiAlertAlarmListener);
     }
 
     CompoundButton.OnCheckedChangeListener broadcastUnreadcountListener = new CompoundButton.OnCheckedChangeListener() {
@@ -249,9 +281,20 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
             if (isChecked) {
                 llNotiAlertSound.setVisibility(View.VISIBLE);
                 llNotiAlertVibrate.setVisibility(View.VISIBLE);
+                loginUser = HDClient.getInstance().getCurrentUser();
+                if (loginUser != null && loginUser.getRoles() != null){
+                    if (loginUser.getRoles().contains("admin")){
+                        llNotiAlarm.setVisibility(View.VISIBLE);
+                    }else{
+                        llNotiAlarm.setVisibility(View.INVISIBLE);
+                    }
+                } else {
+                    llNotiAlarm.setVisibility(View.INVISIBLE);
+                }
             } else {
                 llNotiAlertSound.setVisibility(View.INVISIBLE);
                 llNotiAlertVibrate.setVisibility(View.INVISIBLE);
+                llNotiAlarm.setVisibility(View.INVISIBLE);
             }
         }
     };
@@ -270,8 +313,12 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
         }
     };
 
-
-
+    CompoundButton.OnCheckedChangeListener notiAlertAlarmListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            HDApplication.getInstance().setNotiAlertAlarmStatus(isChecked);
+        }
+    };
 
     private void setAgentWelcomeMsgEnable(boolean enable) {
         HDClient.getInstance().agentManager().setAgentWelcomeMsgEnable(enable, new HDDataCallBack<String>() {
@@ -412,7 +459,7 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
             if(remoteUrl.contains("/images/uikit/")){
                 return;
             }
-            AvatarManager.getInstance(this).asyncGetAvatar(ivAvatar, remoteUrl, this);
+            AvatarManager.getInstance().asyncGetAvatar(ivAvatar, remoteUrl, this);
         }
 
     }
@@ -587,9 +634,9 @@ public class AgentProfileActivity extends BaseActivity implements View.OnClickLi
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         dialog.show();
-        HDClient.getInstance().logout(new HDDataCallBack() {
+        HDClient.getInstance().logout(new HDDataCallBack<String>() {
             @Override
-            public void onSuccess(Object value) {
+            public void onSuccess(String value) {
                 if (isFinishing()){
                     return;
                 }

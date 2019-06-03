@@ -1,10 +1,8 @@
 package com.easemob.helpdesk.mvp;
 
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +23,7 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.AlertDialog;
 import com.easemob.helpdesk.activity.CategoryShowActivity;
 import com.easemob.helpdesk.activity.chat.CustomWebViewActivity;
-import com.easemob.helpdesk.activity.chat.PhraseActivity;
+import com.easemob.helpdesk.activity.chat.PhraseListActivity;
 import com.easemob.helpdesk.activity.main.CurrentSessionFragment;
 import com.easemob.helpdesk.activity.transfer.TransferActivity;
 import com.easemob.helpdesk.activity.visitor.CustomerDetailActivity;
@@ -39,16 +37,13 @@ import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.IEvalEventListener;
 import com.easemob.helpdesk.widget.chatview.ChatEmoticonsKeyBoard;
 import com.easemob.helpdesk.widget.popupwindow.SessionCloseWindow;
-import com.github.angads25.filepicker.controller.DialogSelectionListener;
-import com.github.angads25.filepicker.model.DialogConfigs;
-import com.github.angads25.filepicker.model.DialogProperties;
-import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.hyphenate.kefusdk.HDChatListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.entity.HDCategorySummary;
-import com.hyphenate.kefusdk.entity.option.OptionEntity;
 import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.CustomEmojIconEntity;
+import com.hyphenate.kefusdk.entity.HDCategorySummary;
 import com.hyphenate.kefusdk.entity.HDMessage;
+import com.hyphenate.kefusdk.entity.option.OptionEntity;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.sj.emoji.EmojiBean;
@@ -58,7 +53,6 @@ import com.zdxd.tagview.TagView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,8 +63,6 @@ import sj.keyboard.interfaces.EmoticonClickListener;
 import sj.keyboard.utils.EmoticonsKeyboardUtils;
 import sj.keyboard.widget.EmoticonsAutoEditText;
 import sj.keyboard.widget.FuncLayout;
-
-
 
 /**
  * 聊天界面
@@ -90,41 +82,36 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     //打开会话小结
     public static final int REQUEST_CODE_CATEGORY_SHOW = REQUEST_CODE_BASE_MAX + 0x17;
     //打开用户详情
-    public static final int REQUEST_CODE_USER_DETAIL = REQUEST_CODE_BASE_MAX +0x18;
+    public static final int REQUEST_CODE_USER_DETAIL = REQUEST_CODE_BASE_MAX + 0x18;
 
     /**
      * 发送自定义消息
      * send custom message
      */
-    public static final int REQUEST_CODE_SEND_EXT_MSG = REQUEST_CODE_BASE_MAX+ 0x19;
+    public static final int REQUEST_CODE_SEND_EXT_MSG = REQUEST_CODE_BASE_MAX + 0x19;
 
     /**
      * 渠道显示的图标
      */
-    @BindView(R.id.iv_channel)
-    protected ImageView iv_channel;
+    @BindView(R.id.iv_channel) protected ImageView iv_channel;
     /**
      * 来源信息显示TextView
      */
-    @BindView(R.id.tv_channel_content)
-    protected TextView tvChannelText;
+    @BindView(R.id.tv_channel_content) protected TextView tvChannelText;
 
     /**
      * 界面标题Title
      */
-    @BindView(R.id.user_name)
-    protected TextView tvTitle;
+    @BindView(R.id.user_name) protected TextView tvTitle;
     /**
      * 标题和来源的父View
      */
-    @BindView(R.id.ll_title_click)
-    protected RelativeLayout llTitleClick;
+    @BindView(R.id.ll_title_click) protected RelativeLayout llTitleClick;
 
     /**
      * 列表View
      */
-    @BindView(R.id.list)
-    protected RecyclerView mRecyclerView;
+    @BindView(R.id.list) protected RecyclerView mRecyclerView;
 
     /**
      * 当前是否正在加载数据
@@ -135,8 +122,6 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
      */
     private boolean haveMoreData = true;
 
-
-
     /**
      * 监听到满意度变化回调
      */
@@ -145,26 +130,22 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     /**
      * 返回按钮显示的未读消息View
      */
-    @BindView(R.id.tv_unread_msg)
-    protected TextView tvUnReadMsg;
+    @BindView(R.id.tv_unread_msg) protected TextView tvUnReadMsg;
 
     /**
      * title栏的更多按钮
      */
-    @BindView(R.id.ib_menu_more)
-    protected View ibMenuMore;
+    @BindView(R.id.ib_menu_more) protected View ibMenuMore;
 
     /**
      * 是否发送过满意度评价申请
      */
     private String isSendEvalState = null;
 
-
     /**
      * 加载更多的View
      */
-    @BindView(R.id.chat_swipe_layout)
-    protected SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.chat_swipe_layout) protected SwipeRefreshLayout swipeRefreshLayout;
 
     /**
      * 服务器配置信息
@@ -174,32 +155,29 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     /**
      * 标签显示收起按钮
      */
-    @BindView(R.id.btn_up)
-    protected ImageButton btnUp;
+    @BindView(R.id.btn_up) protected ImageButton btnUp;
 
     /**
      * 标签显示展开按钮
      */
-    @BindView(R.id.btn_down)
-    protected ImageButton btnDown;
+    @BindView(R.id.btn_down) protected ImageButton btnDown;
+
+    @BindView(R.id.iv_show_label) protected ImageView ivShowLabel;
 
     /**
      * 标签显示整个布局
      */
-    @BindView(R.id.tag_layout)
-    protected LinearLayout tagLayout;
+    @BindView(R.id.tag_layout) protected LinearLayout tagLayout;
 
     /**
      * 标签组布局
      */
-    @BindView(R.id.tagview)
-    protected TagView tagGroup;
+    @BindView(R.id.tagview) protected TagView tagGroup;
 
     /**
      * 标签备注信息View
      */
-    @BindView(R.id.tv_note)
-    protected TextView tvNote;
+    @BindView(R.id.tv_note) protected TextView tvNote;
     /**
      * 备注信息
      */
@@ -208,71 +186,104 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     /**
      * 标签整理父布局
      */
-    @BindView(R.id.tag_ll)
-    protected View tagLL;
+    @BindView(R.id.tag_ll) protected View tagLL;
 
-    @BindView(R.id.seesion_extra_info)
-    protected TextView sessionExtraInfo;
+    /**
+     * 访客的IP 客户端等信息
+     */
+    @BindView(R.id.seesion_extra_info) protected TextView sessionExtraInfo;
+
+    @BindView(R.id.ll_chat_status_tip) protected LinearLayout llChatStatusTip;
+
+    @BindView(R.id.tv_chat_status_tip) protected TextView tvChatStatusTip;
+
     /**
      * 会话关闭确认窗口
      */
     private SessionCloseWindow closeWindow;
 
-    @BindView(R.id.ek_bar)
-    public ChatEmoticonsKeyBoard ekBar;
+    @BindView(R.id.ek_bar) public ChatEmoticonsKeyBoard ekBar;
 
     private long chatGroupId;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         evalEventListener = this;
         intentDataParse();
         sessionManager = new SessionManager(chatGroupId, sessionId, toUser, new HDChatListener() {
-            @Override
-            public void onEnquiryChanged() {
+            @Override public void onEnquiryChanged() {
                 // 获取满意度评价状态
                 sessionManager.getEvalStatus(toUser.getTenantId(), new HDDataCallBack<String>() {
-                    @Override
-                    public void onSuccess(String value) {
+                    @Override public void onSuccess(String value) {
+                        if (isFinishing()) {
+                            return;
+                        }
                         updateEvalStatus(value);
                     }
 
-                    @Override
-                    public void onError(int error, String errorMsg) {
+                    @Override public void onError(int error, String errorMsg) {
 
                     }
                 });
             }
 
-            @Override
-            public void onNewMessage() {
+            @Override public void onNewMessage() {
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.refreshSelectLast();
+                    @Override public void run() {
+                        if (mAdapter.srollBottomPosition() <= 1) {
+                            if (llChatStatusTip != null) llChatStatusTip.setVisibility(View.GONE);
+                            hasUnReadMessage = false;
+                            mAdapter.refreshSelectLast();
+                        } else {
+                            mAdapter.refresh();
+                            if (llChatStatusTip != null) {
+                                llChatStatusTip.setVisibility(View.VISIBLE);
+                                tvChatStatusTip.setText("新消息");
+                            }
+                            hasUnReadMessage = true;
+                        }
                     }
                 });
             }
 
-            @Override
-            public void onClosed() {
+            @Override public void onClosed() {
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         finish();
                         HDLog.d(TAG, "end Session:serviceId:" + sessionId);
                     }
                 });
             }
 
-            @Override
-            public void onClosedByAdmin() {
+            @Override public void onClosedByAdmin() {
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         finish();
                         HDLog.d(TAG, "endbyadmin Session:serviceId:" + sessionId);
+                    }
+                });
+            }
+
+            @Override public void onNewPredictMessage(final boolean isNull) {
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        if (mAdapter.srollBottomPosition() <= 1) {
+                            mAdapter.refresh();
+                            mAdapter.refreshSelectLast();
+                        } else {
+                            if (llChatStatusTip == null) {
+                                return;
+                            }
+                            if (!isNull) {
+                                llChatStatusTip.setVisibility(View.VISIBLE);
+                                tvChatStatusTip.setText("对方正在输入");
+                            } else if (hasUnReadMessage) {
+                                llChatStatusTip.setVisibility(View.VISIBLE);
+                                tvChatStatusTip.setText("新消息");
+                            } else {
+                                llChatStatusTip.setVisibility(View.GONE);
+                            }
+                        }
                     }
                 });
             }
@@ -284,66 +295,68 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
          * 异步获取访客和客服间消息from Server
          */
         sessionManager.asyncLoadRemoteMsg(new HDDataCallBack<List<HDMessage>>() {
-            @Override
-            public void onSuccess(List<HDMessage> value) {
-                if (isFinishing()){
+            @Override public void onSuccess(List<HDMessage> value) {
+                if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         closeDialog();
                         mAdapter.refreshSelectLast();
                     }
                 });
-
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
-                if (isFinishing()){
+            @Override public void onError(int error, String errorMsg) {
+                if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         closeDialog();
                     }
                 });
             }
-
         });
 
         // 获取满意度评价状态
         sessionManager.getEvalStatus(toUser.getTenantId(), new HDDataCallBack<String>() {
-            @Override
-            public void onSuccess(String value) {
+            @Override public void onSuccess(String value) {
                 updateEvalStatus(value);
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
 
             }
         });
 
         //获取session信息，查询会话是否已经设置,Tag标签
         sessionManager.getCategorySummarys(new HDDataCallBack<List<HDCategorySummary>>() {
-            @Override
-            public void onSuccess(final List<HDCategorySummary> value) {
+            @Override public void onSuccess(final List<HDCategorySummary> value) {
                 if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setTagViews(value);
+                    @Override public void run() {
+                        if (tagLayout == null)
+                            return;
+                        final int tagLayoutVisibility = tagLayout.getVisibility();
+                        if (tagLayoutVisibility == View.GONE) {
+                            tagLayout.setVisibility(View.INVISIBLE);
+                            new Handler().post(new Runnable() {
+                                @Override public void run() {
+                                    setTagViews(value);
+                                    tagLayout.setVisibility(tagLayoutVisibility);
+                                }
+                            });
+                        } else {
+                            setTagViews(value);
+                        }
                     }
                 });
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
 
             }
         });
@@ -352,14 +365,12 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
         getExtOptionUrl();
         //获取Note信息
         sessionManager.getCommentsFromServer(new HDDataCallBack<String>() {
-            @Override
-            public void onSuccess(final String value) {
+            @Override public void onSuccess(final String value) {
                 if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         if (TextUtils.isEmpty(value)) {
                             commentString = "";
                             if (tvNote != null) {
@@ -375,16 +386,15 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 });
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
 
             }
         });
+
         ekBar.setAudioFinishRecorderListener(new ChatEmoticonsKeyBoard.AudioFinishRecorderListener() {
-            @Override
-            public void onFinish(float seconds, String filePath) {
+            @Override public void onFinish(float seconds, String filePath) {
                 //发送语音消息
-//                android.util.Log.e(TAG, "seconds:" + seconds + ",filePath:" + filePath);
+                //                android.util.Log.e(TAG, "seconds:" + seconds + ",filePath:" + filePath);
                 sendVoiceMessage((int) seconds, filePath);
             }
         });
@@ -395,15 +405,6 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
 
         getSessionExtraInfo();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (tagLayout!= null) {
-                    tagLayout.setVisibility(View.GONE);
-                }
-            }
-        }, 300);
-
         try {
             loadPhraseData();
         } catch (Exception e) {
@@ -411,8 +412,7 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
         }
     }
 
-    @Override
-    public void setContentView() {
+    @Override public void setContentView() {
         setContentView(R.layout.activity_chat);
     }
 
@@ -432,57 +432,48 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     /**
      * 加载常用语
      */
-    private void loadPhraseData(){
+    private void loadPhraseData() {
         sessionManager.asyncGetPhraseValues(new HDDataCallBack<List<String>>() {
-            @Override
-            public void onSuccess(final List<String> value) {
-                if (isFinishing()){
+            @Override public void onSuccess(final List<String> value) {
+                if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         ekBar.getEtChat().setDatas(value);
                     }
                 });
-
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
 
             }
         });
     }
-
-
 
     /**
      * 获取自定义消息设置信息
      */
     private void getExtOptionUrl() {
         new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
+            @Override public void run() {
+                try {
                     extOptionEntity = HDClient.getInstance().agentManager().getOptionEntity("imgMsgSender");
                     runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                        @Override public void run() {
                             if (extOptionEntity != null && !TextUtils.isEmpty(extOptionEntity.getOptionValue())) {
                                 if (extOptionEntity.getOptionValue().length() > 3) {
-//                                    extMsgLayout.setVisibility(View.VISIBLE);
+                                    //                                    extMsgLayout.setVisibility(View.VISIBLE);
                                 }
                             }
                         }
                     });
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
-
 
     /**
      * 初始化View
@@ -511,6 +502,7 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                     break;
                 case "webim":
                     iv_channel.setImageResource(R.drawable.channel_web_icon);
+                    ekBar.getBtnVoice().setEnabled(false);
                     break;
                 case "app":
                     iv_channel.setImageResource(R.drawable.channel_app_icon);
@@ -520,32 +512,28 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 tvChannelText.setText(String.format(getString(R.string.txt_chat_from), techChannelName));
             }
         }
-        swipeRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_dark,
-                R.color.holo_orange_light, R.color.holo_red_light);
+        swipeRefreshLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_dark, R.color.holo_orange_light,
+                R.color.holo_red_light);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+            @Override public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         int firstVisibilePosition = layoutManager.findFirstVisibleItemPosition();
                         if (firstVisibilePosition == 0 && !isLoadding && haveMoreData) {
                             sessionManager.asyncLoadMoreMsg(new HDDataCallBack<List<HDMessage>>() {
-                                @Override
-                                public void onSuccess(final List<HDMessage> value) {
-                                    if (isFinishing()){
+                                @Override public void onSuccess(final List<HDMessage> value) {
+                                    if (isFinishing()) {
                                         return;
                                     }
                                     runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (value.isEmpty()){
+                                        @Override public void run() {
+                                            if (value.isEmpty()) {
                                                 haveMoreData = false;
                                                 Toast.makeText(ChatActivity.this, getString(R.string.txt_no_more_message), Toast.LENGTH_SHORT).show();
-                                            }else{
+                                            } else {
                                                 mAdapter.refresh();
                                             }
-                                            if (swipeRefreshLayout != null){
+                                            if (swipeRefreshLayout != null) {
                                                 swipeRefreshLayout.setRefreshing(false);
                                             }
                                             isLoadding = false;
@@ -553,42 +541,37 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                                     });
                                 }
 
-                                @Override
-                                public void onError(int error, String errorMsg) {
-                                    if (isFinishing()){
+                                @Override public void onError(int error, String errorMsg) {
+                                    if (isFinishing()) {
                                         return;
                                     }
                                     runOnUiThread(new Runnable() {
 
-                                        @Override
-                                        public void run() {
+                                        @Override public void run() {
                                             isLoadding = false;
                                             swipeRefreshLayout.setRefreshing(false);
                                         }
                                     });
                                 }
 
-                                @Override
-                                public void onAuthenticationException() {
+                                @Override public void onAuthenticationException() {
 
                                 }
                             });
                         } else {
                             Toast.makeText(ChatActivity.this, getString(R.string.txt_no_more_message), Toast.LENGTH_SHORT).show();
                         }
-                        if (swipeRefreshLayout != null){
+                        if (swipeRefreshLayout != null) {
                             swipeRefreshLayout.setRefreshing(false);
                         }
-
                     }
                 }, 1000);
             }
         });
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                switch (newState){
+            @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                switch (newState) {
                     case 0:
                         break;
                     case 1:
@@ -598,66 +581,81 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                         break;
                 }
             }
+
+            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (mAdapter.srollBottomPosition(recyclerView) == 0) {
+                    llChatStatusTip.setVisibility(View.GONE);
+                    hasUnReadMessage = false;
+                }
+            }
+        });
+
+        llChatStatusTip.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                mAdapter.refreshSelectLast();
+                llChatStatusTip.setVisibility(View.GONE);
+                hasUnReadMessage = false;
+            }
         });
 
         notifyChangeUnreadMsgCount();
         initEmoticonsKeyBoardBar();
     }
 
-    private void initEmoticonsKeyBoardBar(){
+    private void initEmoticonsKeyBoardBar() {
+        HDClient.getInstance().emojiManager().reflesh();
         SimpleCommonUtils.initEmoticonsEditText(ekBar.getEtChat());
         ekBar.setAdapter(SimpleCommonUtils.getCommonAdapter(this, emoticonClickListener));
         ekBar.addOnFuncKeyBoardListener(this);
         ekBar.addFuncView(new SimpleUserDefAppsGridView(this), getExtendAppBeans().size());
         ekBar.getEtChat().setOnSizeChangedListener(new EmoticonsAutoEditText.OnSizeChangedListener() {
-            @Override
-            public void onSizeChanged(int w, int h, int oldw, int oldh) {
+            @Override public void onSizeChanged(int w, int h, int oldw, int oldh) {
                 scrollToBottom();
             }
         });
         ekBar.getBtnSend().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String inputContent = ekBar.getEtChat().getText().toString().trim();
-                if (TextUtils.isEmpty(inputContent)){
+            @Override public void onClick(View v) {
+                String inputContent = ekBar.getEtChat().getText().toString();
+                if (TextUtils.isEmpty(inputContent)) {
                     Toast.makeText(ChatActivity.this, "内容不能为空!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (inputContent.length() > 1000){
+                if (inputContent.length() > 1000) {
                     Toast.makeText(ChatActivity.this, "消息太长!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                OnSendBtnClick(ekBar.getEtChat().getText().toString());
+                OnSendBtnClick(ekBar.getEtChat().getText().toString().trim());
                 ekBar.getEtChat().setText("");
             }
         });
-
     }
 
-
     EmoticonClickListener emoticonClickListener = new EmoticonClickListener() {
-        @Override
-        public void onEmoticonClick(Object o, int actionType, boolean isDelBtn) {
+        @Override public void onEmoticonClick(Object o, int actionType, boolean isDelBtn) {
             if (isDelBtn) {
                 SimpleCommonUtils.delClick(ekBar.getEtChat());
             } else {
-                if(o == null){
+                if (o == null) {
                     return;
                 }
-                if(actionType == Constants.EMOTICON_CLICK_BIGIMAGE){
-                    if(o instanceof EmoticonEntity){
-                        OnSendImage(((EmoticonEntity)o).getIconUri());
+                if (actionType == Constants.EMOTICON_CLICK_BIGIMAGE) {
+                    if (o instanceof EmoticonEntity) {
+                        OnSendImage(((EmoticonEntity) o).getIconUri());
+                    } else if (o instanceof CustomEmojIconEntity) {
+                        sendCustomEmojMessage((CustomEmojIconEntity) o);
                     }
                 } else {
                     String content = null;
-                    if(o instanceof EmojiBean){
-                        content = ((EmojiBean)o).emoji;
-                    } else if(o instanceof EmoticonEntity){
-                        content = ((EmoticonEntity)o).getContent();
+                    if (o instanceof EmojiBean) {
+                        content = ((EmojiBean) o).emoji;
+                    } else if (o instanceof EmoticonEntity) {
+                        content = ((EmoticonEntity) o).getContent();
                     }
 
-                    if(TextUtils.isEmpty(content)){
+                    if (TextUtils.isEmpty(content)) {
                         return;
                     }
                     int index = ekBar.getEtChat().getSelectionStart();
@@ -684,16 +682,13 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     private void scrollToBottom() {
         mRecyclerView.requestLayout();
         mRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 mAdapter.refreshSelectLast();
             }
         });
-
     }
 
-    @Override
-    protected void onPause() {
+    @Override protected void onPause() {
         super.onPause();
         ekBar.reset();
     }
@@ -719,27 +714,23 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
      */
     private void setMessageReadedMarkTag() {
         sessionManager.setMessageReadedMarkTag(new HDDataCallBack<String>() {
-            @Override
-            public void onSuccess(String value) {
+            @Override public void onSuccess(String value) {
                 if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         updateCurrentSessionUnreadCount();
                     }
                 });
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
 
             }
 
-            @Override
-            public void onAuthenticationException() {
+            @Override public void onAuthenticationException() {
 
             }
         });
@@ -755,32 +746,28 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
         notifyChangeUnreadMsgCount();
     }
 
-
-    @Override
-    protected void onResume() {
+    @Override protected void onResume() {
         super.onResume();
         if (mAdapter != null) {
             mAdapter.refresh();
         }
     }
 
-    @Override
-    public ArrayList<AppBean> getExtendAppBeans() {
+    @Override public ArrayList<AppBean> getExtendAppBeans() {
         ArrayList<AppBean> mAppBeanList = new ArrayList<>();
-        mAppBeanList.add(new AppBean(1, R.drawable.input_more_icon_camera, "图片"));
-        mAppBeanList.add(new AppBean(2, R.drawable.hd_chat_video_normal, "视频"));
-        mAppBeanList.add(new AppBean(3, R.drawable.input_more_icon_file, "文件"));
-        if(!TextUtils.isEmpty(sessionId)){
-            mAppBeanList.add(new AppBean(4, R.drawable.input_more_icon_phrase, "常用语"));
-            mAppBeanList.add(new AppBean(5, R.drawable.input_more_icon_link, "自定义消息"));
+        mAppBeanList.add(new AppBean(1, R.drawable.more_picture_icon, "图片"));
+        mAppBeanList.add(new AppBean(2, R.drawable.more_video_icon, "视频"));
+        mAppBeanList.add(new AppBean(3, R.drawable.more_file_icon, "文件"));
+        if (!TextUtils.isEmpty(sessionId)) {
+            mAppBeanList.add(new AppBean(4, R.drawable.more_phrase_icon, "常用语"));
+            mAppBeanList.add(new AppBean(5, R.drawable.more_extend_icon, "自定义消息"));
         }
+        //mAppBeanList.add(new AppBean(6, R.drawable.invite_evaluation_icon, "满意度评价"));
         return mAppBeanList;
     }
 
     /**
      * 为TagGroup 添加数据源
-     *
-     * @param list
      */
     private void setTagViews(List<HDCategorySummary> list) {
         Tag tag;
@@ -823,41 +810,34 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
             closeWindow = new SessionCloseWindow(this);
         }
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+            @Override public void run() {
                 closeWindow.setEvalIcon(isSendEvalState.equalsIgnoreCase("over"));
             }
         });
     }
 
-    @Override
-    public void OnFuncPop(int height) {
+    @Override public void OnFuncPop(int height) {
         scrollToBottom();
     }
 
-    @Override
-    public void OnFuncClose() {
+    @Override public void OnFuncClose() {
 
     }
 
     /**
      * 标题名称点击事件
      */
-    @OnClick(R.id.ll_title_click)
-    public void onClickByDetail(){
+    @OnClick(R.id.ll_title_click) public void onClickByDetail() {
         Intent intent = new Intent();
         intent.putExtra("visitorId", sessionId);
         intent.putExtra("userId", toUser.getUserId());
         intent.putExtra("tenantId", toUser.getTenantId());
         intent.setClass(ChatActivity.this, CustomerDetailActivity.class);
         startActivity(intent);
-
     }
 
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (EmoticonsKeyboardUtils.isFullScreen(this)){
+    @Override public boolean dispatchKeyEvent(KeyEvent event) {
+        if (EmoticonsKeyboardUtils.isFullScreen(this)) {
             boolean isConsum = ekBar.dispatchKeyEventInFullScreen(event);
             return isConsum ? true : super.dispatchKeyEvent(event);
         }
@@ -865,33 +845,22 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
     }
 
     /**
-     * 当前页面的关闭弹出的关闭事件
-     *
-     * @param view
-     */
-    public void popupclose(View view) {
-        if (closeWindow != null && closeWindow.isShowing()) {
-            closeWindow.dismiss();
-        }
-    }
-
-    /**
      * 会话转接点击事件
-     *
-     * @param view
      */
     public void chat_transfer(View view) {
-        popupclose(null);
+        if (closeWindow != null) {
+            closeWindow.dismiss();
+        }
         startActivityForResult(new Intent(this, TransferActivity.class), REQUEST_CODE_TRANSFER);
     }
 
     /**
      * 满意度评价邀请点击事件
-     *
-     * @param view
      */
     public void eval_send(View view) {
-        popupclose(null);
+        if (closeWindow != null) {
+            closeWindow.dismiss();
+        }
         if (isSendEvalState == null || isSendEvalState.equalsIgnoreCase("none")) {
             Intent evalIntent = new Intent();
             evalIntent.setClass(this, AlertDialog.class);
@@ -909,23 +878,22 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
 
     /**
      * 标签设置点击事件
-     *
-     * @param view
      */
     public void lable_setting(View view) {
-        popupclose(null);
-        startActivityForResult(new Intent(ChatActivity.this, CategoryShowActivity.class)
-                .putExtra("sessionId", sessionId)
+        if (closeWindow != null) {
+            closeWindow.dismiss();
+        }
+        startActivityForResult(new Intent(ChatActivity.this, CategoryShowActivity.class).putExtra("sessionId", sessionId)
                 .putExtra("summarys", sessionManager.getCategoryTreeValue()), REQUEST_CODE_CATEGORY_SHOW);
     }
 
     /**
      * 结束会话提示窗显示事件
-     *
-     * @param view
      */
     public void chat_end(View view) {
-        popupclose(null);
+        if (closeWindow != null) {
+            closeWindow.dismiss();
+        }
         if (HDClient.getInstance().isStopSessionNeedSummary && !sessionManager.categoryIsSet()) {
             showCategoryTreeDialog();
         } else {
@@ -938,53 +906,41 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
      * 跳转会话标签展示添加界面
      */
     private void showCategoryTreeDialog() {
-        startActivityForResult(new Intent(ChatActivity.this, CategoryShowActivity.class)
-                .putExtra("sessionId", sessionId)
+        startActivityForResult(new Intent(ChatActivity.this, CategoryShowActivity.class).putExtra("sessionId", sessionId)
                 .putExtra("summarys", sessionManager.getCategoryTreeValue())
                 .putExtra("close", true), REQUEST_CODE_CATEGORY_SHOW);
     }
 
-    @OnClick(R.id.rl_back)
-    public void onClickByBack(){
+    @OnClick(R.id.rl_back) public void onClickByBack() {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
-    @OnClick(R.id.ib_menu_more)
-    public void onClickByMore(){
+    @OnClick(R.id.ib_menu_more) public void onClickByMore() {
         if (closeWindow == null) {
             closeWindow = new SessionCloseWindow(this);
         }
         closeWindow.showPopupWindow(ibMenuMore);
         sessionManager.getEvalStatus(toUser.getTenantId(), new HDDataCallBack<String>() {
-            @Override
-            public void onSuccess(String value) {
+            @Override public void onSuccess(String value) {
                 updateEvalStatus(value);
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
 
             }
         });
     }
 
-    @OnClick(R.id.btn_up)
-    public void onClickByTagUp(){
+    @OnClick(R.id.iv_close) public void onClickByTagUp() {
         tagLayout.setVisibility(View.GONE);
-        btnUp.setVisibility(View.INVISIBLE);
-        btnDown.setVisibility(View.VISIBLE);
+        ivShowLabel.setVisibility(View.VISIBLE);
     }
 
-    @OnClick(R.id.btn_down)
-    public void onClickByTagDown(){
+    @OnClick(R.id.iv_show_label) public void onClickByTagDown() {
         tagLayout.setVisibility(View.VISIBLE);
-        btnUp.setVisibility(View.VISIBLE);
-        btnDown.setVisibility(View.INVISIBLE);
+        ivShowLabel.setVisibility(View.GONE);
     }
-
-
-
 
     /**
      * 满意度评价发送
@@ -994,15 +950,13 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
         pd.show();
         sessionManager.asyncSendEvalInvite(toUser.getTenantId(), new HDDataCallBack<String>() {
 
-            @Override
-            public void onSuccess(String value) {
+            @Override public void onSuccess(String value) {
                 if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         isSendEvalState = "invited";
                         closeDialog();
                         Toast.makeText(getApplicationContext(), getString(R.string.toast_send_success), Toast.LENGTH_SHORT).show();
@@ -1010,47 +964,40 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 });
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
                 HDLog.e(TAG, "sendEvalClick:" + errorMsg);
                 if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         closeDialog();
                         Toast.makeText(getApplicationContext(), getString(R.string.toast_send_fail), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
-            @Override
-            public void onAuthenticationException() {
-                if (isFinishing()){
+            @Override public void onAuthenticationException() {
+                if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         HDApplication.getInstance().logout();
                     }
                 });
-
             }
         });
     }
 
-
-    public void toPhraseUI(){
+    public void toPhraseUI() {
         Intent intent = new Intent();
-        intent.setClass(this, PhraseActivity.class);
+        intent.setClass(this, PhraseListActivity.class);
         startActivityForResult(intent, REQUEST_CODE_SHORTCUT);
     }
 
-
-    public void toCustomWebView(){
+    public void toCustomWebView() {
         if (extOptionEntity == null) {
             return;
         }
@@ -1062,7 +1009,7 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
             url = "http:" + url;
         }
 
-        if (!url.startsWith("http")){
+        if (!url.startsWith("http")) {
             return;
         }
 
@@ -1083,44 +1030,44 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
         selectFileFromLocalNew();
     }
 
-    public void selectFileFromLocalNew(){
-        DialogProperties properties = new DialogProperties();
-        properties.selection_mode = DialogConfigs.SINGLE_MODE;
-        properties.selection_type = DialogConfigs.FILE_SELECT;
-        properties.root = Environment.getExternalStorageDirectory();
-        properties.error_dir = Environment.getExternalStorageDirectory();
-        properties.offset = new File(DialogConfigs.DEFAULT_DIR);
-        properties.extensions = null;
-
-        FilePickerDialog dialog = new FilePickerDialog(this, properties);
-        dialog.setTitle("选择要发送的文件");
-        dialog.setDialogSelectionListener(new DialogSelectionListener() {
-            @Override
-            public void onSelectedFilePaths(String[] files) {
-                // files is the array of the paths of files selected by the Application User.
-                if (files != null && files.length > 0){
-                    for (String filePath : files){
-                        sendFileMessage(filePath);
-                    }
-                }
-            }
-        });
-        dialog.show();
-    }
+//    public void selectFileFromLocalNew() {
+//        DialogProperties properties = new DialogProperties();
+//        properties.selection_mode = DialogConfigs.SINGLE_MODE;
+//        properties.selection_type = DialogConfigs.FILE_SELECT;
+//        properties.root = Environment.getExternalStorageDirectory();
+//        properties.error_dir = Environment.getExternalStorageDirectory();
+//        properties.offset = new File(DialogConfigs.DEFAULT_DIR);
+//        properties.extensions = null;
+//
+//        FilePickerDialog dialog = new FilePickerDialog(this, properties);
+//        dialog.setTitle("选择要发送的文件");
+//        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+//            @Override public void onSelectedFilePaths(String[] files) {
+//                // files is the array of the paths of files selected by the Application User.
+//                if (files != null && files.length > 0) {
+//                    for (String filePath : files) {
+//                        sendFileMessage(filePath);
+//                    }
+//                }
+//            }
+//        });
+//        dialog.show();
+//    }
 
     /**
      * 关闭会话和界面
      */
-    public void closeSessionAndUI() {
+    public void closeSessionAndUI(boolean setEmptySummary) {
+        if (setEmptySummary){
+            sessionManager.asyncPostEmptySessionSummary(null);
+        }
         sessionManager.asyncStopSession(new HDDataCallBack<String>() {
-            @Override
-            public void onSuccess(String value) {
+            @Override public void onSuccess(String value) {
                 if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         if (CurrentSessionFragment.refreshCallback != null) {
                             CurrentSessionFragment.refreshCallback.onRefreshView();
                         }
@@ -1129,76 +1076,61 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 });
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
                 if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         Toast.makeText(ChatActivity.this, getString(R.string.toast_op_fail_p_checknet), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
-            @Override
-            public void onAuthenticationException() {
-                if (isFinishing()){
+            @Override public void onAuthenticationException() {
+                if (isFinishing()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         HDApplication.getInstance().logout();
                     }
                 });
             }
         });
-
     }
 
-
-
-    @Override
-    protected void onDestroy() {
+    @Override protected void onDestroy() {
         super.onDestroy();
         closeDialog();
+        sessionManager.clear();
         evalEventListener = null;
     }
 
-
-    @Override
-    public void onEvalEventListener(String sessionServiceId, String visitorUserId, String agentUserId) {
+    @Override public void onEvalEventListener(String sessionServiceId, String visitorUserId, String agentUserId) {
         if (sessionServiceId != null && sessionServiceId.equals(sessionId)) {
             isSendEvalState = "over";
             if (closeWindow == null) {
                 closeWindow = new SessionCloseWindow(this);
             }
             runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+                @Override public void run() {
                     closeWindow.setEvalIcon(true);
                 }
             });
         }
     }
 
-
-    public boolean isAppChannel(){
-        if(!TextUtils.isEmpty(sessionId)){
-            if (originType == null || originType.equalsIgnoreCase("app") || originType.equalsIgnoreCase("webim")){
+    public boolean isAppChannel() {
+        if (!TextUtils.isEmpty(sessionId)) {
+            if (originType == null || originType.equalsIgnoreCase("app") || originType.equalsIgnoreCase("webim")) {
                 return true;
             }
         }
         return false;
     }
 
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_CODE_SHORTCUT) {
@@ -1212,15 +1144,13 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 pd.show();
                 if (!TextUtils.isEmpty(userId) || queueId > 0) {
                     sessionManager.transfer(data, new HDDataCallBack<String>() {
-                        @Override
-                        public void onSuccess(String value) {
+                        @Override public void onSuccess(String value) {
                             if (isFinishing()) {
                                 return;
                             }
                             runOnUiThread(new Runnable() {
 
-                                @Override
-                                public void run() {
+                                @Override public void run() {
                                     closeDialog();
                                     if (queueId > 0) {
                                         Toast.makeText(ChatActivity.this, getString(R.string.info_transfering), Toast.LENGTH_SHORT).show();
@@ -1233,43 +1163,25 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                             });
                         }
 
-                        @Override
-                        public void onError(int error, String errorMsg) {
+                        @Override public void onError(int error, String errorMsg) {
                             if (isFinishing()) {
                                 return;
                             }
                             runOnUiThread(new Runnable() {
 
-                                @Override
-                                public void run() {
+                                @Override public void run() {
                                     closeDialog();
                                     Toast.makeText(ChatActivity.this, getString(R.string.toast_transfer_fail), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        }
-
-                        @Override
-                        public void onAuthenticationException() {
-                            if (queueId > 0) {
-                                if (isFinishing()){
-                                    return;
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        HDApplication.getInstance().logout();
-                                    }
-                                });
-                            }
                         }
                     });
                 } else {
                     closeDialog();
                     Toast.makeText(this, getString(R.string.toast_transfer_error), Toast.LENGTH_SHORT).show();
                 }
-
             } else if (requestCode == REQUEST_CODE_STOP_DIALOG) {
-                closeSessionAndUI();
+                closeSessionAndUI(!sessionManager.categoryIsSet());
             } else if (requestCode == REQUEST_CODE_SEND_EVAL_INVIT) {
                 sendEvalClick();
             } else if (requestCode == REQUEST_CODE_CATEGORY_SHOW) {
@@ -1278,14 +1190,13 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 boolean isClose = data.getBooleanExtra("close", false);
                 List<HDCategorySummary> currentCategorySummarys = sessionManager.setCategorySummaryValue(newValue);
                 setTagViews(currentCategorySummarys);
-                if(comment != null){
+                if (comment != null && !TextUtils.isEmpty(comment.trim())) {
                     commentString = comment;
                     tvNote.setText(String.format(getString(R.string.tv_text_content), commentString));
                 }
                 if (isClose) {
-                    closeSessionAndUI();
+                    closeSessionAndUI(false);
                 }
-
             } else if (requestCode == REQUEST_CODE_USER_DETAIL) {
                 String rNiceName = data.getStringExtra("nicename");
                 if (TextUtils.isEmpty(rNiceName)) {
@@ -1298,8 +1209,7 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 if (CurrentSessionFragment.callback != null) {
                     CurrentSessionFragment.callback.onFresh(null);
                 }
-
-            }else if (requestCode == REQUEST_CODE_SEND_EXT_MSG) {
+            } else if (requestCode == REQUEST_CODE_SEND_EXT_MSG) {
                 //发送自定义消息
                 String extString = data.getStringExtra("ext");
                 try {
@@ -1308,13 +1218,10 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
                 } catch (JSONException e) {
                     Toast.makeText(ChatActivity.this, getString(R.string.txt_style_error), Toast.LENGTH_SHORT).show();
                 }
-
-
-            }else{
+            } else {
                 mAdapter.refresh();
             }
         }
-
     }
 
     private void getSessionExtraInfo() {
@@ -1322,27 +1229,21 @@ public class ChatActivity extends BaseChatActivity implements IEvalEventListener
 
         if (optionEntity != null && optionEntity.getOptionValue().equals("true")) {
             sessionManager.getSessionExtraInfo(new HDDataCallBack<String>() {
-                @Override
-                public void onSuccess(final String value) {
-                    if (isFinishing()){
+                @Override public void onSuccess(final String value) {
+                    if (isFinishing()) {
                         return;
                     }
                     runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (sessionExtraInfo != null)
-                                sessionExtraInfo.setText(value);
+                        @Override public void run() {
+                            if (sessionExtraInfo != null) sessionExtraInfo.setText(value);
                         }
                     });
                 }
 
-                @Override
-                public void onError(int error, String errorMsg) {
+                @Override public void onError(int error, String errorMsg) {
 
                 }
             });
         }
     }
-
-
 }

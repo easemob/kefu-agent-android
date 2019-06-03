@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_title_height"
-        android:background="@color/top_bar_normal_bg">
+        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/rl_back"
@@ -21,9 +21,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_back_2"
+                android:src="@drawable/back_icon"
                 />
         </RelativeLayout>
 
@@ -33,8 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="公司注册"
-            android:textColor="@android:color/white"
+            android:text="注册"
+            android:textColor="@android:color/black"
             android:textSize="18sp" />
 
         <TextView
@@ -45,7 +44,8 @@
             android:layout_centerVertical="true"
             android:padding="10dp"
             android:text="个人"
-            android:textColor="@android:color/white"
+            android:textColor="#1565C0"
+            android:layout_marginRight="10dp"
             android:textSize="15sp" />
 
     </RelativeLayout>
@@ -55,18 +55,19 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:padding="30dp">
+        android:padding="15dp">
 
         <EditText
             android:id="@+id/et_email"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:hint="邮箱"
             android:inputType="textEmailAddress"
             android:singleLine="true"
             android:textColorHint="#999999"
-            android:textSize="18sp" />
+            android:paddingLeft="10dp"
+            android:textSize="16sp" />
 
         <View
             android:layout_width="match_parent"
@@ -77,13 +78,14 @@
         <EditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:hint="密码"
             android:inputType="textPassword"
             android:singleLine="true"
+            android:paddingLeft="10dp"
             android:textColorHint="#999999"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <View
             android:layout_width="match_parent"
@@ -94,13 +96,14 @@
         <EditText
             android:id="@+id/et_confirm_pwd"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:background="@android:color/transparent"
-            android:hint="重复输入密码"
+            android:hint="再次确认密码"
             android:inputType="textPassword"
+            android:paddingLeft="10dp"
             android:singleLine="true"
             android:textColorHint="#999999"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <View
             android:layout_width="match_parent"
@@ -111,12 +114,13 @@
         <EditText
             android:id="@+id/et_company"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:background="@android:color/transparent"
+            android:paddingLeft="10dp"
             android:hint="公司名称"
             android:singleLine="true"
             android:textColorHint="#999999"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <View
             android:layout_width="match_parent"
@@ -126,13 +130,14 @@
         <EditText
             android:id="@+id/et_phone"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="50dp"
             android:background="@android:color/transparent"
+            android:paddingLeft="10dp"
             android:hint="手机号"
             android:singleLine="true"
             android:inputType="phone"
             android:textColorHint="#999999"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <View
             android:layout_width="match_parent"
@@ -142,7 +147,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp">
+            android:layout_height="50dp">
 
 
             <ImageView
@@ -156,13 +161,14 @@
             <EditText
                 android:id="@+id/et_code"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/iv_code"
                 android:background="@android:color/transparent"
+                android:paddingLeft="10dp"
                 android:hint="请输入右侧验证码"
                 android:singleLine="true"
                 android:textColorHint="#999999"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
         </RelativeLayout>
 
 

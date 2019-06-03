@@ -3,224 +3,204 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f2f2f2"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <View
-        style="@style/line_view_1dp"
-        android:layout_marginTop="15dp" />
+  <View
+      android:layout_marginTop="15dp"
+      style="@style/line_view_1dp"
+      />
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="@android:color/white"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="工作质量"
+        android:textColor="@color/manager_label_text_color"
+        android:textSize="14sp"
+        />
+
+    <ImageView
+        android:id="@+id/tv_refresh"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/refresh_icon"
+        android:visibility="gone"
+        />
+
+  </RelativeLayout>
+
+  <View style="@style/line_view_1dp"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="80dp"
+      android:background="@android:color/white"
+      android:baselineAligned="false"
+      android:gravity="center"
+      android:orientation="horizontal"
+      >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@android:color/white">
+        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:text="工作质量"
-            android:textColor="@color/manager_label_text_color"
-            android:textSize="14sp" />
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginLeft="10dp"
+          android:text="满意度评分"
+          android:textColor="@color/manager_label_text_color"
+          android:textSize="15sp"
+          />
 
-        <ImageView
-            android:id="@+id/tv_refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/icon_refresh"
-            android:visibility="gone"
-            />
+      <TextView
+          android:id="@+id/tv_satisfaction"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginRight="10dp"
+          android:text=""
+          android:textColor="#4990E2"
+          android:textSize="15sp"
+          />
 
     </RelativeLayout>
 
-    <View style="@style/line_view_1dp" />
+  </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_satisfaction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="--"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="38sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="满意度(分)"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-
-
-    </LinearLayout>
-
-    <View style="@style/line_view_1dp" />
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="@color/white"
+      >
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@android:color/white"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="15dp"
-        android:text="首次响应时长"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="首次响应时长(平均)"
         android:textColor="@color/manager_label_text_color"
-        android:textSize="12sp" />
-
-    <View style="@style/line_view_1dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_answer_avg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="--"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="平均值"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/line_color_2" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_answer_max"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="--"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="最大值"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <View style="@style/line_view_1dp" />
+        android:textSize="15sp"
+        />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@android:color/white"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="15dp"
-        android:text="响应时长"
+        android:id="@+id/tv_answer_avg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:text=""
+        android:textColor="#388E3C"
+        android:textSize="15sp"
+        />
+
+  </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="@color/white"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="首次响应时长(最大)"
         android:textColor="@color/manager_label_text_color"
-        android:textSize="12sp" />
+        android:textSize="15sp"
+        />
 
-    <View style="@style/line_view_1dp" />
+    <TextView
+        android:id="@+id/tv_answer_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:text=""
+        android:textColor="#388E3C"
+        android:textSize="15sp"
+        />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:orientation="horizontal">
+  </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_session_answer_avg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="--"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="18sp" />
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="@color/white"
+      >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="平均值"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="12sp" />
-        </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="平均响应时长"
+        android:textColor="@color/manager_label_text_color"
+        android:textSize="15sp"
+        />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="@color/line_color_2" />
+    <TextView
+        android:id="@+id/tv_session_answer_avg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="15sp"
+        />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+  </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="@color/white"
+      >
 
-            <TextView
-                android:id="@+id/tv_session_answer_max"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="--"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="18sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="最大响应时长"
+        android:textColor="@color/manager_label_text_color"
+        android:textSize="15sp"
+        />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="最大值"
-                android:textColor="@color/manager_label_text_color"
-                android:textSize="12sp" />
-        </LinearLayout>
+    <TextView
+        android:id="@+id/tv_session_answer_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="15sp"
+        />
 
-    </LinearLayout>
+  </RelativeLayout>
 
-    <View style="@style/line_view_1dp" />
+  <View style="@style/line_view_1dp"/>
 
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -133,6 +134,28 @@ public class TransferSkillGroupFragment extends Fragment {
         });
         mSwipeLayout.setColorSchemeResources(R.color.holo_blue_bright, R.color.holo_green_dark,
                 R.color.holo_orange_light, R.color.holo_red_light);
+
+        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                boolean enable;
+                if (mListView != null && mListView.getChildCount() > 0) {
+                    //check if the first item of the list is visible
+                    boolean firstItemVisible = mListView.getFirstVisiblePosition() == 0;
+                    //check if the top of the first item is visible
+                    boolean topOfFirstItemVisible = mListView.getChildAt(0).getTop() == 0;
+                    //enabling or disabling the refresh layout
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                    mSwipeLayout.setEnabled(enable);
+                } else {
+                    mSwipeLayout.setEnabled(true);
+                }
+            }
+        });
         // search edittext
         query.addTextChangedListener(new TextWatcher() {
             @Override
@@ -206,14 +229,15 @@ public class TransferSkillGroupFragment extends Fragment {
                     @Override
                     public void run() {
                         synchronized (agentQueues){
-                            List<AgentQueue> list = value;
+//                            List<AgentQueue> list = value;
                             agentQueues.clear();
-                            for (AgentQueue agent : list) {
-                                if (agent.queueGroupType != null && agent.queueGroupType.equals("SystemDefault")){
-                                    continue;
-                                }
-                                agentQueues.add(agent);
-                            }
+                            agentQueues.addAll(value);
+//                            for (AgentQueue agent : list) {
+//                                if (agent.queueGroupType != null && agent.queueGroupType.equals("SystemDefault")){
+//                                    continue;
+//                                }
+//                                agentQueues.add(agent);
+//                            }
                             adapter.notifyDataSetChanged();
                             mSwipeLayout.setRefreshing(false);
                         }

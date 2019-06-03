@@ -42,9 +42,15 @@ public class AlertDialog extends BaseActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dialog_custom_view);
 		Intent gIntent = getIntent();
-		textMessage = gIntent.getStringExtra("msg");
-		okString = gIntent.getStringExtra("okString");
-		position = gIntent.getIntExtra("position", -1);
+		try{
+			textMessage = gIntent.getStringExtra("msg");
+		}catch (Exception ignored){}
+		try{
+			okString = gIntent.getStringExtra("okString");
+		}catch (Exception ignored){}
+		try{
+			position = gIntent.getIntExtra("position", -1);
+		}catch (Exception ignored){}
 		initView();
 		
 	}
@@ -91,9 +97,15 @@ public class AlertDialog extends BaseActivity implements OnClickListener {
 		super.onNewIntent(intent);
 		setIntent(intent);
 		Intent gIntent = getIntent();
-		textMessage = gIntent.getStringExtra("msg");
-		okString = gIntent.getStringExtra("okString");
-		position = gIntent.getIntExtra("position", -1);
+		try{
+			textMessage = gIntent.getStringExtra("msg");
+		}catch (Exception ignored){}
+		try{
+			okString = gIntent.getStringExtra("okString");
+		}catch (Exception ignored){}
+		try{
+			position = gIntent.getIntExtra("position", -1);
+		}catch (Exception ignored){}
 		initView();
 	}
 }

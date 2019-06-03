@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="12dp">
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/queue_name"
+			android:text="技能组昵称1"
+			android:textColor="#FF4D4D4D"
+			android:textSize="15sp"
+			/>
+		<LinearLayout
+			android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+			android:id="@+id/check_detail"
+			android:orientation="horizontal"
+		    android:layout_alignParentRight="true"
+		    >
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="查看详情"
+				android:textColor="#FF15A2FC"
+				android:textSize="12sp"
+				/>
+			<ImageView
+				android:layout_width="7dp"
+				android:layout_height="12dp"
+				android:layout_marginTop="2dp"
+				android:layout_marginLeft="6dp"
+				android:background="@drawable/icon_realtime_supervise_right_arrow_blue"/>
+		</LinearLayout>
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp">
+		<ImageView
+			android:layout_width="14dp"
+			android:layout_height="15dp"
+			android:background="@drawable/icon_realtime_supervise_waiting_count"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/supervise_waiting_count"
+			android:layout_marginLeft="25dp"
+			android:text="15人"
+			android:textColor="#FF4D4D4D"
+			android:textSize="12sp"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="15dp"
+			android:layout_toRightOf="@+id/supervise_waiting_count"
+			android:text="正在排队"
+			android:textColor="#FF4D4D4D"
+			android:textSize="12sp"
+			/>
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_marginTop="10dp">
+		<ImageView
+			android:layout_width="14dp"
+			android:layout_height="15dp"
+			android:background="@drawable/icon_realtime_supervise_reception"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/supervise_current_recept_count"
+			android:layout_marginLeft="25dp"
+			android:text="2人"
+			android:textColor="#FF4D4D4D"
+			android:textSize="12sp"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/supervise_max_recept_count"
+			android:layout_marginLeft="15dp"
+			android:layout_toRightOf="@+id/supervise_current_recept_count"
+			android:text="当前接待/最大接待"
+			android:textColor="#FF4D4D4D"
+			android:textSize="12sp"
+			/>
+	</RelativeLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/users_states_graph_layout"
+		android:orientation="horizontal"
+		android:layout_marginTop="15dp">
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="8dp"
+			android:id="@+id/online_graph"
+		    android:layout_weight="0"
+			android:background="#FF9FF806"
+			/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="8dp"
+			android:id="@+id/busy_graph"
+			android:layout_weight="0"
+			android:background="#FFF9331C"
+			/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="8dp"
+			android:id="@+id/leave_graph"
+			android:layout_weight="0"
+			android:background="#FF29A9EA"
+			/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="8dp"
+			android:id="@+id/hiding_graph"
+			android:layout_weight="0"
+			android:background="#FFEFBB57"
+			/>
+
+		<View
+			android:layout_width="0dp"
+			android:layout_height="8dp"
+			android:id="@+id/offline_graph"
+			android:layout_weight="0"
+			android:background="#FFD8D8D8"
+			/>
+		
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/users_states_num_layout"
+		android:orientation="horizontal"
+		android:layout_marginTop="15dp">
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			>
+			<ImageView
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:background="@drawable/icon_status_free"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/online_num"
+				android:textColor="#FF4D4D4D"
+				android:layout_marginLeft="5dp"
+				android:textSize="12sp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			>
+			<ImageView
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:background="@drawable/icon_status_busy"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/busy_num"
+				android:textColor="#FF4D4D4D"
+				android:layout_marginLeft="5dp"
+				android:textSize="12sp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			>
+			<ImageView
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:background="@drawable/icon_status_leave"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/leave_num"
+				android:textColor="#FF4D4D4D"
+				android:layout_marginLeft="5dp"
+				android:textSize="12sp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			>
+			<ImageView
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:background="@drawable/icon_status_hiding"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/hiding_num"
+				android:textColor="#FF4D4D4D"
+				android:layout_marginLeft="5dp"
+				android:textSize="12sp"/>
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			>
+			<ImageView
+				android:layout_width="10dp"
+				android:layout_height="10dp"
+				android:background="@drawable/state_gray"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/offline_num"
+				android:textColor="#FF4D4D4D"
+				android:layout_marginLeft="5dp"
+				android:textSize="12sp"/>
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>

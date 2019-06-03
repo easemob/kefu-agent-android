@@ -20,6 +20,7 @@ import com.easemob.helpdesk.mvp.LoginActivity;
 import com.easemob.helpdesk.mvp.MainActivity;
 import com.hyphenate.kefusdk.chat.HDClient;
 
+
 /**
  * 加载界面，也是APP的第一个界面
  */
@@ -48,6 +49,7 @@ public class SplashActivity extends BaseActivity {
         AppConfig.setFitWindowMode(this, android.R.color.white);
         setContentView(R.layout.activity_splash);
         initView();
+
         new Handler().postDelayed(new Runnable() {
 
             @Override
@@ -73,36 +75,37 @@ public class SplashActivity extends BaseActivity {
      */
     private void initView() {
         ivLogo = (ImageView) findViewById(R.id.iv_logo);
-        tvCopyFrom = (TextView) findViewById(R.id.tv_copy_from);
-        tvCopyFrom.setText(ChannelConfig.getInstance().getCopyFromTxt());
-        tvCopyFrom.setTextColor(ChannelConfig.getInstance().getCopyFromTxtColor());
-        int winWidth, winHeight;
-        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            Point size = new Point();
-            display.getSize(size);
-            winHeight = size.y;
-            winWidth = size.x;
-        } else {
-            winHeight = display.getHeight();
-            winWidth = display.getWidth();
-        }
-        // 440*360 width:winWidth*2/3 height:
-
-        int iconWidth = winWidth * 2 / 3;
-//		int iconHeight = iconWidth * 360 / 440;
-        int iconHeight = ChannelConfig.getInstance().getWelcomeLogoHeight(iconWidth);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = winHeight / 5;
-        layoutParams.width = iconWidth;
-        layoutParams.height = iconHeight;
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        ivLogo.setLayoutParams(layoutParams);
-//		ivLogo.setImageResource(R.drawable.welcome_logo2);
-        ivLogo.setImageResource(ChannelConfig.getInstance().getWelcomeLogo());
+        ivLogo.setImageResource(R.drawable.splash_screen);
+//        tvCopyFrom = (TextView) findViewById(R.id.tv_copy_from);
+//        tvCopyFrom.setText(ChannelConfig.getInstance().getCopyFromTxt());
+//        tvCopyFrom.setTextColor(ChannelConfig.getInstance().getCopyFromTxtColor());
+//        int winWidth, winHeight;
+//        WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+//        Display display = wm.getDefaultDisplay();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            Point size = new Point();
+//            display.getSize(size);
+//            winHeight = size.y;
+//            winWidth = size.x;
+//        } else {
+//            winHeight = display.getHeight();
+//            winWidth = display.getWidth();
+//        }
+//        // 440*360 width:winWidth*2/3 height:
+//
+//        int iconWidth = winWidth * 2 / 3;
+////		int iconHeight = iconWidth * 360 / 440;
+//        int iconHeight = ChannelConfig.getInstance().getWelcomeLogoHeight(iconWidth);
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
+//                LayoutParams.WRAP_CONTENT);
+//        layoutParams.topMargin = winHeight / 5;
+//        layoutParams.width = iconWidth;
+//        layoutParams.height = iconHeight;
+//        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//        layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+//        ivLogo.setLayoutParams(layoutParams);
+////		ivLogo.setImageResource(R.drawable.welcome_logo2);
+//        ivLogo.setImageResource(ChannelConfig.getInstance().getWelcomeLogo());
     }
 
 }

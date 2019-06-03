@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import android.widget.TextView;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.mvp.ChatActivity;
 
@@ -17,28 +18,35 @@ public class ContextMenu extends BaseActivity {
     public static final int TYPE_CONTEXT_MENU_CREATE_SESSION = 2;
     public static final int TYPE_CONTEXT_MENU_TXT = 3;
     public static final int TYPE_CONTEXT_MENU_TXT_WITH_RECALL = 4;
-//    public static final int TYPE_CONTEXT_MENU_IMAGE = 5;
+    //    public static final int TYPE_CONTEXT_MENU_IMAGE = 5;
     public static final int TYPE_CONTEXT_MENU_IMAGE_WITH_RECALL = 6;
-//    public static final int TYPE_CONTEXT_MENU_VOICE_WITH_RECALL = 6;
-
+    //    public static final int TYPE_CONTEXT_MENU_VOICE_WITH_RECALL = 6;
 
     private int parentPosition;
     private int childPosition;
     private int position;
+    private int isStick;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int type = getIntent().getIntExtra("type", -1);
+        isStick = getIntent().getIntExtra("isStick", -1);
         if (type == TYPE_CONTEXT_MENU_SHORTCUT) {
             setContentView(R.layout.context_menu_for_shorcut);
         } else if (type == TYPE_CONTEXT_MENU_CREATE_SESSION) {
             setContentView(R.layout.context_menu_for_create_session);
         } else if (type == TYPE_CONTEXT_MENU_TXT) {
             setContentView(R.layout.context_menu_for_txt);
-        } else if (type == TYPE_CONTEXT_MENU_TXT_WITH_RECALL){
+            if (isStick == 0) {
+                ((TextView) findViewById(R.id.tv_copy)).setText("取消置顶置顶");
+            } else if (isStick == 1) {
+                ((TextView) findViewById(R.id.tv_copy)).setText("置顶");
+            } else {
+                ((TextView) findViewById(R.id.tv_copy)).setText("复制");
+            }
+        } else if (type == TYPE_CONTEXT_MENU_TXT_WITH_RECALL) {
             setContentView(R.layout.context_menu_for_txt_withrecall);
-        } else if (type == TYPE_CONTEXT_MENU_IMAGE_WITH_RECALL){
+        } else if (type == TYPE_CONTEXT_MENU_IMAGE_WITH_RECALL) {
             setContentView(R.layout.context_menu_for_recall);
         }
         Intent gIntent = getIntent();
@@ -47,8 +55,7 @@ public class ContextMenu extends BaseActivity {
         childPosition = gIntent.getIntExtra("childPosition", -1);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    @Override public boolean onTouchEvent(MotionEvent event) {
         finish();
         return true;
     }
@@ -78,14 +85,12 @@ public class ContextMenu extends BaseActivity {
     }
 
     public void copy(View view) {
-        setResult(ChatActivity.RESULT_CODE_COPY_AND_PASTE, new Intent().putExtra("position", position));
+        setResult(ChatActivity.RESULT_CODE_COPY_AND_PASTE, new Intent().putExtra("position", position).putExtra("isStick",isStick));
         finish();
     }
 
-
-    public void recall(View view){
+    public void recall(View view) {
         setResult(ChatActivity.RESULT_CODE_RECALL, new Intent().putExtra("position", position));
         finish();
     }
-
 }

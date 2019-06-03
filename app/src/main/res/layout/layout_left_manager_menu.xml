@@ -3,365 +3,333 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1a1a1a">
+    android:background="#3C4147"
+    >
 
-    <LinearLayout
-        android:id="@+id/model_change_layout"
+  <LinearLayout
+      android:id="@+id/model_change_layout"
+      android:layout_width="match_parent"
+      android:layout_height="47dp"
+      android:layout_alignParentBottom="true"
+      android:layout_marginBottom="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_marginRight="10dp"
+      android:background="@drawable/corner_bg"
+      android:gravity="center"
+      >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/menu_icon_agent_mode"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="切换至客服模式"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_above="@+id/model_change_layout"
+      android:orientation="vertical"
+      >
+
+
+    <!--android:background="@color/top_bar_normal_bg"-->
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="left|center_vertical"
-        android:padding="15dp">
+        >
+
+      <com.easemob.helpdesk.widget.CircleImageView
+          android:id="@+id/iv_avatar"
+          android:layout_width="@dimen/avatar_width"
+          android:layout_height="@dimen/avatar_height"
+          android:layout_marginBottom="10dp"
+          android:layout_marginLeft="10dp"
+          android:layout_marginTop="10dp"
+          android:src="@drawable/default_agent_avatar"
+          />
+
+      <ImageView
+          android:id="@+id/iv_alarm_status"
+          android:layout_width="10dp"
+          android:layout_height="10dp"
+          android:layout_alignRight="@id/iv_avatar"
+          android:layout_alignTop="@id/iv_avatar"
+          android:background="@drawable/alarms_level2_bg"
+          />
+
+      <TextView
+          android:id="@+id/tv_nickname"
+          android:layout_width="140dp"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_marginLeft="20dp"
+          android:layout_toRightOf="@id/iv_avatar"
+          android:ellipsize="middle"
+          android:singleLine="true"
+          android:textColor="#fff"
+          android:textSize="18sp"
+          />
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_marginRight="12dp"
+          android:onClick="showStatus"
+          >
+
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/menu_icon_agent_mode"
-            android:layout_margin="5dp"
+            android:id="@+id/icon_arrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_down_icon"
             />
 
+
         <TextView
+            android:id="@+id/tv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="客服模式"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/icon_arrow"
+            android:text=""
+            android:textColor="#fff"
+            android:textSize="14sp"
+            />
+        <ImageView
+            android:id="@+id/iv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="5dp"
+            android:layout_alignLeft="@id/tv_status"
+            android:layout_alignRight="@id/tv_status"
+            android:layout_below="@id/tv_status"
+            android:layout_marginTop="16dp"
+            tools:ignore="ContentDescription"
+            />
 
-    <LinearLayout
+      </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/model_change_layout"
-        android:orientation="vertical">
+        android:overScrollMode="never"
+        >
 
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
 
-        <!--android:background="@color/top_bar_normal_bg"-->
-        <RelativeLayout
+        <com.easemob.helpdesk.widget.CheckableLayout
+            android:id="@+id/menu_history_session_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="60dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            >
 
-            <com.easemob.helpdesk.widget.CircleImageView
-                android:id="@+id/iv_avatar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/default_agent_avatar" />
+          <ImageView
+              android:layout_width="@dimen/item_icon_size"
+              android:layout_height="@dimen/item_icon_size"
+              android:background="@drawable/history_icon"
+              />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10dp"
+              android:text="历史会话"
+              android:textColor="@android:color/white"
+              android:textSize="16sp"
+              />
+
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical|right"
+              >
+            <ImageView
+                android:layout_width="@dimen/item_icon_size"
+                android:layout_height="@dimen/item_icon_size"
+                android:src="@drawable/arrow_status_black_right"
+                />
+          </LinearLayout>
+        </com.easemob.helpdesk.widget.CheckableLayout>
+
+        <LinearLayout
+            android:id="@+id/extra_statistic_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+          <com.easemob.helpdesk.widget.CheckableLayout
+              android:id="@+id/menu_workload_layout"
+              android:layout_width="match_parent"
+              android:layout_height="60dp"
+              android:gravity="center_vertical|left"
+              android:orientation="horizontal"
+              android:paddingLeft="12dp"
+              >
 
             <ImageView
-                android:id="@+id/iv_status"
-                android:layout_width="14dip"
-                android:layout_height="14dip"
-                android:layout_alignBottom="@id/iv_avatar"
-                android:layout_alignRight="@id/iv_avatar"
-                tools:ignore="ContentDescription" />
-
+                android:layout_width="@dimen/item_icon_size"
+                android:layout_height="@dimen/item_icon_size"
+                android:background="@drawable/workload_icon"
+                />
 
             <TextView
-                android:id="@+id/tv_nickname"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/iv_avatar"
-                android:ellipsize="middle"
-                android:singleLine="true"
-                android:textColor="#fff"
-                android:textSize="18sp" />
-
-            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:onClick="showStatus">
-
-
-                <ImageView
-                    android:id="@+id/icon_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/arrow_status_black_right"/>
-
-
-                <TextView
-                    android:id="@+id/tv_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/icon_arrow"
-                    android:text=""
-                    android:textColor="#fff"
-                    android:textSize="15sp" />
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never">
-
+                android:layout_marginLeft="10dp"
+                android:text="工作量"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <com.easemob.helpdesk.widget.CheckableLayout
-                    android:id="@+id/menu_home_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical|left"
-                    android:orientation="horizontal"
-                    android:paddingLeft="12dp">
-
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_manager_home"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="首页"
-                        android:textColor="@android:color/white"
-                        android:textSize="17sp" />
-
-                </com.easemob.helpdesk.widget.CheckableLayout>
-
-                <com.easemob.helpdesk.widget.CheckableLayout
-                    android:id="@+id/menu_current_session_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical|left"
-                    android:orientation="horizontal"
-                    android:paddingLeft="12dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_manager_current_session"
-                         />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="当前会话"
-                        android:textColor="@android:color/white"
-                        android:textSize="17sp" />
-
-                </com.easemob.helpdesk.widget.CheckableLayout>
-
-                <com.easemob.helpdesk.widget.CheckableLayout
-                    android:id="@+id/menu_history_session_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical|left"
-                    android:orientation="horizontal"
-                    android:paddingLeft="12dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_manager_history"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="历史会话"
-                        android:textColor="@android:color/white"
-                        android:textSize="17sp" />
-
-                </com.easemob.helpdesk.widget.CheckableLayout>
-
-                <com.easemob.helpdesk.widget.CheckableLayout
-                    android:id="@+id/menu_statistics_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical|left"
-                    android:orientation="horizontal"
-                    android:paddingLeft="12dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_manager_statistic"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="统计查询"
-                        android:textColor="@android:color/white"
-                        android:textSize="17sp" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingRight="10dp">
-
-                        <ImageView
-                            android:id="@+id/tv_arrow_up"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/arrow_status_icon_up"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/tv_arrow_down"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:background="@drawable/arrow_status_icon_down" />
-
-                    </RelativeLayout>
-
-                </com.easemob.helpdesk.widget.CheckableLayout>
-
-                <LinearLayout
-                    android:id="@+id/extra_statistic_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <com.easemob.helpdesk.widget.CheckableLayout
-                        android:id="@+id/menu_workload_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical|left"
-                        android:orientation="horizontal"
-                        android:paddingLeft="12dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_manager_workload"
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="工作量"
-                            android:textColor="@android:color/white"
-                            android:textSize="17sp" />
-
-                    </com.easemob.helpdesk.widget.CheckableLayout>
-
-                    <com.easemob.helpdesk.widget.CheckableLayout
-                        android:id="@+id/menu_workmanship_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical|left"
-                        android:orientation="horizontal"
-                        android:paddingLeft="12dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_manager_workquality"
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="工作质量"
-                            android:textColor="@android:color/white"
-                            android:textSize="17sp" />
-
-                    </com.easemob.helpdesk.widget.CheckableLayout>
-
-                    <com.easemob.helpdesk.widget.CheckableLayout
-                        android:id="@+id/menu_visitors_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:gravity="center_vertical|left"
-                        android:orientation="horizontal"
-                        android:paddingLeft="12dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/icon_manager_visitors"
-                            />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:text="访客统计"
-                            android:textColor="@android:color/white"
-                            android:textSize="17sp" />
-
-                    </com.easemob.helpdesk.widget.CheckableLayout>
-                </LinearLayout>
-                <com.easemob.helpdesk.widget.CheckableLayout
-                    android:id="@+id/menu_realtime_monitor_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical|left"
-                    android:orientation="horizontal"
-                    android:paddingLeft="12dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_manager_realtime"
-                         />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="实时监控"
-                        android:textColor="@android:color/white"
-                        android:textSize="17sp" />
-
-                </com.easemob.helpdesk.widget.CheckableLayout>
-
-                <com.easemob.helpdesk.widget.CheckableLayout
-                    android:id="@+id/menu_alarms_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center_vertical|left"
-                    android:orientation="horizontal"
-                    android:paddingLeft="12dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/icon_manager_alarms"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:text="告警记录"
-                        android:textColor="@android:color/white"
-                        android:textSize="17sp" />
-
-                </com.easemob.helpdesk.widget.CheckableLayout>
-
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                >
+              <ImageView
+                  android:layout_width="@dimen/item_icon_size"
+                  android:layout_height="@dimen/item_icon_size"
+                  android:src="@drawable/arrow_status_black_right"
+                  />
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+          </com.easemob.helpdesk.widget.CheckableLayout>
+
+          <com.easemob.helpdesk.widget.CheckableLayout
+              android:id="@+id/menu_workmanship_layout"
+              android:layout_width="match_parent"
+              android:layout_height="60dp"
+              android:gravity="center_vertical|left"
+              android:orientation="horizontal"
+              android:paddingLeft="12dp"
+              >
+
+            <ImageView
+                android:layout_width="@dimen/item_icon_size"
+                android:layout_height="@dimen/item_icon_size"
+                android:background="@drawable/work_quality_icon"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="工作质量"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                >
+              <ImageView
+                  android:layout_width="@dimen/item_icon_size"
+                  android:layout_height="@dimen/item_icon_size"
+                  android:src="@drawable/arrow_status_black_right"
+                  />
+            </LinearLayout>
+          </com.easemob.helpdesk.widget.CheckableLayout>
+
+          <com.easemob.helpdesk.widget.CheckableLayout
+              android:id="@+id/menu_visitors_layout"
+              android:layout_width="match_parent"
+              android:layout_height="60dp"
+              android:gravity="center_vertical|left"
+              android:orientation="horizontal"
+              android:paddingLeft="12dp"
+              >
+
+            <ImageView
+                android:layout_width="@dimen/item_icon_size"
+                android:layout_height="@dimen/item_icon_size"
+                android:background="@drawable/visitor_icon"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="访客统计"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|right"
+                >
+              <ImageView
+                  android:layout_width="@dimen/item_icon_size"
+                  android:layout_height="@dimen/item_icon_size"
+                  android:src="@drawable/arrow_status_black_right"
+                  />
+            </LinearLayout>
+          </com.easemob.helpdesk.widget.CheckableLayout>
+        </LinearLayout>
+
+        <com.easemob.helpdesk.widget.CheckableLayout
+            android:id="@+id/menu_realtime_supervise_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical|left"
+            android:orientation="horizontal"
+            android:paddingLeft="12dp"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/item_icon_size"
+              android:layout_height="@dimen/item_icon_size"
+              android:background="@drawable/manager_supervise_icon"
+              />
+
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="10dp"
+              android:text="现场管理"
+              android:textColor="@android:color/white"
+              android:textSize="16sp"
+              />
+          <LinearLayout
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical|right"
+              >
+            <ImageView
+                android:layout_width="@dimen/item_icon_size"
+                android:layout_height="@dimen/item_icon_size"
+                android:src="@drawable/arrow_status_black_right"
+                />
+          </LinearLayout>
+        </com.easemob.helpdesk.widget.CheckableLayout>
+
+      </LinearLayout>
+    </ScrollView>
+  </LinearLayout>
 
 </RelativeLayout>

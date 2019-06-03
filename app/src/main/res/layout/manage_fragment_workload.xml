@@ -4,58 +4,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_content_2"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      android:background="@color/white"
+      >
 
-        <include layout="@layout/top_bar_avatar_layout" />
+    <include
+        layout="@layout/top_bar_back_layout"
+        android:id="@+id/back_layout"
+        />
 
-        <com.flyco.tablayout.SegmentTabLayout
-            android:id="@+id/tablayout"
-            android:layout_width="158dp"
-            android:layout_height="28dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            tl:tl_bar_color="@color/bg_top_bar_2"
-            tl:tl_indicator_color="#fff"
-            tl:tl_indicator_corner_radius="4dp"
-            tl:tl_tab_padding="10dp"
-            tl:tl_tab_space_equal="true"
-            tl:tl_textBold="false"
-            tl:tl_textSelectColor="#000"
-            tl:tl_textUnselectColor="#fff"
-            tl:tl_textsize="12sp" />
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/back_layout"
+        android:text="工作量"
+        android:textColor="@color/black"
+        android:textSize="@dimen/title_text_size"
+        />
 
-        <ImageView
-            android:id="@+id/iv_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/icon_screening"
-            />
+    <com.flyco.tablayout.SegmentTabLayout
+        android:id="@+id/tablayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        />
 
+  </RelativeLayout>
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/top_title_text_size"
-            android:visibility="gone" />
-    </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:background="@color/white"
+      >
 
-    <FrameLayout
-        android:id="@+id/content_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:text="自定义筛选数据源"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        />
+    <ImageView
+        android:id="@+id/iv_filter"
+        android:layout_width="@dimen/item_icon_size"
+        android:layout_height="@dimen/item_icon_size"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/screening_icon"
+        />
+  </RelativeLayout>
+
+  <FrameLayout
+      android:id="@+id/content_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
 
 
 </LinearLayout>

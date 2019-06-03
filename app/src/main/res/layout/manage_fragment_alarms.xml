@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:background="@color/bg_content_2"
-              android:orientation="vertical">
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/top_title_height"
-		android:background="@color/bg_top_bar_2">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      >
 
-		<include layout="@layout/top_bar_avatar_layout" />
+    <include
+        layout="@layout/top_bar_avatar_layout"
+        android:id="@+id/layout_avatar"
+        />
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_centerVertical="true"
-			android:text="告警记录"
-			android:textColor="@android:color/white"
-			android:textSize="@dimen/top_title_text_size" />
-	</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/layout_avatar"
+        android:text="告警记录"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/title_text_size"
+        />
+  </RelativeLayout>
 
-	<com.jude.easyrecyclerview.EasyRecyclerView
-		android:id="@+id/alarms_list"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		app:layout_empty="@layout/view_empty"
-		/>
+  <com.jude.easyrecyclerview.EasyRecyclerView
+      android:id="@+id/alarms_list"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_empty="@layout/view_empty"
+      app:layout_error="@layout/view_error"
+      app:layout_progress="@layout/view_progress"
+      />
 </LinearLayout>

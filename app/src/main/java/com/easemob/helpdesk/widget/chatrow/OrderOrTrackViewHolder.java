@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.adapter.ChatAdapter;
 import com.easemob.helpdesk.emoticon.utils.SimpleCommonUtils;
@@ -31,14 +32,14 @@ public class OrderOrTrackViewHolder extends BaseViewHolder {
 
 	public ProgressBar pb;
 	public ImageView ivStatus;
-	public TextView tv;
+	private TextView tv;
 	public TextView tvTitle;
-	public TextView tvOrderTitle;
-	public TextView tvDesc;
-	public TextView tvPrice;
-	public ImageView imgView;
-	public LinearLayout lyView;
-	public LinearLayout tvList;
+	private TextView tvOrderTitle;
+	private TextView tvDesc;
+	private TextView tvPrice;
+	private ImageView imgView;
+	private LinearLayout lyView;
+	private LinearLayout tvList;
 
 	public OrderOrTrackViewHolder(Activity activity, ChatAdapter chatAdapter, View itemView) {
 		super(activity, chatAdapter, itemView);
@@ -95,7 +96,9 @@ public class OrderOrTrackViewHolder extends BaseViewHolder {
 						}
 					}
 				});
-				Glide.with(activity).load(entty.imgRemoteUrl).diskCacheStrategy(DiskCacheStrategy.ALL).into(imgView);
+				if (imgView != null){
+					Glide.with(activity).load(entty.imgRemoteUrl).apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.ALL)).into(imgView);
+				}
 			}
 		}
 

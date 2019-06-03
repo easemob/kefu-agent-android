@@ -11,19 +11,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp">
+        android:layout_height="60dp"
+        android:orientation="horizontal">
 
         <!-- 语音/文字切换-->
         <ImageView
             android:id="@+id/btn_voice_or_text"
-            android:layout_width="@dimen/bar_icon_height_userdef"
-            android:layout_height="@dimen/bar_icon_height_userdef"
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/chatting_vodie"
+            android:src="@drawable/mic_icon"
             tools:ignore="ContentDescription" />
 
         <!--语音输入-->
@@ -59,8 +57,8 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:gravity="center_vertical"
-            android:hint="点击输入文字"
-            android:textSize="16sp"
+            android:hint="说点什么吧"
+            android:textSize="18sp"
             app:completionHighlightColor="@color/colorAccent"
             app:completionIgnoreCase="true"
             app:completionTextColor="#80000000"
@@ -69,17 +67,17 @@
         <!--表情-->
         <ImageView
             android:id="@+id/btn_face"
-            android:layout_width="@dimen/bar_icon_height_userdef"
-            android:layout_height="@dimen/bar_icon_height_userdef"
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
             android:layout_toLeftOf="@+id/rl_multi_and_send"
             android:layout_centerVertical="true"
-            android:src="@mipmap/chatting_emoticons"
+            android:src="@drawable/face_icon"
             tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:id="@+id/rl_multi_and_send"
-            android:layout_width="58dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:focusableInTouchMode="true"
@@ -88,10 +86,11 @@
             <!--apps 功能-->
             <ImageView
                 android:id="@+id/btn_multimedia"
-                android:layout_width="34dp"
-                android:layout_height="28dp"
+                android:layout_width="@dimen/item_icon_size"
+                android:layout_height="@dimen/item_icon_size"
                 android:layout_centerInParent="true"
-                android:src="@mipmap/chatting_apps"
+                android:src="@drawable/extend_icon"
+                android:layout_marginRight="12dp"
                 tools:ignore="ContentDescription" />
 
             <!--发送-->
@@ -106,6 +105,7 @@
                 android:text="@string/btn_text_send"
                 android:textColor="@color/btn_send_textcolor"
                 android:textSize="12sp"
+                android:layout_marginRight="12dp"
                 android:visibility="gone" />
         </RelativeLayout>
     </RelativeLayout>

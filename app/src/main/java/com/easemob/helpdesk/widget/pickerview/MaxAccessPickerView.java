@@ -28,14 +28,11 @@ import java.util.ArrayList;
 
 public class MaxAccessPickerView extends BasePickerView implements View.OnClickListener {
 
-
     private Context mContext;
     private View btnSave;
     private TextView tvTitle;
     private WheelView wv;
     private ArrayList<String> values = new ArrayList<>();
-
-
 
     public MaxAccessPickerView(Context context) {
         super(context);
@@ -52,35 +49,34 @@ public class MaxAccessPickerView extends BasePickerView implements View.OnClickL
         }
         wv.setCyclic(false);
         wv.setAdapter(new ArrayWheelAdapter(values));
-
     }
 
-    public void checkModifiable(){
-        try{
+    public void checkModifiable() {
+        try {
             boolean isCanModify = isModifiable();
             btnSave.setVisibility(isCanModify ? View.VISIBLE : View.INVISIBLE);
-        }catch (Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-
-    public static boolean isModifiable(){
+    public static boolean isModifiable() {
         OptionEntity optionEntity = HDClient.getInstance().agentManager().getOptionEntity("allowAgentChangeMaxSessions");
         if (optionEntity != null) {
             String value = optionEntity.getOptionValue();
             if (value != null && value.equalsIgnoreCase("false")) {
                 HDUser loginUser = HDClient.getInstance().getCurrentUser();
                 return loginUser != null && loginUser.getRoles() != null && loginUser.getRoles().contains("admin");
-            } else return true;
+            } else {
+                return true;
+            }
         }
         return false;
     }
 
-
     private Dialog dialog;
 
-
-    @Override
-    public void onClick(View view) {
+    @Override public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_save:
                 setMaxAccessCountByServer();
@@ -102,7 +98,6 @@ public class MaxAccessPickerView extends BasePickerView implements View.OnClickL
         }
     }
 
-
     private void setMaxAccessCountByServer() {
         dialog = DialogUtils.getLoadingDialog(mContext, "更新中...");
         dialog.setCanceledOnTouchOutside(false);
@@ -111,59 +106,44 @@ public class MaxAccessPickerView extends BasePickerView implements View.OnClickL
         final int maxCount = wv.getCurrentItem();
         HDClient.getInstance().agentManager().setMaxAccessCountByServer(maxCount, new HDDataCallBack<String>() {
 
-            @Override
-            public void onSuccess(String value) {
+            @Override public void onSuccess(String value) {
                 if (((Activity) mContext).isFinishing()) {
                     return;
                 }
                 ((Activity) mContext).runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         closeDialog();
                         refreshUI();
                     }
                 });
-
             }
 
-            @Override
-            public void onError(int error, String errorMsg) {
+            @Override public void onError(int error, String errorMsg) {
                 if (((Activity) mContext).isFinishing()) {
                     return;
                 }
                 ((Activity) mContext).runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         closeDialog();
                         Toast.makeText(mContext, "最大接入数修改失败", Toast.LENGTH_SHORT).show();
                     }
                 });
-
             }
 
-            @Override
-            public void onAuthenticationException() {
+            @Override public void onAuthenticationException() {
                 if (((Activity) mContext).isFinishing()) {
                     return;
                 }
                 ((Activity) mContext).runOnUiThread(new Runnable() {
 
-                    @Override
-                    public void run() {
+                    @Override public void run() {
                         closeDialog();
                         HDApplication.getInstance().logout();
                     }
                 });
             }
         });
-
-
     }
-
-
-
-
-
 }

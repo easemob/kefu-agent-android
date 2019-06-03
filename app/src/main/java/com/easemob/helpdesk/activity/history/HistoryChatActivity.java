@@ -86,6 +86,9 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 	@BindView(R.id.tag_layout)
 	protected LinearLayout tagLayout;
 
+	@BindView(R.id.tag_container)
+	protected View tagContainer;
+
 	@BindView(R.id.tagview)
 	protected TagView tagGroup;
 
@@ -100,6 +103,8 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 
 	@BindView(R.id.seesion_extra_info)
 	protected TextView sessionExtraInfo;
+
+	@BindView(R.id.iv_show_label) protected ImageView ivShowLabel;
 
 	/**
 	 * 加载更多的View
@@ -128,6 +133,8 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 
 	private SessionManager sessionManager;
 
+	private boolean isWait;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -140,21 +147,23 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 		visitorUser = intent.getParcelableExtra("user");
 		originType = intent.getStringExtra("originType");
 		techChannelName = intent.getStringExtra("techChannelName");
+		isWait = intent.getBooleanExtra("isWait", false);
 		long chatGroupId = intent.getLongExtra("chatGroupId", 0);
 		sessionManager = new SessionManager(chatGroupId, sessionId, visitorUser, null);
 		initDatas();
 		initListener();
 		LoadRemoteMsg();
-		//获取tagsView
-		getTagsFromRemote();
-		getCommentsFromRemote();
-		getSessionExtraInfo();
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				tagLayout.setVisibility(View.GONE);
-			}
-		}, 300);
+		if (!isWait) {
+			//获取tagsView
+			getTagsFromRemote();
+			getCommentsFromRemote();
+			getSessionExtraInfo();
+		} else {
+			sessionExtraInfo.setVisibility(View.GONE);
+			btnCallback.setText("-> 接入");
+			ibMenuMore.setVisibility(View.GONE);
+			tagContainer.setVisibility(View.GONE);
+		}
 	}
 
 	private void initListener() {
@@ -164,7 +173,7 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 		btnCallback.setOnClickListener(this);
 	}
 
-	@OnClick(R.id.rl_back)
+	@OnClick(R.id.layout_back)
 	public void onClickByBack(){
 		finish();
 	}
@@ -179,7 +188,21 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						setTagViews(value);
+						final int tagLayoutVisibility = tagLayout.getVisibility();
+						if (tagLayoutVisibility == View.GONE) {
+							tagLayout.setVisibility(View.INVISIBLE);
+							new Handler().post(new Runnable() {
+								@Override
+								public void run() {
+									setTagViews(value);
+									if (tagLayoutVisibility != tagLayout.getVisibility()) {
+										tagLayout.setVisibility(tagLayoutVisibility);
+									}
+								}
+							});
+						} else {
+							setTagViews(value);
+						}
 					}
 				});
 			}
@@ -381,12 +404,22 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 		});
 	}
 
+	@OnClick(R.id.iv_close) public void onClickByTagUp() {
+		tagLayout.setVisibility(View.GONE);
+		ivShowLabel.setVisibility(View.VISIBLE);
+	}
+
+	@OnClick(R.id.iv_show_label) public void onClickByTagDown() {
+		tagLayout.setVisibility(View.VISIBLE);
+		ivShowLabel.setVisibility(View.GONE);
+	}
+
 	public RecyclerView getListView() {
 		return mRecyclerView;
 	}
 
 	private void closeDialog(){
-		if (pd != null) {
+		if (pd != null && pd.isShowing()) {
 			pd.dismiss();
 		}
 	}
@@ -411,85 +444,11 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 			}
 			break;
 			case R.id.btn_call_back:
-				if (pd == null) {
-					pd = new ProgressDialog(this);
+				if (!isWait) {
+					doCallBackSession();
+				} else {
+					doAccessSession();
 				}
-				pd.setMessage("正在回呼...");
-				pd.show();
-				sessionManager.asyncCreateSession(new HDDataCallBack<HDSession>() {
-					@Override
-					public void onSuccess(final HDSession sessionEntty) {
-						if (isFinishing()) {
-							return;
-						}
-						runOnUiThread(new Runnable() {
-
-							@Override
-							public void run() {
-								closeDialog();
-								Toast.makeText(getApplicationContext(), "回呼成功！", Toast.LENGTH_SHORT).show();
-								Intent intent = new Intent();
-								intent.setClass(HistoryChatActivity.this, ChatActivity.class);
-								intent.putExtra("visitorid", sessionEntty.getServiceSessionId());
-								intent.putExtra("originType", originType);
-								intent.putExtra("user", sessionEntty.getUser());
-								intent.putExtra("chatGroupId", sessionEntty.getChatGroupId());
-								intent.putExtra("techChannelName", techChannelName);
-								startActivity(intent);
-								finish();
-							}
-						});
-					}
-
-					@Override
-					public void onError(final int error, String errorMsg) {
-						if (isFinishing()) {
-							return;
-						}
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								closeDialog();
-								if (error == 400) {
-									Toast.makeText(getApplicationContext(), "回呼失败，该访客有尚未结束的会话！", Toast.LENGTH_SHORT).show();
-								} else {
-									Toast.makeText(getApplicationContext(), "回呼失败！", Toast.LENGTH_SHORT).show();
-								}
-							}
-						});
-					}
-
-					@Override
-					public void onError(final int error, String errorMsg, final String valueExt) {
-						if (isFinishing()) {
-							return;
-						}
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								closeDialog();
-								if (error == 400) {
-									try {
-										JSONObject obj = new JSONObject(valueExt);
-										String errorCode = obj.getString("errorCode");
-										if (errorCode.equals("KEFU_025")) {
-											Toast.makeText(getApplicationContext(), "回呼失败，会话的关联不存在!", Toast.LENGTH_SHORT).show();
-										} else {
-											Toast.makeText(getApplicationContext(), "回呼失败，该访客有尚未结束的会话！", Toast.LENGTH_SHORT).show();
-										}
-
-									} catch (JSONException e) {
-										e.printStackTrace();
-										Toast.makeText(getApplicationContext(), "回呼失败，该访客有尚未结束的会话！", Toast.LENGTH_SHORT).show();
-									}
-								} else {
-									Toast.makeText(getApplicationContext(), "回呼失败！", Toast.LENGTH_SHORT).show();
-								}
-							}
-						});
-					}
-				});
-
 				break;
 			case R.id.btn_up:
 				tagLayout.setVisibility(View.GONE);
@@ -515,6 +474,109 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 		sessionMoreWindow.showPopupWindow(ibMenuMore);
 	}
 
+	private void doAccessSession() {
+		if (pd == null) {
+			pd = new ProgressDialog(this);
+		}
+		pd.setMessage("正在接入...");
+		pd.show();
+
+		sessionManager.accessWaitUser(sessionId, new HDDataCallBack<String>() {
+			@Override
+			public void onSuccess(String value) {
+				if (isFinishing()) {
+					return;
+				}
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						closeDialog();
+						Toast.makeText(getApplicationContext(), "接入成功！", Toast.LENGTH_SHORT).show();
+						finish();
+					}
+				});
+			}
+
+			@Override
+			public void onError(final int error, final String errorMsg) {
+				if (isFinishing()) {
+					return;
+				}
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						closeDialog();
+						Toast.makeText(getApplicationContext(), "接入失败！", Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+		});
+
+
+	}
+	private void doCallBackSession() {
+		if (pd == null) {
+			pd = new ProgressDialog(this);
+		}
+		pd.setMessage("正在回呼...");
+		pd.show();
+		sessionManager.asyncCreateSession(new HDDataCallBack<HDSession>() {
+			@Override
+			public void onSuccess(final HDSession sessionEntty) {
+				if (isFinishing()) {
+					return;
+				}
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						closeDialog();
+						Toast.makeText(getApplicationContext(), "回呼成功！", Toast.LENGTH_SHORT).show();
+						Intent intent = new Intent();
+						intent.setClass(HistoryChatActivity.this, ChatActivity.class);
+						intent.putExtra("visitorid", sessionEntty.getServiceSessionId());
+						intent.putExtra("originType", originType);
+						intent.putExtra("user", sessionEntty.getUser());
+						intent.putExtra("chatGroupId", sessionEntty.getChatGroupId());
+						intent.putExtra("techChannelName", techChannelName);
+						startActivity(intent);
+						finish();
+					}
+				});
+			}
+
+			@Override
+			public void onError(final int error,final String errorMsg) {
+				if (isFinishing()) {
+					return;
+				}
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						closeDialog();
+						if (error == 400) {
+							try {
+								JSONObject obj = new JSONObject(errorMsg);
+								String errorCode = obj.getString("errorCode");
+								if (errorCode.equals("KEFU_025")) {
+									Toast.makeText(getApplicationContext(), "回呼失败，会话的关联不存在!", Toast.LENGTH_SHORT).show();
+								} else {
+									Toast.makeText(getApplicationContext(), "回呼失败，该访客有尚未结束的会话！", Toast.LENGTH_SHORT).show();
+								}
+
+							} catch (JSONException e) {
+								e.printStackTrace();
+								Toast.makeText(getApplicationContext(), "回呼失败，该访客有尚未结束的会话！", Toast.LENGTH_SHORT).show();
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "回呼失败！", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+			}
+		});
+	}
 
 	public void lable_setting(View view) {
 		popupclose(null);
@@ -557,6 +619,7 @@ public class HistoryChatActivity extends BaseActivity implements View.OnClickLis
 	protected void onDestroy() {
 		super.onDestroy();
 		MediaManager.release();
+		sessionManager.clear();
 	}
 
 	private void getSessionExtraInfo() {

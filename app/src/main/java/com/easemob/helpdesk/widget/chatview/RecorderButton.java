@@ -31,6 +31,7 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
     private static final int STATE_NORMAL = 1;
     private static final int STATE_RECORDING = 2;
     private static final int STATE_WANT_TO_CANCEL = 3;
+    private static final int STATE_DISABLED = 4;
 
     private int mCurState = STATE_NORMAL;
     private boolean isRecording = false;
@@ -42,6 +43,7 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
     private AudioManager mAudioManager;
 
     private boolean isHasRecorderPermission = false;
+    private boolean disableButton;
 
 
     /*记录时间*/
@@ -150,32 +152,11 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
         }
     }
 
-//    Handler mHandler = new Handler(){
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            switch (msg.what){
-//                case MSG_AUDIO_REPARED:
-//                    //真正显示因该是在audio prepare()之后
-//                    mDialogManager.showRecordingDialog();
-//                    isRecording = true;
-//
-//                    /*开启线程获取音量,因为获取VoiceLevel是有时间间隔的*/
-//                    new Thread(mGetAudioVoiceLevelRunnable).start();
-//                    break;
-//                case MSG_VOICE_CHANGE:
-//                    mDialogManager.updateVoiceLevel(mAudioManager.getVoiceLevel(7));
-//                    break;
-//                case MSG_DIALOG_DISMISS:
-//                    mDialogManager.dismissDialog();
-//                    break;
-//            }
-//
-//        }
-//    };
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (disableButton){
+            return false;
+        }
         int action = event.getAction();
         int x = (int) event.getX();
         int y = (int) event.getY();
@@ -286,7 +267,23 @@ public class RecorderButton extends Button implements AudioManager.AudioStateLis
                     setText(R.string.str_recorder_want_cancel);
                     mDialogManager.wantToCancel();
                     break;
+                case STATE_DISABLED:
+                    setBackgroundResource(R.drawable.btn_recorder_recording);
+                    setText(R.string.str_not_support);
+                    break;
             }
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (enabled){
+            disableButton = false;
+            changeState(STATE_NORMAL);
+        }else{
+            disableButton = true;
+            changeState(STATE_DISABLED);
         }
     }
 

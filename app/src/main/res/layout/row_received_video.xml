@@ -83,7 +83,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_centerInParent="true"
-					android:background="@drawable/hd_video_play_btn_small_nor" />
+					android:background="@drawable/video_play_icon" />
 			</RelativeLayout>
 			<LinearLayout
 				android:id="@+id/ll_loading"

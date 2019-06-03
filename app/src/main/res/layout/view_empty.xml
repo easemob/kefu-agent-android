@@ -7,6 +7,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="暂无数据"/>
+        android:text="暂无数据"
+        android:textColor="#000"
+        android:background="#fff"
+        />
 
 </LinearLayout>

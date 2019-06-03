@@ -9,18 +9,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/badgeutil" />
-            <option value="$PROJECT_DIR$/easyrecycleview" />
-            <option value="$PROJECT_DIR$/filepicker" />
-            <option value="$PROJECT_DIR$/flowlayout" />
-            <option value="$PROJECT_DIR$/flycotablayout_lib" />
-            <option value="$PROJECT_DIR$/jsbridge" />
-            <option value="$PROJECT_DIR$/kmpautotextview" />
-            <option value="$PROJECT_DIR$/photopicker" />
-            <option value="$PROJECT_DIR$/pickview" />
-            <option value="$PROJECT_DIR$/slidingmenu" />
-            <option value="$PROJECT_DIR$/switchbutton" />
-            <option value="$PROJECT_DIR$/tagviewgroup" />
+            <option value="$PROJECT_DIR$/hmspush" />
+            <option value="$PROJECT_DIR$/reclib-easemobmoticons" />
             <option value="$PROJECT_DIR$/xhsemotionskeyboard" />
           </set>
         </option>

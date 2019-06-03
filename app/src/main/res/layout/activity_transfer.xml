@@ -10,7 +10,7 @@
         android:id="@+id/rl_navbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+        android:background="@color/white">
 
         <!--<com.zdxd.iconfont.IconFontView-->
             <!--android:id="@+id/left"-->
@@ -22,21 +22,7 @@
             <!--app:iconName="@string/if_arrow_left"-->
             <!--app:iconSize="18sp" />-->
 
-        <RelativeLayout
-            android:id="@+id/rl_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_back_2"
-                />
-        </RelativeLayout>
+        <include layout="@layout/top_bar_back_layout"/>
 
         <TextView
             android:id="@+id/title"
@@ -44,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="转接到"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="@dimen/top_title_text_size" />
     </RelativeLayout>
 
@@ -65,7 +51,7 @@
 
     <View style="@style/line_view" />
 
-    <android.support.v4.view.ViewPager
+    <com.easemob.helpdesk.widget.HViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

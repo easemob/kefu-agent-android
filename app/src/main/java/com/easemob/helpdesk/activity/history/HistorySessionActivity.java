@@ -189,7 +189,7 @@ public class HistorySessionActivity extends BaseActivity {
 
     private void initView() {
         viewFilter = $(R.id.iv_filter);
-        viewBack = $(R.id.rl_back);
+        viewBack = $(R.id.iv_back);
         recyclerView = (EasyRecyclerView) findViewById(R.id.recyclerView);
         tvLabelTotalCount = (TextView) findViewById(R.id.tv_label_total_count);
         search_button = $(R.id.search_button);

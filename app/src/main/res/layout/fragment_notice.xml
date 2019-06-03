@@ -3,53 +3,61 @@
     xmlns:tl="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      android:background="@color/white"
+      >
 
-        <include layout="@layout/top_bar_avatar_layout" />
+    <include
+        layout="@layout/top_bar_avatar_layout"
+        android:id="@+id/layout_avatar"
+        />
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="未读通知"
-            android:textSize="18sp"
-            android:textColor="@android:color/white"
-            />
-        <TextView
-            android:id="@+id/tv_readed_notice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:text="查看已读"
-            android:textColor="#28a2ef"
-            android:textSize="15sp" />
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/layout_avatar"
+        android:text="未读通知"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/top_title_text_size"
+        />
+
+    <com.flyco.tablayout.SegmentTabLayout
+        android:id="@+id/notice_tablayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
+        />
 
 
-    </RelativeLayout>
-    <com.flyco.tablayout.CommonTabLayout
-        android:id="@+id/tablayout"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@android:color/white"
-        tl:tl_indicator_color="#15A2FC"
-        tl:tl_iconVisible="false"
-        tl:tl_textSelectColor="#15A2FC"
-        tl:tl_textUnselectColor="@android:color/black"
-        tl:tl_textsize="14sp"/>
+  </RelativeLayout>
+  <com.flyco.tablayout.CommonTabLayout
+      android:id="@+id/tablayout"
+      android:layout_width="match_parent"
+      android:layout_height="45dp"
+      android:background="@android:color/white"
+      tl:tl_iconVisible="false"
+      tl:tl_indicator_color="#15A2FC"
+      tl:tl_textSelectColor="#15A2FC"
+      tl:tl_textUnselectColor="@android:color/black"
+      tl:tl_textsize="14sp"
+      />
 
-    <FrameLayout
-        android:id="@+id/framelayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#fff" />
+  <FrameLayout
+      android:id="@+id/framelayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#fff"
+      />
 
 </LinearLayout>
 

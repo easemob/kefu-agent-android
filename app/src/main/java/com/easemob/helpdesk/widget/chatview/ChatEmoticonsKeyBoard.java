@@ -57,15 +57,15 @@ public class ChatEmoticonsKeyBoard extends XhsEmoticonsKeyBoard {
     public void reset() {
         EmoticonsKeyboardUtils.closeSoftKeyboard(getContext());
         mLyKvml.hideAllFuncView();
-        mBtnFace.setImageResource(R.mipmap.chatting_emoticons);
+        mBtnFace.setImageResource(R.drawable.face_icon);
     }
 
     @Override
     public void onFuncChange(int key) {
         if (FUNC_TYPE_EMOTION == key){
-            mBtnFace.setImageResource(R.mipmap.chatting_softkeyboard);
+            mBtnFace.setImageResource(R.drawable.keyboard_icon);
         }else{
-            mBtnFace.setImageResource(R.mipmap.chatting_emoticons);
+            mBtnFace.setImageResource(R.drawable.face_icon);
         }
         checkVoice();
     }
@@ -90,9 +90,9 @@ public class ChatEmoticonsKeyBoard extends XhsEmoticonsKeyBoard {
     @Override
     protected void checkVoice() {
         if (mBtnVoice.isShown()){
-            mBtnVoiceOrText.setImageResource(R.mipmap.chatting_softkeyboard);
+            mBtnVoiceOrText.setImageResource(R.drawable.keyboard_icon);
         }else{
-            mBtnVoiceOrText.setImageResource(R.mipmap.chatting_vodie);
+            mBtnVoiceOrText.setImageResource(R.drawable.mic_icon);
         }
     }
 
@@ -101,11 +101,11 @@ public class ChatEmoticonsKeyBoard extends XhsEmoticonsKeyBoard {
         int i = v.getId();
         if (i == sj.keyboard.R.id.btn_voice_or_text){
             if (mEtChat.isShown()){
-                mBtnVoiceOrText.setImageResource(R.mipmap.chatting_softkeyboard);
+                mBtnVoiceOrText.setImageResource(R.drawable.keyboard_icon);
                 showVoice();
             }else{
                 showText();
-                mBtnVoiceOrText.setImageResource(R.mipmap.chatting_vodie);
+                mBtnVoiceOrText.setImageResource(R.drawable.mic_icon);
                 EmoticonsKeyboardUtils.openSoftKeyboard(mEtChat);
 
             }

@@ -3,23 +3,38 @@ package com.easemob.helpdesk.activity.manager;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.easemob.helpdesk.AppConfig;
+import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
+import com.easemob.helpdesk.activity.main.LeaveMessageGroupFragment;
+import com.easemob.helpdesk.activity.main.NoticeFragment;
+import com.easemob.helpdesk.activity.main.SessionFragment;
+import com.easemob.helpdesk.activity.main.WaitAccessFragment;
+import com.easemob.helpdesk.adapter.FragmentViewPagerAdapter;
+import com.easemob.helpdesk.entity.TabEntity;
 import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.widget.CheckableLayout;
 import com.easemob.helpdesk.widget.pickerview.StatusPickerView;
 import com.easemob.slidingmenu.lib.SlidingMenu;
+import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.listener.CustomTabEntity;
+import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.user.HDUser;
 
@@ -58,11 +73,16 @@ public class ManagerHomeActivity extends BaseActivity {
      */
     private ImageView ivStatus;
 
+    /**
+     * 用户告警信息状态  （左侧菜单）
+     */
+    private View ivAlarmStatus;
+
     private HomeFragment homeFragment;
 
-//    private ManagerCurrentSessionFragment currentSessionFragment;
+    private ManagerCurrentSessionFragment currentSessionFragment;
 
-//    private ManagerHistoryFragment historyFragment;
+    private ManagerHistoryFragment historyFragment;
 
     private ManagerWorkloadFragment workloadFragment;
 
@@ -70,128 +90,187 @@ public class ManagerHomeActivity extends BaseActivity {
 
     private ManagerVisitorsFragment visitorsFragment;
 
-//    private RealTimeMonitorFragment realTimeMonitorFragment;
+    private RealTimeMonitorFragment realTimeMonitorFragment;
 
-//    private ManagerAlarmsFragment managerAlarmsFragment;
+    private ManagerRealtimeSuperviseFragment managerRealtimeSuperviseFragment;
+
+    private ManagerAlarmsFragment managerAlarmsFragment;
 
     private StatusPickerView statusPickerView;
 
     private HDUser currentLoginUser;
 
-    private CheckableLayout homeMenuLayout;
-    private CheckableLayout currentSessionMenuLayout;
     private CheckableLayout historySessionMenuLayout;
-    private CheckableLayout realTimeMonitorLayout;
-    private CheckableLayout alarmMenuLayout;
+    private CheckableLayout realTimeSuperviseLayout;
 
-    private CheckableLayout statisticsMenuLayout;
-    private View tvMenuStatisUp;
-    private View tvMenuStatisDown;
-
-    private LinearLayout extraStatisticsLayout;
     private CheckableLayout workloadMenuLayout;
     private CheckableLayout workManShipMenuLayout;
     private CheckableLayout visitorsMenuLayout;
 
-    private MenuItem currentSelectedMenu = MenuItem.Home;
     private FragmentManager fragmentManager;
 
     private LinearLayout modelChangeLayout;
 
-
     private List<CheckableLayout> leftMenuViews = new ArrayList<>();
 
+    /**
+     * ViewPager
+     */
+    private ViewPager mViewPager;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    /**
+     * Fragment Datas
+     */
+    private List<Fragment> mFragments = new ArrayList<>();
+
+    private String[] mTitles = { "概况", "当前会话", "实时监控", "告警记录" };
+
+    private int currentSelectedIndex = 0;
+    private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
+    /**
+     * Bottom Tab bar
+     */
+    private CommonTabLayout mTabLayout;
+    private RelativeLayout pagerLayout;
+    private FrameLayout sideLayout;
+
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppConfig.setFitWindowMode(this);
         setContentView(R.layout.manager_main_activity);
         currentLoginUser = HDClient.getInstance().getCurrentUser();
+        mTabLayout = $(R.id.tablayout);
         configureSlidingMenu();
-        homeFragment = new HomeFragment();
         fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_layout, homeFragment).commit();
+        pagerLayout = $(R.id.pager_layout);
+        sideLayout = $(R.id.main_layout);
+        pagerLayout.setVisibility(View.VISIBLE);
+        sideLayout.setVisibility(View.GONE);
+        initView();
     }
 
-    protected void clickMenuItem(MenuItem clickMenuItem){
-        if (clickMenuItem != currentSelectedMenu){
-            if (fragmentManager == null){
-                return;
-            }
-//            if (realTimeMonitorFragment != null) {
-//                realTimeMonitorFragment.removeFragments();
-//            }
-            currentSelectedMenu = clickMenuItem;
-            switch (clickMenuItem){
-                case Home:
-                    if (homeFragment == null){
-                        homeFragment = new HomeFragment();
-                    }
-                    fragmentManager.beginTransaction().replace(R.id.main_layout, homeFragment).commit();
-                    break;
-//                case CurrentSession:
-//                    if (currentSessionFragment == null){
-//                        currentSessionFragment = new ManagerCurrentSessionFragment();
-//                    }
-//                    fragmentManager.beginTransaction().replace(R.id.main_layout, currentSessionFragment).commit();
-//                    break;
-//                case HistorySession:
-//                    if (historyFragment == null){
-//                        historyFragment = new ManagerHistoryFragment();
-//                    }
-//                    fragmentManager.beginTransaction().replace(R.id.main_layout, historyFragment).commit();
-//                    break;
-                case Workload:
-                    if (workloadFragment == null){
-                        workloadFragment = new ManagerWorkloadFragment();
-                    }
-                    fragmentManager.beginTransaction().replace(R.id.main_layout, workloadFragment).commit();
-                    break;
-                case Workmanship:
-                    if (workmanshipFragment == null){
-                        workmanshipFragment = new ManagerWorkmanshipFragment();
-                    }
-                    fragmentManager.beginTransaction().replace(R.id.main_layout, workmanshipFragment).commit();
-                    break;
-                case Visitors:
-                    if (visitorsFragment == null){
-                        visitorsFragment = new ManagerVisitorsFragment();
-                    }
-                    fragmentManager.beginTransaction().replace(R.id.main_layout, visitorsFragment).commit();
-                    break;
-//                case RealTimeMonitor:
-//                    if (realTimeMonitorFragment == null){
-//                        realTimeMonitorFragment = new RealTimeMonitorFragment();
-//                    }
-//                    fragmentManager.beginTransaction().replace(R.id.main_layout, realTimeMonitorFragment).commit();
-//                    break;
-//                case Alarms:
-//                    if (managerAlarmsFragment == null) {
-//                        managerAlarmsFragment = new ManagerAlarmsFragment();
-//                    }
-//                    fragmentManager.beginTransaction().replace(R.id.main_layout, managerAlarmsFragment).commit();
-//                    break;
-            }
+    /**
+     * Initalization Component
+     */
+    private void initView() {
+        //======start=======
+        mFragments.clear();
+        if (homeFragment == null) {
+            homeFragment = new HomeFragment();
         }
-        if (menu != null){
+        if (currentSessionFragment == null) {
+            currentSessionFragment = new ManagerCurrentSessionFragment();
+        }
+        if (realTimeMonitorFragment == null) {
+            realTimeMonitorFragment = new RealTimeMonitorFragment();
+        }
+        if (managerAlarmsFragment == null) {
+            managerAlarmsFragment = new ManagerAlarmsFragment();
+        }
+
+        mFragments.add(homeFragment);
+        mFragments.add(currentSessionFragment);
+
+        mFragments.add(realTimeMonitorFragment);
+        mFragments.add(managerAlarmsFragment);
+
+        for (int i = 0; i < mTitles.length; i++) {
+            mTabEntities.add(new TabEntity(mTitles[i]));
+        }
+        mViewPager = $(R.id.viewpager);
+
+        FragmentViewPagerAdapter viewPagerAdapter = new FragmentViewPagerAdapter(fragmentManager, mViewPager, mFragments);
+        mViewPager.setAdapter(viewPagerAdapter);
+        mViewPager.setOffscreenPageLimit(4);
+        setDataToLayout();
+        //========end=========
+    }
+
+    /**
+     * 为CommonTablayout填充数据
+     */
+    private void setDataToLayout() {
+        mTabLayout.setTabData(mTabEntities);
+        mTabLayout.setBaseLineId(R.drawable.baseline_icon);
+        mTabLayout.setTextsize(14);
+        mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override public void onTabSelect(int position) {
+                mViewPager.setCurrentItem(position);
+                if (position == 3){
+                    mTabLayout.hideMsg(3);
+                }
+            }
+
+            @Override public void onTabReselect(int position) {
+            }
+        });
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override public void onPageSelected(int position) {
+                mTabLayout.setCurrentTab(position);
+                if (position == 3){
+                    mTabLayout.hideMsg(3);
+                }
+            }
+
+            @Override public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        mTabLayout.setCurrentTab(currentSelectedIndex);
+        mViewPager.setCurrentItem(currentSelectedIndex);
+        refreshMenuNickAndStatus();
+        refreshAllAvatar();
+    }
+
+    protected void clickMenuItem(MenuItem clickMenuItem) {
+        if (fragmentManager == null) {
+            return;
+        }
+        pagerLayout.setVisibility(View.GONE);
+        sideLayout.setVisibility(View.VISIBLE);
+        switch (clickMenuItem) {
+            case HistorySession:
+                if (historyFragment == null) {
+                    historyFragment = new ManagerHistoryFragment();
+                }
+                fragmentManager.beginTransaction().replace(R.id.main_layout, historyFragment).commit();
+                break;
+            case Workload:
+                if (workloadFragment == null) {
+                    workloadFragment = new ManagerWorkloadFragment();
+                }
+                fragmentManager.beginTransaction().replace(R.id.main_layout, workloadFragment).commit();
+                break;
+            case Workmanship:
+                if (workmanshipFragment == null) {
+                    workmanshipFragment = new ManagerWorkmanshipFragment();
+                }
+                fragmentManager.beginTransaction().replace(R.id.main_layout, workmanshipFragment).commit();
+                break;
+            case Visitors:
+                if (visitorsFragment == null) {
+                    visitorsFragment = new ManagerVisitorsFragment();
+                }
+                fragmentManager.beginTransaction().replace(R.id.main_layout, visitorsFragment).commit();
+                break;
+            case RealTimeSupervise:
+                if (managerRealtimeSuperviseFragment == null) {
+                    managerRealtimeSuperviseFragment = new ManagerRealtimeSuperviseFragment();
+                }
+                fragmentManager.beginTransaction().replace(R.id.main_layout, managerRealtimeSuperviseFragment).commit();
+                break;
+        }
+        if (menu != null) {
             menu.toggle();
         }
     }
 
-
-    enum MenuItem{
-        Home,
-        CurrentSession,
-        HistorySession,
-        Workload,
-        Workmanship,
-        Visitors,
-        RealTimeMonitor,
-        Alarms
+    enum MenuItem {
+        HistorySession, Workload, Workmanship, Visitors, RealTimeSupervise,
     }
-
 
     private void configureSlidingMenu() {
         //configure the SlidingMenu
@@ -200,13 +279,12 @@ public class ManagerHomeActivity extends BaseActivity {
         //设置触摸屏幕的模式
         menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
         menu.setShadowWidthRes(R.dimen.shadow_width);
-//        menu.setShadowDrawable(R.color.colorAccent);
+        //        menu.setShadowDrawable(R.color.colorAccent);
 
         //设置滑动菜单视图的宽度
         menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
         //设置渐入渐出效果的值
         menu.setFadeDegree(0.35f);
-
 
         menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         //为侧滑菜单设置布局
@@ -216,80 +294,45 @@ public class ManagerHomeActivity extends BaseActivity {
         tvMenuStatus = (TextView) view.findViewById(R.id.tv_status);
         ivAvatar = (ImageView) view.findViewById(R.id.iv_avatar);
         ivStatus = (ImageView) view.findViewById(R.id.iv_status);
+        ivAlarmStatus = view.findViewById(R.id.iv_alarm_status);
 
-        homeMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_home_layout);
-        currentSessionMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_current_session_layout);
         historySessionMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_history_session_layout);
-        statisticsMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_statistics_layout);
-        tvMenuStatisUp = view.findViewById(R.id.tv_arrow_up);
-        tvMenuStatisDown = view.findViewById(R.id.tv_arrow_down);
 
-        extraStatisticsLayout = (LinearLayout) view.findViewById(R.id.extra_statistic_layout);
         workloadMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_workload_layout);
         workManShipMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_workmanship_layout);
         visitorsMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_visitors_layout);
-        realTimeMonitorLayout = (CheckableLayout) view.findViewById(R.id.menu_realtime_monitor_layout);
-        alarmMenuLayout = (CheckableLayout) view.findViewById(R.id.menu_alarms_layout);
-
-        extraStatisticsLayout.setVisibility(View.GONE);
-
+        realTimeSuperviseLayout = (CheckableLayout) view.findViewById(R.id.menu_realtime_supervise_layout);
 
         modelChangeLayout = (LinearLayout) view.findViewById(R.id.model_change_layout);
-        modelChangeLayout.setOnClickListener(new View.OnClickListener(){
+        modelChangeLayout.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 setResult(RESULT_OK, new Intent());
                 ManagerHomeActivity.this.finish();
             }
         });
 
-
-        homeMenuLayout.setChecked(true);
-        homeMenuLayout.setBackgroundColor(getResources().getColor(R.color.manager_left_menu_item_color_pressed));
-        homeMenuLayout.setOnClickListener(menuItemClickListener);
-//        currentSessionMenuLayout.setOnClickListener(menuItemClickListener);
-//        historySessionMenuLayout.setOnClickListener(menuItemClickListener);
+        historySessionMenuLayout.setOnClickListener(menuItemClickListener);
         workloadMenuLayout.setOnClickListener(menuItemClickListener);
         workManShipMenuLayout.setOnClickListener(menuItemClickListener);
         visitorsMenuLayout.setOnClickListener(menuItemClickListener);
-//        realTimeMonitorLayout.setOnClickListener(menuItemClickListener);
-//        alarmMenuLayout.setOnClickListener(menuItemClickListener);
-
-        statisticsMenuLayout.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                if (tvMenuStatisUp.getVisibility() == View.VISIBLE){
-                    tvMenuStatisUp.setVisibility(View.INVISIBLE);
-                    tvMenuStatisDown.setVisibility(View.VISIBLE);
-                    extraStatisticsLayout.setVisibility(View.GONE);
-                }else{
-                    tvMenuStatisDown.setVisibility(View.INVISIBLE);
-                    tvMenuStatisUp.setVisibility(View.VISIBLE);
-                    extraStatisticsLayout.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
+        realTimeSuperviseLayout.setOnClickListener(menuItemClickListener);
 
         leftMenuViews.clear();
-        leftMenuViews.add(homeMenuLayout);
-//        leftMenuViews.add(currentSessionMenuLayout);
-//        leftMenuViews.add(historySessionMenuLayout);
+        leftMenuViews.add(historySessionMenuLayout);
         leftMenuViews.add(workloadMenuLayout);
         leftMenuViews.add(workManShipMenuLayout);
         leftMenuViews.add(visitorsMenuLayout);
-//        leftMenuViews.add(realTimeMonitorLayout);
-//        leftMenuViews.add(alarmMenuLayout);
+        leftMenuViews.add(realTimeSuperviseLayout);
 
-        currentSessionMenuLayout.setVisibility(View.GONE);
-        historySessionMenuLayout.setVisibility(View.GONE);
-        realTimeMonitorLayout.setVisibility(View.GONE);
-        alarmMenuLayout.setVisibility(View.GONE);
-
-        refreshMenuNickAndStatus();
-        refreshAllAvatar();
+        menu.setOnOpenedListener(new SlidingMenu.OnOpenedListener() {
+            @Override public void onOpened() {
+                refreshMenuNickAndStatus();
+                if (ivAvatar != null) {
+                    AvatarManager.getInstance().refreshAgentAvatar(ManagerHomeActivity.this, ivAvatar);
+                }
+            }
+        });
     }
 
     private void refreshAllAvatar() {
@@ -297,31 +340,18 @@ public class ManagerHomeActivity extends BaseActivity {
             homeFragment.refreshAgentAvatar();
         }
 
-//        if (currentSessionFragment != null) {
-//            currentSessionFragment.refreshAgentAvatar();
-//        }
-//        if (historyFragment != null) {
-//            historyFragment.refreshAgentAvatar();
-//        }
-        if (workloadFragment != null) {
-            workloadFragment.refreshAgentAvatar();
+        if (currentSessionFragment != null) {
+            currentSessionFragment.refreshAgentAvatar();
         }
-        if (workmanshipFragment != null) {
-            workmanshipFragment.refreshAgentAvatar();
+        if (realTimeMonitorFragment != null) {
+            realTimeMonitorFragment.refreshAgentAvatar();
         }
-        if (visitorsFragment != null) {
-            visitorsFragment.refreshAgentAvatar();
-        }
-//        if (realTimeMonitorFragment != null) {
-//            realTimeMonitorFragment.refreshAgentAvatar();
-//        }
-//
-//        if (managerAlarmsFragment != null) {
-//            managerAlarmsFragment.refreshAgentAvatar();
-//        }
-        if (ivAvatar != null) {
-            AvatarManager.getInstance(this).refreshAgentAvatar(ManagerHomeActivity.this, ivAvatar);
 
+        if (managerAlarmsFragment != null) {
+            managerAlarmsFragment.refreshAgentAvatar();
+        }
+        if (ivAvatar != null) {
+            AvatarManager.getInstance().refreshAgentAvatar(ManagerHomeActivity.this, ivAvatar);
         }
     }
 
@@ -330,36 +360,45 @@ public class ManagerHomeActivity extends BaseActivity {
             tvMenuNick.setText(currentLoginUser.getNicename());
             CommonUtils.setAgentStatusView(ivStatus, currentLoginUser.getOnLineState());
             CommonUtils.setAgentStatusTextView(tvMenuStatus, currentLoginUser.getOnLineState());
+            if (HDApplication.getInstance().isHasAlarmNoti()) {
+                if (ivAlarmStatus != null) {
+                    ivAlarmStatus.setVisibility(View.VISIBLE);
+                }
+                mTabLayout.showDot(3);
+            } else {
+                if (ivAlarmStatus != null) {
+                    ivAlarmStatus.setVisibility(View.GONE);
+                }
+                mTabLayout.hideMsg(3);
+            }
         }
     }
 
     public void agentStatusUpdated(String status) {
         CommonUtils.setAgentStatusView(ivStatus, status);
         CommonUtils.setAgentStatusTextView(tvMenuStatus, status);
+        if (HDApplication.getInstance().isHasAlarmNoti()) {
+            if (ivAlarmStatus != null) {
+                ivAlarmStatus.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (ivAlarmStatus != null) {
+                ivAlarmStatus.setVisibility(View.GONE);
+            }
+        }
         if (homeFragment != null) {
             homeFragment.refreshOnline(status);
         }
-//        if (currentSessionFragment != null){
-//            currentSessionFragment.refreshOnline(status);
-//        }
-//        if (historyFragment != null){
-//            historyFragment.refreshOnline(status);
-//        }
-        if (workloadFragment != null){
-            workloadFragment.refreshOnline(status);
+        if (currentSessionFragment != null) {
+            currentSessionFragment.refreshOnline(status);
         }
-        if (workmanshipFragment != null){
-            workmanshipFragment.refreshOnline(status);
+        if (realTimeMonitorFragment != null) {
+            realTimeMonitorFragment.refreshOnline(status);
         }
-        if (visitorsFragment != null){
-            visitorsFragment.refreshOnline(status);
+
+        if (managerAlarmsFragment != null) {
+            managerAlarmsFragment.refreshOnline(status);
         }
-//        if (realTimeMonitorFragment != null){
-//            realTimeMonitorFragment.refreshOnline(status);
-//        }
-//        if (managerAlarmsFragment != null) {
-//            managerAlarmsFragment.refreshOnline(status);
-//        }
     }
 
     public void menutoggle(View view) {
@@ -376,61 +415,70 @@ public class ManagerHomeActivity extends BaseActivity {
         statusPickerView.show();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public void back() {
+        if (pagerLayout.getVisibility() == View.GONE) {
+            pagerLayout.setVisibility(View.VISIBLE);
+            sideLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            moveTaskToBack(true);
+            if (menu.isMenuShowing()) {
+                menu.toggle();
+            } else if (pagerLayout.getVisibility() == View.GONE) {
+                pagerLayout.setVisibility(View.VISIBLE);
+                sideLayout.setVisibility(View.GONE);
+            } else {
+                moveTaskToBack(true);
+            }
             return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
-
     View.OnClickListener menuItemClickListener = new View.OnClickListener() {
 
-        @Override
-        public void onClick(View v) {
-            if (v instanceof CheckableLayout){
-                refreshPressedStatus((CheckableLayout)v);
+        @Override public void onClick(View v) {
+            if (v instanceof CheckableLayout) {
+                refreshPressedStatus((CheckableLayout) v);
             }
         }
     };
 
-
     public void refreshPressedStatus(CheckableLayout pressedView) {
-        for (CheckableLayout item : leftMenuViews) {
-            if (item != null){
-                item.setChecked(false);
-                item.setBackgroundColor(getResources().getColor(R.color.manager_left_menu_item_color_normal));
-            }
-        }
-        pressedView.setChecked(true);
-        pressedView.setBackgroundColor(getResources().getColor(R.color.manager_left_menu_item_color_pressed));
-        MenuItem pressedMenuItem = MenuItem.Home;
-        if (pressedView == homeMenuLayout){
-            pressedMenuItem = MenuItem.Home;
-        }else if (pressedView == currentSessionMenuLayout) {
-            pressedMenuItem = MenuItem.CurrentSession;
-        }else if (pressedView == historySessionMenuLayout) {
+        //for (CheckableLayout item : leftMenuViews) {
+        //    if (item != null){
+        //        item.setChecked(false);
+        //        item.setBackgroundColor(getResources().getColor(R.color.manager_left_menu_item_color_normal));
+        //    }
+        //}
+        //pressedView.setChecked(true);
+        //pressedView.setBackgroundColor(getResources().getColor(R.color.manager_left_menu_item_color_pressed));
+        MenuItem pressedMenuItem = MenuItem.HistorySession;
+        if (pressedView == historySessionMenuLayout) {
             pressedMenuItem = MenuItem.HistorySession;
-        }else if (pressedView == workloadMenuLayout) {
+        } else if (pressedView == workloadMenuLayout) {
             pressedMenuItem = MenuItem.Workload;
-        }else if (pressedView == workManShipMenuLayout) {
+        } else if (pressedView == workManShipMenuLayout) {
             pressedMenuItem = MenuItem.Workmanship;
-        }else if (pressedView == visitorsMenuLayout) {
+        } else if (pressedView == visitorsMenuLayout) {
             pressedMenuItem = MenuItem.Visitors;
-        }else if (pressedView == realTimeMonitorLayout) {
-            pressedMenuItem = MenuItem.RealTimeMonitor;
-        }else if (pressedView == alarmMenuLayout) {
-            pressedMenuItem = MenuItem.Alarms;
+        } else if (pressedView == realTimeSuperviseLayout) {
+            pressedMenuItem = MenuItem.RealTimeSupervise;
         }
         clickMenuItem(pressedMenuItem);
     }
 
-//    public void currentSessionIntent(int position, int index) {
-//        if (currentSessionFragment != null) {
-//            currentSessionFragment.currentSessionIntent(position, index);
-//        }
-//    }
+    public void currentSessionIntent(int position, int index) {
+        if (currentSessionFragment != null) {
+            currentSessionFragment.currentSessionIntent(position, index);
+        }
+    }
 
+    public void refreshAlarmsFragment() {
+        if (managerAlarmsFragment != null) {
+            managerAlarmsFragment.refresh();
+        }
+    }
 }

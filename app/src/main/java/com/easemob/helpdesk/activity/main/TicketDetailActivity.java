@@ -8,6 +8,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -46,6 +47,8 @@ import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.ISO8601DateFormat;
 import com.hyphenate.kefusdk.utils.PathUtil;
 import com.hyphenate.util.DensityUtil;
+import com.leon.lfilepickerlibrary.LFilePicker;
+import com.leon.lfilepickerlibrary.utils.Constant;
 import com.wefika.flowlayout.FlowLayout;
 
 import java.io.File;
@@ -80,7 +83,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
     private View rlAssignee;
 
     protected static final int REQUEST_CODE_CHOOSE_PICTURE = 1;
-    protected static final int FILE_SELECT_CODE = 2;
+    protected static final int REQUEST_CODE_SELECT_LOCAL_FILE = 2;
     protected static final int REQUEST_CODE_LOCAL = 3;
     private PickCategory currentPickCategory = PickCategory.STATUS;
 
@@ -690,20 +693,7 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
 
 
                                     } else {
-                                        Intent intent = new Intent();
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        //设置intent的Action属性
-                                        intent.setAction(Intent.ACTION_VIEW);
-                                        //获取文件file的MIME类型
-                                        String type = CommonUtils.getMIMEType(file);
-                                        //设置intent的data和Type属性。
-                                        intent.setDataAndType(/*uri*/Uri.fromFile(file), type);
-                                        //跳转
-                                        try {
-                                            startActivity(intent); //这里最好try一下，有可能会报错。 //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
-                                        } catch (Exception e) {
-                                            Toast.makeText(getApplicationContext(), "文件无法打开", Toast.LENGTH_SHORT).show();
-                                        }
+                                        FileUtils.openFile(file, TicketDetailActivity.this);
                                     }
                                 } else {
                                     Intent intent = new Intent();
@@ -822,15 +812,13 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
     @OnClick(R.id.ll_file)
     public void onClickByllFile(View view){
         // 打开文件列表
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        try {
-            startActivityForResult( Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(this, "Please install a File Manager.",  Toast.LENGTH_SHORT).show();
-        }
+        new LFilePicker().withActivity(this)
+                .withRequestCode(REQUEST_CODE_SELECT_LOCAL_FILE)
+                .withStartPath(Environment.getExternalStorageDirectory().getPath())
+                .withTitle("选择要发送的文件")
+                .withIsGreater(false).withMaxNum(1)
+                .withFileSize(500 * 1024)
+                .start();
 
     }
 
@@ -867,11 +855,16 @@ public class TicketDetailActivity extends BaseActivity implements SimplePickerVi
                     String picPath = picPathList.get(0);
                     uploadFile(picPath);
                 }
-            }else if (requestCode == FILE_SELECT_CODE){
+            }else if (requestCode == REQUEST_CODE_SELECT_LOCAL_FILE){
                 // Get the Uri of the selected file
-                Uri uri = data.getData();
-                String path = FileUtils.getPath(this, uri);
-                uploadFile(path);
+                List<String> files = data.getStringArrayListExtra(Constant.RESULT_INFO);
+                // files is the array of the paths of files selected by the Application User.
+                if (files != null && files.size() > 0){
+                    for (String filePath : files){
+                        uploadFile(filePath);
+                    }
+                }
+
             }
         }
 

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +93,10 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
         Bundle bundle = getArguments();
         if (bundle != null) {
             isUnreadSettings = bundle.getBoolean("isUnreadSettings", false);
-            typeSettings = bundle.getString("typeSettings", "all");
+            typeSettings = bundle.getString("typeSettings");
+            if (TextUtils.isEmpty(typeSettings)) {
+                typeSettings = "all";
+            }
         }
         mWeakHandler = new WeakHandler(this);
         initView();
@@ -163,9 +167,6 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                             }
                         }
                         break;
-                    case MSG_AUTHENTICATION:
-                        HDApplication.getInstance().logout();
-                        break;
                 }
             }
 
@@ -174,8 +175,9 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
     }
 
     private synchronized void updateView(List<NoticesResponse.EntitiesBean> data) {
+        recyclerView.setRefreshing(false);
         if (data != null) {
-            if (data.size() == 0) {
+            if (data.size() == 0 && data.size() < noticeManager.getPageCount()) {
                 adapter.stopMore();
                 return;
             }
@@ -184,10 +186,7 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                 adapter.addAll(data);
                 adapter.notifyDataSetChanged();
             }
-
             adapter.pauseMore();
-        } else {
-            recyclerView.setRefreshing(false);
         }
         refreshShowLabel();
     }
@@ -200,6 +199,9 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
             return;
         }
         lastUpdateTime = currentUpdateTime;
+        if(recyclerView != null){
+            recyclerView.setRefreshing(false);
+        }
         if (data != null) {
             synchronized (noticeEntities){
                 noticeEntities.clear();
@@ -212,11 +214,6 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                 }
                 adapter.pauseMore();
             }
-        }else{
-            if(recyclerView != null){
-                recyclerView.setRefreshing(false);
-            }
-
         }
         refreshShowLabel();
     }
@@ -257,6 +254,7 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
 
 
      void loadTheFirstPageData() {
+        recyclerView.setRefreshing(true);
         noticeManager.loadTheFirstPageData(typeSettings, isUnreadSettings, new HDDataCallBack<List<NoticesResponse.EntitiesBean>>() {
             @Override
             public void onSuccess(List<NoticesResponse.EntitiesBean> value) {
@@ -397,6 +395,7 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
                             adapter.notifyDataSetChanged();
                         }
                         refreshShowLabel();
+                        loadTheFirstPageData();
                         if (getActivity() instanceof MainActivity) {
                             if (isUnreadSettings) {
                                 ((NoticeFragment)getParentFragment()).refreshTabUnreadCount();
@@ -435,7 +434,7 @@ public class NoticeListFragment extends Fragment implements RecyclerArrayAdapter
             if (isUnreadSettings) {
                 tvLabelCount.setText(String.format("当前展示数%d (未读%d)", currentCount, unreadCount));
             } else {
-                tvLabelCount.setText(String.format("当前展示数%d (总共%d)", currentCount, totalCount));
+                tvLabelCount.setText(String.format("当前展示数%d (已读总共%d)", currentCount, (totalCount - unreadCount)));
 
             }
         }

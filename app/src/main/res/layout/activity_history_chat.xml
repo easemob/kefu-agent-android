@@ -9,25 +9,12 @@
     <RelativeLayout
         android:id="@+id/rl_history_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+        android:layout_height="@dimen/item_height"
+        android:background="@color/white">
 
 
-        <RelativeLayout
-            android:id="@+id/rl_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_back_2"
-                />
-        </RelativeLayout>
+        <include layout="@layout/top_bar_back_layout"
+            android:id="@+id/layout_back"/>
 
 
         <LinearLayout
@@ -41,10 +28,10 @@
 
             <ImageButton
                 android:id="@+id/ib_menu_more"
-                android:layout_width="32dip"
-                android:layout_height="32dip"
+                android:layout_width="@dimen/item_icon_size"
+                android:layout_height="@dimen/item_icon_size"
                 android:layout_marginLeft="5dip"
-                android:background="@drawable/icon_button_more"
+                android:background="@drawable/menu_icon"
                 android:onClick="sessionMore"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
@@ -55,11 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_toRightOf="@id/layout_back"
             android:layout_toLeftOf="@id/ll_more"
-            android:layout_toRightOf="@id/rl_back"
-            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -70,7 +55,7 @@
                 android:lines="1"
                 android:singleLine="true"
                 android:gravity="center_vertical"
-                android:textColor="#fff"
+                android:textColor="#000"
                 android:textSize="18sp" />
 
             <LinearLayout
@@ -92,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
-                    android:textColor="#fff"
+                    android:textColor="#000"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -121,7 +106,7 @@
                 android:transcriptMode="normal" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <include layout="@layout/layout_chat_tag" />
+        <include layout="@layout/layout_chat_tag" android:id="@+id/tag_container"/>
 
     </RelativeLayout>
 

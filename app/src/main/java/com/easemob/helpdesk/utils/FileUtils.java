@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
@@ -78,37 +79,37 @@ public class FileUtils {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Toast.makeText(context, "没有找到打开此类文件的程序", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context.getApplicationContext(), "没有找到打开此类文件的程序", Toast.LENGTH_SHORT).show();
 		}
 	}
 
-	public static String getPath(Context context, Uri uri) {
-
-		if ("content".equalsIgnoreCase(uri.getScheme())) {
-			String[] projection = {"_data"};
-			Cursor cursor = null;
-			try {
-				cursor = context.getContentResolver().query(uri, projection, null, null, null);
-				if (cursor == null){
-					return null;
-				}
-				int column_index = cursor.getColumnIndexOrThrow("_data");
-				if (cursor.moveToFirst()) {
-					return cursor.getString(column_index);
-				}
-			} catch (Exception e) {
-				// Eat it
-			}finally {
-				if (cursor != null){
-					cursor.close();
-				}
-			}
-		} else if ("file".equalsIgnoreCase(uri.getScheme())) {
-			return uri.getPath();
-		}
-
-		return null;
-	}
+//	public static String getPath(Context context, Uri uri) {
+//
+//		if ("content".equalsIgnoreCase(uri.getScheme())) {
+//			String[] projection = {"_data"};
+//			Cursor cursor = null;
+//			try {
+//				cursor = context.getContentResolver().query(uri, projection, null, null, null);
+//				if (cursor == null){
+//					return null;
+//				}
+//				int column_index = cursor.getColumnIndexOrThrow("_data");
+//				if (cursor.moveToFirst()) {
+//					return cursor.getString(column_index);
+//				}
+//			} catch (Exception e) {
+//				// Eat it
+//			}finally {
+//				if (cursor != null){
+//					cursor.close();
+//				}
+//			}
+//		} else if ("file".equalsIgnoreCase(uri.getScheme())) {
+//			return uri.getPath();
+//		}
+//
+//		return null;
+//	}
 
 	/**
 	 * 复制单个文件
@@ -143,7 +144,7 @@ public class FileUtils {
 			}
 		}
 		catch (Exception e) {
-			System.out.println("Copy file failed.");
+			Log.e("WorkService","Copy file failed.");
 			e.printStackTrace();
 			return false;
 		}

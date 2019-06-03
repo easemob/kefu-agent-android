@@ -29,23 +29,19 @@ public class ChattingAppsAdapter extends BaseAdapter {
         }
     }
 
-    @Override
-    public int getCount() {
+    @Override public int getCount() {
         return mDdata.size();
     }
 
-    @Override
-    public Object getItem(int position) {
+    @Override public Object getItem(int position) {
         return mDdata.get(position);
     }
 
-    @Override
-    public long getItemId(int position) {
+    @Override public long getItemId(int position) {
         return position;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @Override public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
@@ -62,33 +58,37 @@ public class ChattingAppsAdapter extends BaseAdapter {
             viewHolder.iv_icon.setBackgroundResource(appBean.getIcon());
             viewHolder.tv_name.setText(appBean.getFuncName());
             convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                @Override public void onClick(View v) {
                     final int id = appBean.getId();
                     switch (id) {
                         case 1:
-                            if (mContext instanceof BaseChatActivity){
-                                ((BaseChatActivity)mContext).selectPicFromLocal();
+                            if (mContext instanceof BaseChatActivity) {
+                                ((BaseChatActivity) mContext).selectPicFromLocal();
                             }
                             break;
                         case 2:
-                            if (mContext instanceof BaseChatActivity){
-                                ((BaseChatActivity)mContext).selectVideoFromLocal();
+                            if (mContext instanceof BaseChatActivity) {
+                                ((BaseChatActivity) mContext).selectVideoFromLocal();
                             }
                             break;
                         case 3:
-                            if (mContext instanceof BaseChatActivity){
-                                ((BaseChatActivity)mContext).selectFileFromLocal();
+                            if (mContext instanceof BaseChatActivity) {
+                                ((BaseChatActivity) mContext).selectFileFromLocal();
                             }
                             break;
                         case 4:
-                            if (mContext instanceof ChatActivity){
-                                ((ChatActivity)mContext).toPhraseUI();
+                            if (mContext instanceof ChatActivity) {
+                                ((ChatActivity) mContext).toPhraseUI();
                             }
                             break;
                         case 5:
-                            if (mContext instanceof ChatActivity){
-                                ((ChatActivity)mContext).toCustomWebView();
+                            if (mContext instanceof ChatActivity) {
+                                ((ChatActivity) mContext).toCustomWebView();
+                            }
+                            break;
+                        case 6:
+                            if (mContext instanceof ChatActivity) {
+                                ((ChatActivity) mContext).eval_send(null);
                             }
                             break;
                     }
@@ -102,7 +102,4 @@ public class ChattingAppsAdapter extends BaseAdapter {
         public ImageView iv_icon;
         public TextView tv_name;
     }
-
-
-
 }

@@ -3,13 +3,9 @@ package com.easemob.helpdesk.activity.visitor;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.easemob.helpdesk.AppConfig;
@@ -17,16 +13,11 @@ import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.easemob.helpdesk.mvp.ChatActivity;
-import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DialogUtils;
-import com.flyco.tablayout.SlidingTabLayout;
-import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
-import com.hyphenate.kefusdk.entity.HDSession;
 import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.HDSession;
 import com.hyphenate.kefusdk.utils.HDLog;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,19 +31,11 @@ import static com.easemob.helpdesk.R.id.originType;
  * Created by liyuzhao on 14/02/2017.
  */
 
-public class CustomerDetailActivity extends BaseActivity implements OnTabSelectListener {
+public class CustomerDetailActivity extends BaseActivity {
     private static final String TAG = "CustomerDetailActivity";
-    @BindView(R.id.slidingtablayout)
-    protected SlidingTabLayout tabLayout;
-    @BindView(R.id.viewpager)
-    protected ViewPager viewPager;
-    private final String[] mTitls = {"详情", "标签"};
-    private ArrayList<Fragment> mFragments = new ArrayList<>();
     private String visitorId;
     private CustomerInfoFragment customerInfoFragment;
-    private VisitorTagsFragment tagsFragment;
-    @BindView(R.id.tv_nick)
-    protected TextView tvNick;
+    public FragmentTransaction fragmentTransaction;
 
     @BindView(R.id.ll_contact)
     protected LinearLayout llContact;
@@ -75,42 +58,19 @@ public class CustomerDetailActivity extends BaseActivity implements OnTabSelectL
         } else {
             llContact.setVisibility(View.GONE);
         }
-        tabLayout.setTabWidth(CommonUtils.convertPx2Dip(this, getWindowManager().getDefaultDisplay().getWidth() / 2));
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
         customerInfoFragment = new CustomerInfoFragment();
         customerInfoFragment.setArguments(intent.getExtras());
-        mFragments.add(customerInfoFragment);
+        fragmentTransaction.add(R.id.layout_container,customerInfoFragment);
+        fragmentTransaction.commit();
 
-        tagsFragment = new VisitorTagsFragment();
-        tagsFragment.setArguments(intent.getExtras());
-        mFragments.add(tagsFragment);
-
-        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-
-        tabLayout.setViewPager(viewPager);
-        tabLayout.setOnTabSelectListener(this);
     }
 
-    public void updateCurrentNick(String nick) {
-        if (tvNick != null) {
-            tvNick.setText(nick);
-        }
-    }
-
-
-    public void back(View view) {
+    @OnClick(R.id.iv_back)
+    public void back() {
         finish();
     }
-
-    @Override
-    public void onTabSelect(int position) {
-//        Toast.makeText(this, "onTabSelect&position--->" + position, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onTabReselect(int position) {
-
-    }
-
 
     @OnClick(R.id.btn_contact)
     public void onClickByBtnContact() {
@@ -161,19 +121,6 @@ public class CustomerDetailActivity extends BaseActivity implements OnTabSelectL
                 });
             }
 
-            @Override
-            public void onAuthenticationException() {
-                if (isFinishing()) {
-                    return;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeDialog();
-                        HDApplication.getInstance().logout();
-                    }
-                });
-            }
         });
 
 
@@ -194,29 +141,5 @@ public class CustomerDetailActivity extends BaseActivity implements OnTabSelectL
             unbinder.unbind();
         }
     }
-
-    private class MyPagerAdapter extends FragmentPagerAdapter {
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-//            return super.getPageTitle(position);
-            return mTitls[position];
-        }
-    }
-
 
 }

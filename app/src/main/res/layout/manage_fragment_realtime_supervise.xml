@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      >
+
+    <include
+        layout="@layout/top_bar_back_layout"
+        android:id="@+id/back_layout"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/back_layout"
+        android:text="现场管理"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/title_text_size"
+        />
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="44dp"
+      >
+    <LinearLayout
+        android:id="@+id/sort_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="12dp"
+        >
+      <TextView
+          android:id="@+id/sort_text"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="排队人数由高到低"
+          android:textColor="#FF4D4D4D"
+          android:textSize="15sp"
+          />
+      <ImageView
+          android:id="@+id/sort_up_icon"
+          android:layout_width="15dp"
+          android:layout_height="9dp"
+          android:src="@drawable/icon_realtime_supervise_up_arrow"
+          android:visibility="gone"
+          />
+
+      <ImageView
+          android:id="@+id/sort_down_icon"
+          android:layout_width="15dp"
+          android:layout_height="9dp"
+          android:layout_marginTop="10dp"
+          android:src="@drawable/icon_realtime_supervise_down_arrow"
+          />
+    </LinearLayout>
+  </RelativeLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="#DDDDDD"
+      />
+
+  <com.jude.easyrecyclerview.EasyRecyclerView
+      android:id="@+id/recyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_empty="@layout/view_empty"
+      app:layout_progress="@layout/view_progress"
+      />
+
+</LinearLayout>

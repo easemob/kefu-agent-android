@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/main_layout"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/white"
-              android:duplicateParentState="true"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:duplicateParentState="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
 
-	<RelativeLayout
-		android:layout_width="match_parent"
-		android:layout_height="@dimen/top_title_height"
-		android:background="@color/bg_top_bar_2">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      android:background="@color/white"
+      >
 
-		<RelativeLayout
-			android:id="@+id/rl_back"
-			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
-			android:layout_centerVertical="true"
-			android:background="@android:color/transparent">
+    <RelativeLayout
+        android:id="@+id/rl_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        >
 
-			<ImageView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="10dp"
-				android:layout_centerVertical="true"
-				android:src="@drawable/icon_back_2"
-				/>
-		</RelativeLayout>
-		
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_centerHorizontal="true"
-			android:layout_centerVertical="true"
-			android:text="客户中心"
-			android:textColor="@android:color/white"
-			android:textSize="@dimen/top_title_text_size" />
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:src="@drawable/back_icon"
+          />
+    </RelativeLayout>
 
-		<ImageView
-			android:id="@+id/iv_filter"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentRight="true"
-			android:layout_centerVertical="true"
-			android:layout_marginRight="5dp"
-			android:background="@drawable/icon_screening"
-			/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="客户中心"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/title_text_size"
+        />
 
-	</RelativeLayout>
+    <ImageView
+        android:id="@+id/iv_filter"
+        android:layout_width="@dimen/item_icon_size"
+        android:layout_height="@dimen/item_icon_size"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/screening_icon"
+        />
 
-	<com.jude.easyrecyclerview.EasyRecyclerView
-		android:id="@+id/recyclerView"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		app:layout_empty="@layout/view_empty"
-		app:layout_progress="@layout/view_progress"
-		/>
+  </RelativeLayout>
+
+  <com.jude.easyrecyclerview.EasyRecyclerView
+      android:id="@+id/recyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_empty="@layout/view_empty"
+      app:layout_progress="@layout/view_progress"
+      />
 </LinearLayout>

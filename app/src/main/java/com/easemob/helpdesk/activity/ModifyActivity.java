@@ -29,8 +29,10 @@ public class ModifyActivity extends BaseActivity implements OnClickListener {
     public static final int MODIFY_QQ = 4;
     public static final int MODIFY_EMAIL = 5;
     public static final int MODIFY_COMPANY = 6;
-    public static final int MODIFY_NOTE = 7;
+    public static final int MODIFY_WEIXIN = 15;
+    public static final int MODIFY_DESCRIPTION = 16;
 
+    public static final int MODIFY_NOTE = 7;
     //user profile setting
     public static final int PROFILE_MODIFY_NICKNAME = 8;
     public static final int PROFILE_MODIFY_TRUENAME = 9;
@@ -79,11 +81,17 @@ public class ModifyActivity extends BaseActivity implements OnClickListener {
             case MODIFY_QQ:
                 txtTitle.setText("QQ");
                 break;
+            case MODIFY_WEIXIN:
+                txtTitle.setText("微信");
+                break;
             case MODIFY_EMAIL:
                 txtTitle.setText("邮箱");
                 break;
             case MODIFY_COMPANY:
                 txtTitle.setText("公司");
+                break;
+            case MODIFY_DESCRIPTION:
+                txtTitle.setText("描述");
                 break;
             case MODIFY_NOTE:
                 txtTitle.setText("备注");

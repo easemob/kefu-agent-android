@@ -32,7 +32,7 @@ public class TransferActivity extends BaseActivity {
     /**
      * 显示的Fragment的标题
      */
-    private String[] mTitles = {"客服", "技能组"};
+    private String[] mTitles = { "客服", "技能组" };
     /**
      * 滑动的ViewPager，
      */
@@ -58,9 +58,7 @@ public class TransferActivity extends BaseActivity {
 
     private int position = -1;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppConfig.setFitWindowMode(this);
         setContentView(R.layout.activity_transfer);
@@ -77,45 +75,55 @@ public class TransferActivity extends BaseActivity {
      */
     private void initView() {
         position = getIntent().getIntExtra("position", -1);
-        viewBack = $(R.id.rl_back);
+        viewBack = $(R.id.iv_back);
         mViewPager = $(R.id.viewpager);
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         /** with nothing **/
         mTabLayout = $(R.id.tablayout);
         mTabLayout.setTabData(mTabEntities);
         mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
+            @Override public void onTabSelect(int position) {
                 mViewPager.setCurrentItem(position);
             }
 
-            @Override
-            public void onTabReselect(int position) {
+            @Override public void onTabReselect(int position) {
+
+            }
+        });
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override public void onPageSelected(int position) {
+                mTabLayout.setCurrentTab(position);
+
+            }
+
+            @Override public void onPageScrollStateChanged(int state) {
 
             }
         });
         viewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            @Override public void onClick(View v) {
                 finish();
             }
         });
     }
 
+    //    /**
+    //     * 返回按钮点击事件
+    //     *
+    //     * @param view
+    //     */
+    //    public void back(View view) {
+    //        finish();
+    //    }
 
-//    /**
-//     * 返回按钮点击事件
-//     *
-//     * @param view
-//     */
-//    public void back(View view) {
-//        finish();
-//    }
-
-    public int getPosition(){
+    public int getPosition() {
         return position;
     }
-
 
     /**
      * 滑动的View适配器，功能是根据滑动切换界面
@@ -125,20 +133,16 @@ public class TransferActivity extends BaseActivity {
             super(fm);
         }
 
-        @Override
-        public int getCount() {
+        @Override public int getCount() {
             return mFragments.size();
         }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
+        @Override public CharSequence getPageTitle(int position) {
             return mTitles[position];
         }
 
-        @Override
-        public Fragment getItem(int position) {
+        @Override public Fragment getItem(int position) {
             return mFragments.get(position);
         }
     }
-
 }

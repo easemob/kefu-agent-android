@@ -3,342 +3,353 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_content_2"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <RelativeLayout
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      android:background="@color/white"
+      >
+
+    <include
+        layout="@layout/top_bar_avatar_layout"
+        android:id="@+id/layout_avatar"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/layout_avatar"
+        android:text="概况"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/title_text_size"
+        />
+  </RelativeLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
-        <include layout="@layout/top_bar_avatar_layout" />
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:background="@android:color/white"
+          >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="首页"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/top_title_text_size" />
-    </RelativeLayout>
+            android:layout_marginLeft="15dp"
+            android:text="今日数据"
+            android:textColor="@color/manager_label_text_color"
+            android:textSize="15sp"
+            />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/tv_refresh"
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/refresh_icon"
+            />
 
-        <LinearLayout
+      </RelativeLayout>
+
+      <View
+          android:layout_marginLeft="15dp"
+          android:layout_marginRight="15dp"
+          style="@style/line_view_1dp"
+          />
+
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="45dp"
+          android:background="@color/white"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+          >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="今日新会话数"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            />
+        <TextView
+            android:id="@+id/tv_sessions_today"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="right"
+            android:text=""
+            android:textColor="#4990E2"
+            android:textSize="15sp"
+            />
+      </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="45dp"
+          android:background="@color/white"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+          >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="处理中会话数"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            />
+        <TextView
+            android:id="@+id/tv_inprocess_sessions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text=""
+            android:textColor="#388E3C"
+            android:textSize="15sp"
+            />
 
+      </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="45dp"
+          android:background="@color/white"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+          >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="在线客服数"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            />
+        <TextView
+            android:id="@+id/tv_customer_service_online"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text=""
+            android:textColor="#F6A623"
+            android:textSize="15sp"
+            />
 
-            <View
-                style="@style/line_view_1dp"
-                android:layout_marginTop="15dp" />
+      </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="45dp"
+          android:background="@color/white"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingLeft="15dp"
+          android:paddingRight="15dp"
+          >
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@android:color/white">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="今日消息数"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="今日数据"
-                    android:textColor="@color/manager_label_text_color"
-                    android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_messages_today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="15sp"
+            />
 
-                <ImageView
-                    android:id="@+id/tv_refresh"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/icon_refresh"
-                    />
+      </LinearLayout>
 
-            </RelativeLayout>
+      <View
+          android:layout_marginTop="15dp"
+          style="@style/line_view_1dp"
+          />
 
-            <View style="@style/line_view_1dp" />
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:background="@android:color/white"
+          >
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="会话量趋势"
+            android:textColor="@color/manager_label_text_color"
+            android:textSize="14sp"
+            />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+        <ImageView
+            android:id="@+id/session_filter"
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/screening_icon"
+            />
+      </RelativeLayout>
 
-                    <TextView
-                        android:id="@+id/tv_sessions_today"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="@color/today_session_text_color"
-                        android:textSize="38sp" />
+      <View style="@style/line_view_1dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="今日新会话数"
-                        android:textColor="@color/today_session_text_color"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/line_color_2" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_inprocess_sessions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="@color/inpro_session_text_color"
-                        android:textSize="38sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="处理中会话数"
-                        android:textColor="@color/inpro_session_text_color"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View style="@style/line_view_1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_customer_service_online"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="@color/online_agent_text_color"
-                        android:textSize="38sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="在线客服数"
-                        android:textColor="@color/online_agent_text_color"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/line_color_2" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_messages_today"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--"
-                        android:textColor="@color/today_message_text_color"
-                        android:textSize="38sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="今日消息数"
-                        android:textColor="@color/today_message_text_color"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View style="@style/line_view_1dp" />
-
-            <View
-                style="@style/line_view_1dp"
-                android:layout_marginTop="15dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@android:color/white">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="会话量趋势"
-                    android:textColor="@color/manager_label_text_color"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/session_filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/icon_screen_black"
-                    />
-            </RelativeLayout>
-
-            <View style="@style/line_view_1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="223dp"
-                android:background="@android:color/white"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:id="@+id/session_chart_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:gravity="right|center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="20dp"
-                    android:visibility="gone">
-
-                </LinearLayout>
-                <FrameLayout
-                    android:id="@+id/session_trend_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/white"/>
-            </LinearLayout>
-
-
-            <View style="@style/line_view_1dp" />
-
-            <View
-                style="@style/line_view_1dp"
-                android:layout_marginTop="15dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@android:color/white">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="消息量趋势"
-                    android:textColor="@color/manager_label_text_color"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/message_filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/icon_screen_black"
-                    />
-            </RelativeLayout>
-
-            <View style="@style/line_view_1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="223dp"
-                android:orientation="vertical"
-                android:background="@android:color/white">
-                <LinearLayout
-                    android:id="@+id/message_chart_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:gravity="right|center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingRight="20dp"
-                    android:visibility="gone"
-                    >
-
-                </LinearLayout>
-
-                <FrameLayout
-                    android:id="@+id/message_trend_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/white"/>
-            </LinearLayout>
-
-            <View
-                style="@style/line_view_1dp"
-                android:layout_marginTop="15dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@android:color/white">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:text="今日客服新进会话数报表"
-                    android:textColor="@color/manager_label_text_color"
-                    android:textSize="14sp" />
-            </RelativeLayout>
-
-            <View style="@style/line_view_1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="223dp"
-                android:orientation="vertical"
-                android:background="@android:color/white">
-
-                <FrameLayout
-                    android:id="@+id/currentsession_chart_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/white"/>
-            </LinearLayout>
-
-            <View style="@style/line_view_1dp" />
-
-
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="223dp"
+          android:background="@android:color/white"
+          android:orientation="vertical"
+          >
+        <LinearLayout
+            android:id="@+id/session_chart_container"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal"
+            android:paddingRight="20dp"
+            android:visibility="gone"
+            >
 
         </LinearLayout>
-    </ScrollView>
+        <FrameLayout
+            android:id="@+id/session_trend_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            />
+      </LinearLayout>
+
+
+      <View style="@style/line_view_1dp"/>
+
+      <View
+          android:layout_marginTop="15dp"
+          style="@style/line_view_1dp"
+          />
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:background="@android:color/white"
+          >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="消息量趋势"
+            android:textColor="@color/manager_label_text_color"
+            android:textSize="14sp"
+            />
+
+        <ImageView
+            android:id="@+id/message_filter"
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/screening_icon"
+            />
+      </RelativeLayout>
+
+      <View style="@style/line_view_1dp"/>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="223dp"
+          android:background="@android:color/white"
+          android:orientation="vertical"
+          >
+        <LinearLayout
+            android:id="@+id/message_chart_container"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:gravity="right|center_vertical"
+            android:orientation="horizontal"
+            android:paddingRight="20dp"
+            android:visibility="gone"
+            >
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/message_trend_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_marginTop="15dp"
+          style="@style/line_view_1dp"
+          />
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:background="@android:color/white"
+          >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:text="今日客服新进会话数报表"
+            android:textColor="@color/manager_label_text_color"
+            android:textSize="14sp"
+            />
+      </RelativeLayout>
+
+      <View style="@style/line_view_1dp"/>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="223dp"
+          android:background="@android:color/white"
+          android:orientation="vertical"
+          >
+
+        <FrameLayout
+            android:id="@+id/currentsession_chart_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            />
+      </LinearLayout>
+
+      <View style="@style/line_view_1dp"/>
+
+
+    </LinearLayout>
+  </ScrollView>
 
 
 </LinearLayout>

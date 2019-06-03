@@ -8,12 +8,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 
+import com.easemob.badger.BadgeUtil;
 import com.easemob.helpdesk.mvp.LoginActivity;
+import com.easemob.helpdesk.utils.ActivityUtils;
+import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.PreferenceUtils;
+import com.hyphenate.autoupdate.CheckVersion;
 import com.hyphenate.kefusdk.chat.HDClient;
-import com.hyphenate.kefusdk.manager.session.CurrentSessionManager;
-import com.liyuzhao.badger.BadgeUtil;
+import com.hyphenate.kefusdk.entity.user.HDUser;
+import com.hyphenate.push.EMPushConfig;
+import com.squareup.leakcanary.LeakCanary;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -36,24 +43,67 @@ public class HDApplication extends Application {
     private boolean newMsgNotiStatus;
     private boolean notiAlertSoundStatus;
     private boolean notiAlertVibrateStatus;
-
+    private boolean notiAlertAlarmStatus;
+    private boolean isHasAlarmNoti;
 
     @Override
     public void onCreate() {
         super.onCreate();
 	    instance = this;
-        HDClient.getInstance().init(this);
-        PreferenceUtils.getInstance().init(this);
+        ActivityUtils.getInstance().init(this);
+	    HMSPushHelper.getInstance().initHMSAgent(this);
         HDClient.getInstance().setDebugMode(true);
+        HDClient.Options options = new HDClient.Options();
+        EMPushConfig.Builder pushBuilder = new EMPushConfig.Builder(this);
+        pushBuilder.enableVivoPush() // 需要在AndroidManifest.xml中配置appId和appKey
+                .enableMeiZuPush("120517", "9a43d4aae67c4fc48572af474d749b26")
+                .enableMiPush("2882303761517428629", "5941742837629")
+                .enableOppoPush("3483386", "1mnvxW1exj4008k80C88w4cSW")
+                .enableHWPush(); // 需要在AndroidManifest.xml中配置appId
+        options.setPushConfig(pushBuilder.build());
+        HDClient.getInstance().init(this, options);
+        CheckVersion.getInstance().setUpdateUrl(ChannelConfig.getInstance().getCheckUpdateVersion());
+        PreferenceUtils.getInstance().init(this);
+
         registerActivityListener();
         IMHelper.getInstance().setGlobalListener();
-        HDClient.getInstance().setDebugMode(true);
+
+        if (HDClient.getInstance().isLoggedInBefore()){
+            HDUser currentUser = HDClient.getInstance().getCurrentUser();
+            if (currentUser != null){
+                putGrowingIO(currentUser);
+                long companyId = currentUser.getTenantId();
+                String strCompanyId = "" + companyId;
+                initBugly(strCompanyId);
+            }
+        }
 
         isBroadcastUnreadCount = PreferenceUtils.getInstance().getBroadcastUnReadCount();
 
         newMsgNotiStatus = PreferenceUtils.getInstance().getNewMsgNotiStatus();
         notiAlertSoundStatus = PreferenceUtils.getInstance().getNotiAlertSoundStatus();
         notiAlertVibrateStatus = PreferenceUtils.getInstance().getNotiAlertVibrateStatus();
+        notiAlertAlarmStatus = PreferenceUtils.getInstance().getNotiAlertAlarmStatus();
+        isHasAlarmNoti = PreferenceUtils.getInstance().getHasAlarmNotiStatus();
+
+        if (LeakCanary.isInAnalyzerProcess(this)){
+            // This process is dedicated to LeakCanary for heap analysis.
+            return;
+        }
+//            com.squareup.leakcanary.ExcludedRefs excludedRefs = com.squareup.leakcanary.AndroidExcludedRefs.createAppDefaults()
+//                    .instanceField("android.view.inputmethod.InputMethodManager", "sInstance")
+//                    .instanceField("android.view.inputmethod.InputMethodManager", "mLastSrvView")
+//                    .instanceField("android.view.inputmethod.InputMethodManager$1", "this$0")
+//                    .instanceField("android.view.inputmethod.InputMethodManager$ControlledInputConnectionWrapper", "mParentInputMethodManager")
+//                    .instanceField("com.android.internal.policy.PhoneWindow$DecorView", "mContext")
+//                    .instanceField("android.support.v7.widget.SearchView$SearchAutoComplete", "mContext")
+//                    .build();
+//            LeakCanary.refWatcher(this)
+//                    .listenerServiceClass(com.squareup.leakcanary.DisplayLeakService.class)
+//                    .excludedRefs(excludedRefs)
+//                    .buildAndInstall();
+            LeakCanary.install(this);
+
     }
 
 
@@ -81,6 +131,21 @@ public class HDApplication extends Application {
         PreferenceUtils.getInstance().setNotiAlertVibrateStatus(notiAlertVibrateStatus);
     }
 
+    public void setNotiAlertAlarmStatus(boolean notiAlertAlarmStatus) {
+        this.notiAlertAlarmStatus = notiAlertAlarmStatus;
+        PreferenceUtils.getInstance().setNotiAlertAlarmStatus(notiAlertAlarmStatus);
+
+    }
+
+    public boolean isHasAlarmNoti() {
+        return isNotiAlertAlarmStatus() && isHasAlarmNoti;
+    }
+
+    public void setHasAlarmNoti(boolean isHasAlarmNoti) {
+        this.isHasAlarmNoti = isHasAlarmNoti;
+        PreferenceUtils.getInstance().setHasAlarmNotiStatus(isHasAlarmNoti);
+    }
+
     public boolean isNewMsgNotiStatus() {
         return newMsgNotiStatus;
     }
@@ -93,8 +158,36 @@ public class HDApplication extends Application {
         return notiAlertVibrateStatus;
     }
 
+    public boolean isNotiAlertAlarmStatus() {
+        return newMsgNotiStatus && notiAlertAlarmStatus;
+    }
+
+    /**
+     * 注册Bugly
+     */
+    public void initBugly(String strCompanyId){
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
+        strategy.setAppChannel(ChannelConfig.getInstance().getChannelString());
+        strategy.setAppVersion(CommonUtils.getAppVersionNameFromApp(this));
+        strategy.setAppPackageName(getPackageName());
+        strategy.setAppReportDelay(20000);
+        CrashReport.initCrashReport(getApplicationContext(), "900027600", HDClient.getInstance().isDebugMode(), strategy);
+        CrashReport.setUserId("companyId:" + strCompanyId);
+    }
+
+    public void putGrowingIO(HDUser loginUser) {
+        if (loginUser == null){
+            return;
+        }
+        String userId = loginUser.getUsername();
+        long companyId = loginUser.getTenantId();
+        String strCompanyId = "" + companyId;
+
+        initBugly(strCompanyId);
+    }
+
     public synchronized int getUnReadMsgCount() {
-        return CurrentSessionManager.getInstance().getTotalUnReadCount();
+        return HDClient.getInstance().ongoingSessionManager().getTotalUnReadCount();
     }
 
     /**

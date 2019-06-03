@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import android.widget.TextView;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.utils.CommonUtils;
@@ -37,21 +38,18 @@ public class ManagerWorkloadFragment extends Fragment {
 
     private static final String TAG = ManagerWorkloadFragment.class.getSimpleName();
     private static final int REQUEST_CODE_SCREENING = 0x01;
-    private String[] mTitle = {"图表", "客服"};
+    private String[] mTitle = { "图表", "客服" };
+    private Integer[] drawableId = { R.drawable.chart_icon, R.drawable.agents_icon };
 
+    @BindView(R.id.iv_back) protected ImageView back;
 
-    @BindView(R.id.iv_avatar)
-    protected ImageView ivAvatar;
-    @BindView(R.id.iv_status)
-    protected ImageView ivStatus;
+    @BindView(R.id.tv_title) protected TextView tvTitle;
 
     protected HDUser currentLoginUser;
 
-    @BindView(R.id.content_layout)
-    protected FrameLayout contentLayout;
+    @BindView(R.id.content_layout) protected FrameLayout contentLayout;
 
-    @BindView(R.id.tablayout)
-    protected SegmentTabLayout segmentTabLayout;
+    @BindView(R.id.tablayout) protected SegmentTabLayout segmentTabLayout;
 
     private WorkloadChartFragment workloadChartFragment;
     private WorkloadAgentsFragment workloadAgentsFragment;
@@ -64,48 +62,48 @@ public class ManagerWorkloadFragment extends Fragment {
 
     private Unbinder unbinder;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.manage_fragment_workload, container, false);
         unbinder = ButterKnife.bind(this, view);
-        return  view;
+        tvTitle.setText("工作量");
+        return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             currentSelectedIndex = savedInstanceState.getInt("selectedIndex", 0);
         }
         currentLoginUser = HDClient.getInstance().getCurrentUser();
         screenEntity.setCurrentTimeInfo(DateUtils.getTimeInfoByCurrentWeek().getStartTime(), DateUtils.getTimeInfoByCurrentWeek().getEndTime());
         fragmentManager = getFragmentManager();
 
-        if (currentSelectedIndex == 0){
+        if (currentSelectedIndex == 0) {
             workloadChartFragment = new WorkloadChartFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.content_layout, workloadChartFragment).commit();
-        }else{
+        } else {
             workloadAgentsFragment = new WorkloadAgentsFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.content_layout, workloadAgentsFragment).commit();
         }
 
         initView();
-        loadFirstStatus();
-        refreshAgentAvatar();
         settingTabLayout();
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ((ManagerHomeActivity) getActivity()).back();
+            }
+        });
     }
 
-    private void settingTabLayout(){
+    private void settingTabLayout() {
         //将Fragment添加入集合
 
-        segmentTabLayout.setTabData(mTitle);
+        segmentTabLayout.setTabData(drawableId, R.drawable.baseline_icon);
         segmentTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
+            @Override public void onTabSelect(int position) {
                 if (position == currentSelectedIndex) {
                     return;
                 }
@@ -116,49 +114,30 @@ public class ManagerWorkloadFragment extends Fragment {
                             workloadChartFragment = new WorkloadChartFragment();
                         }
                         fragmentManager.beginTransaction().replace(R.id.content_layout, workloadChartFragment).commit();
+                        tvTitle.setText("工作量");
                         break;
                     case 1:
                         if (workloadAgentsFragment == null) {
                             workloadAgentsFragment = new WorkloadAgentsFragment();
                         }
                         fragmentManager.beginTransaction().replace(R.id.content_layout, workloadAgentsFragment).commit();
+                        tvTitle.setText("客服");
                         break;
                 }
             }
 
-            @Override
-            public void onTabReselect(int position) {
+            @Override public void onTabReselect(int position) {
 
             }
         });
 
         segmentTabLayout.setCurrentTab(currentSelectedIndex);
-
     }
 
-    private void initView(){
+    private void initView() {
     }
 
-
-    private void loadFirstStatus(){
-        if (currentLoginUser != null){
-            refreshOnline(currentLoginUser.getOnLineState());
-        }
-    }
-
-    public void refreshOnline(String status){
-        CommonUtils.setAgentStatusView(ivStatus, status);
-    }
-
-
-    public void refreshAgentAvatar(){
-        if (ivAvatar != null){
-            AvatarManager.getInstance(getContext()).refreshAgentAvatar(getActivity(), ivAvatar);
-        }
-    }
-
-    @OnClick(R.id.iv_filter)
-    public void onClickByfilter(View view){
+    @OnClick(R.id.iv_filter) public void onClickByfilter(View view) {
 
         Intent intent = new Intent();
         intent.setClass(getContext(), WorkloadFilter.class);
@@ -168,64 +147,54 @@ public class ManagerWorkloadFragment extends Fragment {
         startActivityForResult(intent, REQUEST_CODE_SCREENING);
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK){
-            if (requestCode == REQUEST_CODE_SCREENING){
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_SCREENING) {
                 TimeInfo currentTimeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
 
                 screenEntity.setCurrentTimeInfo(currentTimeInfo.getStartTime(), currentTimeInfo.getEndTime());
 
-                if(data.hasExtra("techChannel")){
+                if (data.hasExtra("techChannel")) {
                     screenEntity.setCurrentTechChannel((TechChannel) data.getSerializableExtra("techChannel"));
-                }else{
+                } else {
                     screenEntity.setCurrentTechChannel(null);
                 }
                 if (data.hasExtra("ids")) {
                     String currentTagIds = data.getStringExtra("ids");
-                    screenEntity.setCurrentTagIds(currentTagIds.replace("[","").replace("]",""));
+                    screenEntity.setCurrentTagIds(currentTagIds.replace("[", "").replace("]", ""));
                 } else {
                     screenEntity.setCurrentTagIds("all");
                 }
-                if (data.hasExtra("agentUserId")){
+                if (data.hasExtra("agentUserId")) {
                     screenEntity.setAgentUserId(data.getStringExtra("agentUserId"));
-                }else{
+                } else {
                     screenEntity.setAgentUserId(null);
                 }
                 refreshFragment();
-
             }
         }
     }
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+    @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("selectedIndex", currentSelectedIndex);
     }
 
-
-
-
-
-    private void refreshFragment(){
-        if (workloadChartFragment != null){
+    private void refreshFragment() {
+        if (workloadChartFragment != null) {
             workloadChartFragment.setScreenEntity(screenEntity);
             workloadChartFragment.refreshCurrentView();
         }
-        if (workloadAgentsFragment != null){
+        if (workloadAgentsFragment != null) {
             workloadAgentsFragment.setScreenEntity(screenEntity);
             workloadAgentsFragment.onRefresh();
         }
     }
 
-    @Override
-    public void onDestroyView() {
+    @Override public void onDestroyView() {
         super.onDestroyView();
-        if (unbinder != null){
+        if (unbinder != null) {
             unbinder.unbind();
         }
     }

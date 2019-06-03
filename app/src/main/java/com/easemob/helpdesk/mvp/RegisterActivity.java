@@ -17,7 +17,6 @@ import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.BaseActivity;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

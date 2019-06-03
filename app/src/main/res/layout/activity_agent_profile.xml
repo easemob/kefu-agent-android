@@ -5,584 +5,691 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <RelativeLayout
+  <RelativeLayout
+      android:id="@+id/rl_back"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      android:background="#ffffff"
+      >
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@drawable/back_icon"
+        />
+    <View
+        android:id="@+id/view_divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_toRightOf="@id/iv_back"
+        android:background="@color/gray_1"
+        />
+  </RelativeLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="#f2f2f2"
+      android:scrollbars="none"
+      >
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_title_height"
-        android:background="#333333">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:background="#ffffff"
+          >
+
+        <com.easemob.helpdesk.widget.CircleImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/default_agent_avatar"
+            />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_below="@id/iv_avatar"
+            android:layout_marginLeft="-15dp"
+            android:layout_marginTop="-15dp"
+            android:layout_toRightOf="@id/iv_avatar"
+            android:src="@drawable/editavatar_icon"
+            />
+
+        <TextView
+            android:id="@+id/tv_nick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_avatar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:textColor="#fff"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:id="@+id/rl_nickname"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="昵称"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/et_nickname"
+            android:layout_toRightOf="@id/tv_nickname"
+            android:gravity="right"
+            style="@style/profile_textview_style"
+            />
+
+        <ImageButton
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_status_black_right"
+            tools:ignore="ContentDescription"
+            />
+
+      </RelativeLayout>
+
+      <View style="@style/line_view"/>
+
+      <RelativeLayout
+          android:id="@+id/rl_truename"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_truename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="真实姓名"
+            android:textSize="16sp"
+            />
+
+
+        <TextView
+            android:id="@+id/et_truename"
+            android:layout_toRightOf="@id/tv_truename"
+            android:gravity="right"
+            style="@style/profile_textview_style"
+            />
+
+        <ImageButton
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_status_black_right"
+            tools:ignore="ContentDescription"
+            />
+
+      </RelativeLayout>
+
+      <View style="@style/line_view"/>
+
+      <RelativeLayout
+          android:id="@+id/rl_number"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_nubmer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="编号"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/et_number"
+            android:layout_toRightOf="@id/tv_nubmer"
+            android:gravity="right"
+            style="@style/profile_textview_style"
+            />
+
+        <ImageButton
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_status_black_right"
+            tools:ignore="ContentDescription"
+            />
+      </RelativeLayout>
+
+      <View style="@style/line_view"/>
+
+      <RelativeLayout
+          android:id="@+id/rl_mobile"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="手机号码"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/et_mobile"
+            android:layout_toRightOf="@id/tv_mobile"
+            android:gravity="right"
+            style="@style/profile_textview_style"
+            />
+
+        <ImageButton
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_status_black_right"
+            tools:ignore="ContentDescription"
+            />
+      </RelativeLayout>
+
+      <View style="@style/line_view"/>
+
+      <RelativeLayout
+          android:id="@+id/rl_email"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="邮箱"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/et_email"
+            android:layout_toRightOf="@id/tv_email"
+            android:gravity="right"
+            style="@style/profile_textview_style"
+            />
+
+        <!--<ImageButton-->
+        <!--android:layout_width="32dip"-->
+        <!--android:layout_height="32dip"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:background="@drawable/icon_open"-->
+        <!--android:visibility="gone" />-->
+      </RelativeLayout>
+
+      <View style="@style/line_view"/>
+
+      <RelativeLayout
+          android:id="@+id/rl_pwd"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_pwd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="密码"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/et_pwd"
+            android:layout_toRightOf="@id/tv_pwd"
+            android:gravity="right"
+            android:text="点击修改密码"
+            style="@style/profile_textview_style"
+            />
+
+        <ImageButton
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/arrow_status_black_right"
+            tools:ignore="ContentDescription"
+            />
+      </RelativeLayout>
+
+      <View style="@style/line_view"/>
+
+      <View
+          android:layout_marginTop="20dp"
+          style="@style/line_view"
+          />
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="客服问候语"
+            android:textSize="16sp"
+            />
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/switch_button"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="30dp"
+            android:paddingTop="4dp"
+            app:kswAnimationDuration="300"
+            app:kswBackDrawable="@drawable/ios_back_drawable"
+            app:kswBackMeasureRatio="1.7"
+            app:kswThumbDrawable="@drawable/ios_thumb"
+            app:kswThumbMarginBottom="-8dp"
+            app:kswThumbMarginLeft="-5dp"
+            app:kswThumbMarginRight="-5dp"
+            app:kswThumbMarginTop="-2.5dp"
+            android:layout_marginRight="16dp"
+            />
+
+
+      </RelativeLayout>
+
+      <TextView
+          android:id="@+id/tv_welcome_content"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="#fff"
+          android:minLines="2"
+          android:padding="10dp"
+          android:textColor="#1a1a1a"
+          android:textSize="18sp"
+          />
+
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_broadcast_unreadcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="本机广播未读数"
+            android:textSize="16sp"
+            />
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/st_broadcast_unreadcount"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="30dp"
+            android:paddingTop="4dp"
+            app:kswAnimationDuration="300"
+            app:kswBackDrawable="@drawable/ios_back_drawable"
+            app:kswBackMeasureRatio="1.7"
+            app:kswThumbDrawable="@drawable/ios_thumb"
+            app:kswThumbMarginBottom="-8dp"
+            app:kswThumbMarginLeft="-5dp"
+            app:kswThumbMarginRight="-5dp"
+            app:kswThumbMarginTop="-2.5dp"
+            android:layout_marginRight="16dp"
+            />
+
+
+      </RelativeLayout>
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingBottom="24dp"
+          android:paddingLeft="24dp"
+          android:paddingTop="8dp"
+          android:text="打开广播未读数后，可以通过其他APP获取到未读消息数"
+          android:textColor="@android:color/darker_gray"
+          android:textSize="14sp"
+
+          />
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/item_height"
+          android:background="#fff"
+          android:paddingLeft="24dp"
+          >
+
+        <TextView
+            android:id="@+id/tv_new_msg_noti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="新消息通知"
+            android:textSize="16sp"
+            />
+
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/st_new_msg_noti"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="30dp"
+            android:paddingTop="4dp"
+            app:kswAnimationDuration="300"
+            app:kswBackDrawable="@drawable/ios_back_drawable"
+            app:kswBackMeasureRatio="1.7"
+            app:kswThumbDrawable="@drawable/ios_thumb"
+            app:kswThumbMarginBottom="-8dp"
+            app:kswThumbMarginLeft="-5dp"
+            app:kswThumbMarginRight="-5dp"
+            app:kswThumbMarginTop="-2.5dp"
+            android:layout_marginRight="16dp"
+            />
+
+
+      </RelativeLayout>
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingBottom="24dp"
+          android:paddingLeft="24dp"
+          android:paddingTop="8dp"
+          android:text="是否接收新消息推送"
+          android:textColor="@android:color/darker_gray"
+          android:textSize="14sp"
+
+          />
+
+      <LinearLayout
+          android:id="@+id/ll_noti_alert_sound"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
 
         <RelativeLayout
-            android:id="@+id/rl_back"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent">
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:background="#fff"
+            android:paddingLeft="24dp"
+            >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_back_2"
-                />
+          <TextView
+              android:id="@+id/tv_noti_alert_sound"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:text="声音通知"
+              android:textSize="16sp"
+              />
+
+          <com.kyleduo.switchbutton.SwitchButton
+              android:id="@+id/st_noti_alert_sound"
+              android:layout_width="wrap_content"
+              android:layout_height="44dp"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
+              android:paddingBottom="4dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="30dp"
+              android:paddingTop="4dp"
+              app:kswAnimationDuration="300"
+              app:kswBackDrawable="@drawable/ios_back_drawable"
+              app:kswBackMeasureRatio="1.7"
+              app:kswThumbDrawable="@drawable/ios_thumb"
+              app:kswThumbMarginBottom="-8dp"
+              app:kswThumbMarginLeft="-5dp"
+              app:kswThumbMarginRight="-5dp"
+              app:kswThumbMarginTop="-2.5dp"
+              android:layout_marginRight="16dp"
+              />
+
+
         </RelativeLayout>
 
-    </RelativeLayout>
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#f2f2f2"
-        android:scrollbars="none">
-
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="90dip"
-                android:background="#333333">
-
-                <com.easemob.helpdesk.widget.CircleImageView
-                    android:id="@+id/iv_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/default_agent_avatar"/>
-
-                <TextView
-                    android:id="@+id/tv_nick"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/iv_avatar"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5dp"
-                    android:textColor="#fff"
-                    android:textSize="18sp"/>
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_nickname"
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_nickname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="昵称："
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/et_nickname"
-                    style="@style/profile_textview_style"
-                    android:layout_toRightOf="@id/tv_nickname"/>
-
-                <ImageButton
-                    android:layout_width="36dip"
-                    android:layout_height="36dip"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/arrow_status_black_right"
-                    tools:ignore="ContentDescription"/>
-
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_truename"
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_truename"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="名字："
-                    android:textSize="16sp"/>
-
-
-                <TextView
-                    android:id="@+id/et_truename"
-                    style="@style/profile_textview_style"
-                    android:layout_toRightOf="@id/tv_truename"/>
-
-                <ImageButton
-                    android:layout_width="36dip"
-                    android:layout_height="36dip"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/arrow_status_black_right"
-                    tools:ignore="ContentDescription"/>
-
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_number"
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_nubmer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="编号："
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/et_number"
-                    style="@style/profile_textview_style"
-                    android:layout_toRightOf="@id/tv_nubmer"/>
-
-                <ImageButton
-                    android:layout_width="36dip"
-                    android:layout_height="36dip"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/arrow_status_black_right"
-                    tools:ignore="ContentDescription"/>
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_mobile"
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_mobile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="手机："
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/et_mobile"
-                    style="@style/profile_textview_style"
-                    android:layout_toRightOf="@id/tv_mobile"/>
-
-                <ImageButton
-                    android:layout_width="36dip"
-                    android:layout_height="36dip"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/arrow_status_black_right"
-                    tools:ignore="ContentDescription"/>
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_email"
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="邮箱："
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/et_email"
-                    style="@style/profile_textview_style"
-                    android:layout_toRightOf="@id/tv_email"/>
-
-                <!--<ImageButton-->
-                <!--android:layout_width="32dip"-->
-                <!--android:layout_height="32dip"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginRight="10dp"-->
-                <!--android:background="@drawable/icon_open"-->
-                <!--android:visibility="gone" />-->
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <RelativeLayout
-                android:id="@+id/rl_pwd"
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_pwd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="密码："
-                    android:textSize="16sp"/>
-
-                <TextView
-                    android:id="@+id/et_pwd"
-                    style="@style/profile_textview_style"
-                    android:layout_toRightOf="@id/tv_pwd"
-                    android:text="******"/>
-
-                <ImageButton
-                    android:layout_width="36dip"
-                    android:layout_height="36dip"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/arrow_status_black_right"
-                    tools:ignore="ContentDescription"/>
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <View
-                style="@style/line_view"
-                android:layout_marginTop="20dp"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_welcome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="客服问候语"
-                    android:textSize="16sp"/>
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:id="@+id/switch_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="4dp"
-                    app:kswAnimationDuration="300"
-                    app:kswBackDrawable="@drawable/ios_back_drawable"
-                    app:kswBackMeasureRatio="1.7"
-                    app:kswThumbDrawable="@drawable/ios_thumb"
-                    app:kswThumbMarginBottom="-8dp"
-                    app:kswThumbMarginLeft="-5dp"
-                    app:kswThumbMarginRight="-5dp"
-                    app:kswThumbMarginTop="-2.5dp"/>
-
-
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <TextView
-                android:id="@+id/tv_welcome_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff"
-                android:minLines="2"
-                android:padding="10dp"
-                android:textColor="#1a1a1a"
-                android:textSize="18sp"/>
-
-
-            <View
-                style="@style/line_view"
-                android:layout_marginTop="20dp"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_broadcast_unreadcount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="本机广播未读数"
-                    android:textSize="16sp"/>
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:id="@+id/st_broadcast_unreadcount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="4dp"
-                    app:kswAnimationDuration="300"
-                    app:kswBackDrawable="@drawable/ios_back_drawable"
-                    app:kswBackMeasureRatio="1.7"
-                    app:kswThumbDrawable="@drawable/ios_thumb"
-                    app:kswThumbMarginBottom="-8dp"
-                    app:kswThumbMarginLeft="-5dp"
-                    app:kswThumbMarginRight="-5dp"
-                    app:kswThumbMarginTop="-2.5dp"/>
-
-
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:padding="2dp"
-                android:text="打开广播未读数后，可以通过其他APP获取到未读消息数"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="13sp"
-
-                />
-
-            <View style="@style/line_view"/>
-
-            <View
-                style="@style/line_view"
-                android:layout_marginTop="20dp"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dip"
-                android:background="#fff"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <TextView
-                    android:id="@+id/tv_new_msg_noti"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="新消息通知"
-                    android:textSize="16sp"/>
-
-                <com.kyleduo.switchbutton.SwitchButton
-                    android:id="@+id/st_new_msg_noti"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="4dp"
-                    app:kswAnimationDuration="300"
-                    app:kswBackDrawable="@drawable/ios_back_drawable"
-                    app:kswBackMeasureRatio="1.7"
-                    app:kswThumbDrawable="@drawable/ios_thumb"
-                    app:kswThumbMarginBottom="-8dp"
-                    app:kswThumbMarginLeft="-5dp"
-                    app:kswThumbMarginRight="-5dp"
-                    app:kswThumbMarginTop="-2.5dp"/>
-
-
-            </RelativeLayout>
-
-            <View style="@style/line_view"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:padding="2dp"
-                android:text="是否接收新消息推送"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="13sp"
-
-                />
-
-            <View style="@style/line_view"/>
-
-            <LinearLayout
-                android:id="@+id/ll_noti_alert_sound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="44dip"
-                    android:background="#fff"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-
-                    <TextView
-                        android:id="@+id/tv_noti_alert_sound"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="声音通知"
-                        android:textSize="16sp"/>
-
-                    <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/st_noti_alert_sound"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="4dp"
-                        app:kswAnimationDuration="300"
-                        app:kswBackDrawable="@drawable/ios_back_drawable"
-                        app:kswBackMeasureRatio="1.7"
-                        app:kswThumbDrawable="@drawable/ios_thumb"
-                        app:kswThumbMarginBottom="-8dp"
-                        app:kswThumbMarginLeft="-5dp"
-                        app:kswThumbMarginRight="-5dp"
-                        app:kswThumbMarginTop="-2.5dp"/>
-
-
-                </RelativeLayout>
-
-                <View style="@style/line_view"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:gravity="center"
-                    android:padding="2dp"
-                    android:text="是否播放声音"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="13sp"
-
-                    />
-
-                <View style="@style/line_view"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_noti_alert_vibrate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="44dip"
-                    android:background="#fff"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
-
-                    <TextView
-                        android:id="@+id/tv_noti_alert_vibrate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="震动通知"
-                        android:textSize="16sp"/>
-
-                    <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/st_noti_alert_vibrate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="4dp"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:paddingTop="4dp"
-                        app:kswAnimationDuration="300"
-                        app:kswBackDrawable="@drawable/ios_back_drawable"
-                        app:kswBackMeasureRatio="1.7"
-                        app:kswThumbDrawable="@drawable/ios_thumb"
-                        app:kswThumbMarginBottom="-8dp"
-                        app:kswThumbMarginLeft="-5dp"
-                        app:kswThumbMarginRight="-5dp"
-                        app:kswThumbMarginTop="-2.5dp"/>
-
-
-                </RelativeLayout>
-
-                <View style="@style/line_view"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/white"
-                    android:gravity="center"
-                    android:padding="2dp"
-                    android:text="是否震动"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="13sp"
-
-                    />
-
-                <View style="@style/line_view"/>
-            </LinearLayout>
-
-
-            <RelativeLayout
-                android:id="@id/agentprofile_logout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="40dp"
-                android:background="#fff"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="退出登录"
-                    android:textColor="#ff2a00"
-                    android:textSize="17sp"
-
-                    />
-
-            </RelativeLayout>
-
-            <View
-                style="@style/line_view"
-                android:layout_marginBottom="40dp"/>
-        </LinearLayout>
-
-
-    </ScrollView>
+            android:paddingBottom="24dp"
+            android:paddingLeft="24dp"
+            android:paddingTop="8dp"
+            android:text="是否播放声音"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+
+            />
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/ll_noti_alert_vibrate"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:background="#fff"
+            android:paddingLeft="24dp"
+            >
+
+          <TextView
+              android:id="@+id/tv_noti_alert_vibrate"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:text="震动通知"
+              android:textSize="16sp"
+              />
+
+          <com.kyleduo.switchbutton.SwitchButton
+              android:id="@+id/st_noti_alert_vibrate"
+              android:layout_width="wrap_content"
+              android:layout_height="44dp"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
+              android:paddingBottom="4dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="30dp"
+              android:paddingTop="4dp"
+              app:kswAnimationDuration="300"
+              app:kswBackDrawable="@drawable/ios_back_drawable"
+              app:kswBackMeasureRatio="1.7"
+              app:kswThumbDrawable="@drawable/ios_thumb"
+              app:kswThumbMarginBottom="-8dp"
+              app:kswThumbMarginLeft="-5dp"
+              app:kswThumbMarginRight="-5dp"
+              app:kswThumbMarginTop="-2.5dp"
+              android:layout_marginRight="16dp"
+              />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp"
+            android:paddingLeft="24dp"
+            android:paddingTop="8dp"
+            android:text="是否震动"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+
+            />
+
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/ll_noti_alarm"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:visibility="visible"
+          >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:background="#fff"
+            android:paddingLeft="24dp"
+            >
+
+          <TextView
+              android:id="@+id/tv_noti_alarm"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:text="告警通知"
+              android:textSize="16sp"
+              />
+
+          <com.kyleduo.switchbutton.SwitchButton
+              android:id="@+id/st_noti_alarm"
+              android:layout_width="wrap_content"
+              android:layout_height="44dp"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
+              android:paddingBottom="4dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="30dp"
+              android:paddingTop="4dp"
+              app:kswAnimationDuration="300"
+              app:kswBackDrawable="@drawable/ios_back_drawable"
+              app:kswBackMeasureRatio="1.7"
+              app:kswThumbDrawable="@drawable/ios_thumb"
+              app:kswThumbMarginBottom="-8dp"
+              app:kswThumbMarginLeft="-5dp"
+              app:kswThumbMarginRight="-5dp"
+              android:layout_marginRight="16dp"
+              app:kswThumbMarginTop="-2.5dp"
+              />
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp"
+            android:paddingLeft="24dp"
+            android:paddingTop="8dp"
+            android:text="产生告警记录时，是否通知管理员"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+
+            />
+
+      </LinearLayout>
+
+      <RelativeLayout
+          android:id="@id/agentprofile_logout"
+          android:layout_width="match_parent"
+          android:layout_height="48dp"
+          android:layout_marginLeft="12dp"
+          android:layout_marginRight="12dp"
+          android:layout_marginTop="24dp"
+          android:layout_marginBottom="26dp"
+          android:background="@drawable/btn_bg_shape_normal"
+          >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="退出登录"
+            android:textColor="#ff2a00"
+            android:textSize="18sp"
+
+            />
+      </RelativeLayout>
+    </LinearLayout>
+
+
+  </ScrollView>
 
 
 </LinearLayout>

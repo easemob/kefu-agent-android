@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="popupclose" />
-
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:layout_width="130dip"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="-5dp">
 
         <View
@@ -26,7 +19,7 @@
             android:background="@drawable/popup_triangle" />
 
         <LinearLayout
-            android:layout_width="130dip"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/triangle_icon"
             android:background="@drawable/popup_more_text_bg"
@@ -41,8 +34,8 @@
                 android:paddingTop="5dp">
 
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/item_icon_size"
+                    android:layout_height="@dimen/item_icon_size"
                     android:src="@drawable/expand_icon_sessiontag"
                     tools:ignore="ContentDescription" />
 
@@ -51,7 +44,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
                     android:text="会话标签"
-                    android:textColor="#4d4d4d" />
+                    android:textColor="#4d4d4d"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
 

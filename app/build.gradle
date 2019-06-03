@@ -1,90 +1,252 @@
+// 声明是Android程序
 apply plugin: 'com.android.application'
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
-    defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 3
-        versionName "2.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk {
-            //设置 支持的SO库架构
-            abiFilters 'armeabi','arm64-v8a','x86'//,'armeabi-v7a','x86_64','arm64-v8a','x86'
-        }
-    }
+apply plugin: 'com.jakewharton.butterknife'
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
 
-    productFlavors {
-        travis {
-            manifestPlaceholders = [APP_LABLE_VALUE: "@string/app_name", APP_ICON_VALUE: "@drawable/icon_launcher2"]
-        }
-    }
+def releaseTime(){
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC+08:00"))
 }
 
+def configInfo = rootProject.ext.android
+def librarys = rootProject.ext.dependencies
+
+android {
+    // 编译SDK的版本
+    compileSdkVersion configInfo.compileSdkVersion
+    // build tools的版本
+    //noinspection GradleDependency
+    buildToolsVersion configInfo.buildToolsVersion
+
+    sourceSets{
+        main(){
+            jniLibs.srcDirs=['libs']
+        }
+    }
+
+    defaultConfig {
+        // 应用的包名
+        applicationId "com.easemob.helpdesk.demo"
+        minSdkVersion configInfo.minSdkVersion
+        //noinspection OldTargetApi
+        targetSdkVersion configInfo.targetSdkVersion
+        versionCode configInfo.versionCode
+        //2个数的版本为正式版本，3个数的版本为紧急版本，4位数的版本为测试版本
+        versionName configInfo.versionName
+        // dex 突破 65535 的限制
+        multiDexEnabled true
+
+        ndk {
+            //设置 支持的SO库架构
+            abiFilters 'armeabi-v7a','arm64-v8a'//,'armeabi-v7a','x86_64','arm64-v8a','x86'
+        }
+
+    }
+
+//    dexOptions {
+//        dexInProcess true
+//        preDexLibraries true
+//        javaMaxHeapSize "2560" //越大越好
+//        jumboMode = true // 支持大工程模式
+//    }
+
+
+    buildTypes {
+        debug {
+            //压缩资源
+            shrinkResources false
+            //zip优化
+            zipAlignEnabled false
+            ext.enableCrashlytics = false
+            // debug模式
+            //是否输出LOG信息  暂时用不到
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            //为debug模式下的apk，指定一个另外的application id ,这样debug和release包就可以同时安装在手机上了
+           // applicationIdSuffix ".debug"
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            applicationVariants.all {
+//                variant -> generateAppName(variant)
+//            }
+
+        }
+
+        release {
+            //是否输出LOG信息  暂时用不到
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            // 是否进行混淆
+            minifyEnabled true
+            zipAlignEnabled true
+            //移除无用的资源文件
+            shrinkResources true
+            // 混淆文件的位置
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ext.enableCrashlytics = false
+
+            //指定签名包得输入文件名称
+            android.applicationVariants.all{ variant ->
+                variant.outputs.all{ output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')){
+                        //输出apk名称为KefuApp_v1.0_2015-09-15_wandoujia.apk
+                        outputFileName = "KefuApp_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                    }
+                }
+            }
+        }
+    }
+    // 移除lint检查的error
+    lintOptions{
+        disable 'InvalidPackage'
+        // set to true to turn off analysis progress reporting by lint
+        // 设置为true会关闭lint分析进度
+        quiet true
+        // if true, stop the gradle build if errors are found
+        // 如果为true,则在发现错误时停止gradle构建
+        abortOnError false
+        // if true, only report errors
+        // 如果为true, 则只报告错误
+        ignoreWarnings true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+//        exclude 'android.net.http.SslCertificate'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license/LICENSE.base64.txt'
+    }
+
+
+//    flavorDimensions "default"
+    flavorDimensions "versionCode"
+    productFlavors {
+        easemob {
+            manifestPlaceholders = [APP_LABLE_VALUE: "@string/app_name", APP_ICON_VALUE: "@drawable/icon_launcher2"]
+        }
+
+//        dev {
+//            // 每个环境包名不同
+//            applicationId "com.lyl.dev"
+//            // 动态添加 string.xml 字段；
+//            // 注意，这里是添加，在 string.xml 不能有这个字段，会重名！！！
+//            resValue "string", "app_name", "dev_myapp"
+//            resValue "bool", "isrRank", 'false'
+//            // 动态修改 常量 字段
+//            buildConfigField "String", "ENVIRONMENT", '"dev"'
+//            // 修改 AndroidManifest.xml 里渠道变量
+//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "dev"]
+//        }
+
+    }
+//    productFlavors.all{ flavor ->
+//        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+//
+//    }
+
+
+    // 开启dataBinding
+    dataBinding {
+        enabled true
+    }
+
+    useLibrary 'org.apache.http.legacy'
+
+}
+
+//
+//afterEvaluate {
+//    tasks.matching {
+//        it.name.startsWith('dex')
+//    }.each{
+//        dx ->
+//            if (dx.additionalParameters == null){
+//                dx.additionalParameters = []
+//            }
+//            dx.additionalParameters += '--multi-dex' //enable multidex
+//
+//            // optional
+//            // dx.additionalParameters += "--main-dex-list=$projectDir/<filename>".toString() // enable the main-dex-list
+//    }
+//}
+
+
 repositories{
+
     flatDir {
         dirs 'libs'
     }
 }
-
+//noinspection GradleDependency
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testCompile 'junit:junit:4.12'
-    //methodCount more than 65535, split dex
-    compile 'com.android.support:multidex:1.0.0'
-    // kefu agent sdk
-//       compile(name:'kefu-agentsdk-android-debug',ext:'aar')
-    compile 'com.easemob:kefu-agentsdk-android:1.0.4'
-    // http request library, sdk required
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    // show picture library , ui required
-    compile 'com.github.bumptech.glide:glide:3.6.0'
-    // gson parse library, sdk required
-    compile 'com.google.code.gson:gson:2.2.4'
+    // 编译libs目录下的所有jar包
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation librarys.supportRecyclerViewV7
+    implementation librarys.supportV4
+    implementation librarys.appCompatV7
+    implementation librarys.supportDesign
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'com.github.liyuzhao:photopicker:v1.0.1'
+    implementation 'com.github.liyuzhao:jsbridge:v1.0.1'
+    implementation 'com.github.liyuzhao:flycotablayout:v1.0.1'
+    implementation 'com.github.liyuzhao:slidingmenu:v1.0.2'
+    implementation 'com.github.liyuzhao:tagview:v1.0.1'
+    implementation 'com.github.liyuzhao:kmpautotextview:v1.0.1'
+    implementation 'com.github.liyuzhao:switchbutton:v1.0.1'
+    implementation 'com.github.liyuzhao:badgeutil:v1.0.1'
+    implementation 'com.github.liyuzhao:pickerview:v1.0.1'
+    implementation 'com.github.liyuzhao:hellocharts:v1.0.1'
+    implementation 'com.github.liyuzhao:mpchart:v1.0.1'
+    implementation 'com.github.liyuzhao:easyrecyclerview:v1.0.1'
+    implementation 'com.github.liyuzhao:autoupdate:v1.0.1'
+    implementation 'com.github.liyuzhao:filepicker:v1.0.3'
+    implementation 'com.github.liyuzhao:kmpautotextview:v1.0.1'
+    implementation 'com.github.Jlanglang:TreeRecyclerView:1.2.8.4'
+
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.github.liyuzhao:imageloader:v1.0.1'
     /*****************butterknife:8.4.0 start*****************/
-    compile 'com.jakewharton:butterknife:8.4.0'
+    implementation 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     /*****************butterknife:8.4.0 end******************/
-    compile 'com.mikepenz:iconics-core:2.5.11@aar'
+    //    compile 'com.tencent.bugly:crashreport:latest.release' //其中lastest.release指代最新版本号,也可以指定明确的版本号,例如2.2.0
+    implementation 'com.tencent.bugly:crashreport:2.6.6.1'
+    implementation 'com.lovedise:permissiongen:0.0.6'
+    implementation 'com.wefika:flowlayout:0.4.0'
+    implementation 'com.daimajia.numberprogressbar:library:1.2@aar'
+    implementation project(':xhsemotionskeyboard')
+    implementation project(':reclib-easemobmoticons')
+    implementation 'com.easemob:kefu-agentsdk-android:1.0.9'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
+    implementation project(':hmspush')
+    // meizu push
+    implementation 'com.meizu.flyme.internet:push-internal:3.7.0@aar' //配置集成sdk
+}
 
-    // android 6.0 check permission
-    compile 'com.lovedise:permissiongen:0.0.6'
-    // bottom navigation bar
-    compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
-    // compatible low version android mobile
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    // dependence library , emoticons and keyboard
-    compile project(':xhsemotionskeyboard')
-    // animation library
-    compile 'com.nineoldandroids:library:2.4.0'
-    // select file dialog
-    compile project(':filepicker')
-    compile project(':photopicker')
-    compile project(':tagviewgroup')
-    compile project(':flycotablayout_lib')
-    compile project(':pickview')
-    compile project(':slidingmenu')
-    compile project(':easyrecycleview')
-    compile project(':flowlayout')
-    compile project(':switchbutton')
-    compile project(':badgeutil')
-    compile project(':jsbridge')
-    compile project(':flowlayout')
-    compile project(':mpchartlib')
-    compile project(':hellocharts')
-    compile 'com.wefika:flowlayout:0.4.0'
-    compile 'io.reactivex:rxjava:1.0.14'
-    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
+buildscript{
+    repositories{
+        google()
+        mavenCentral() // or jcenter()
+    }
 
+    dependencies{
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
+    }
+}
+
+apply plugin: 'com.getkeepsafe.dexcount'
+dependencies {
+    implementation 'com.google.firebase:firebase-appindexing:18.0.0'
+}
+
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }

@@ -15,5 +15,5 @@
     
     <!-- 填充 -->
     <solid
-        android:color="@color/btn_bg_normal"/><!-- 填充的颜色 -->
+        android:color="@color/white"/><!-- 填充的颜色 -->
 </shape>

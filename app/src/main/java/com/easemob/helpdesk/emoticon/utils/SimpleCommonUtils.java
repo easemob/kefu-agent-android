@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.emoticon.filter.EaseMobFilter;
 import com.easemob.helpdesk.emoticon.filter.WeBoFilter;
@@ -19,14 +21,19 @@ import com.easemob.helpdesk.mvp.BaseChatActivity;
 import com.easemob.moticons.DefEaseEmoticons;
 import com.easemob.moticons.DefWeChatEmoticons;
 import com.easemob.moticons.DefWeiBoEmoticons;
+import com.hyphenate.kefusdk.chat.EmojiconManager.EmojiconPackage;
+import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.CustomEmojIconEntity;
 import com.sj.emoji.DefEmoticons;
 import com.sj.emoji.EmojiBean;
 import com.sj.emoji.EmojiDisplay;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import sj.keyboard.adapter.EmoticonsAdapter;
 import sj.keyboard.adapter.PageSetAdapter;
@@ -101,6 +108,7 @@ public class SimpleCommonUtils {
             }else{
                 addEasemobPageSetEntity(pageSetAdapter, context, emoticonClickListener);
             }
+            addCustomEmojiconSetEntity(pageSetAdapter, context, emoticonClickListener);
         }
         return pageSetAdapter;
     }
@@ -152,27 +160,6 @@ public class SimpleCommonUtils {
         pageSetAdapter.add(emojiPageSetEntity);
     }
 
-
-    /**
-     * 插入xhs表情集
-     *
-     * @param pageSetAdapter
-     * @param context
-     * @param emoticonClickListener
-     */
-//    public static void addXhsPageSetEntity(PageSetAdapter pageSetAdapter, Context context, EmoticonClickListener emoticonClickListener) {
-//        EmoticonPageSetEntity xhsPageSetEntity
-//                = new EmoticonPageSetEntity.Builder()
-//                .setLine(3)
-//                .setRow(7)
-//                .setEmoticonList(ParseDataUtils.ParseXhsData(DefXhsEmoticons.xhsEmoticonArray, ImageBase.Scheme.ASSETS))
-//                .setIPageViewInstantiateItem(getDefaultEmoticonPageViewInstantiateItem(getCommonEmoticonDisplayListener(emoticonClickListener, Constants.EMOTICON_CLICK_TEXT)))
-//                .setShowDelBtn(EmoticonPageEntity.DelBtnStatus.LAST)
-//                .setIconUri(ImageBase.Scheme.ASSETS.toUri("xhsemoji_19.png"))
-//                .build();
-//        pageSetAdapter.add(xhsPageSetEntity);
-//    }
-
     public static void addEasemobPageSetEntity(PageSetAdapter pageSetAdapter, Context context, EmoticonClickListener emoticonClickListener){
         EmoticonPageSetEntity easePageSetEntity
                 = new EmoticonPageSetEntity.Builder()
@@ -210,6 +197,25 @@ public class SimpleCommonUtils {
                 .setIconUri(ImageBase.Scheme.ASSETS.toUri("wb_1.gif"))
                 .build();
         pageSetAdapter.add(easePageSetEntity);
+    }
+
+    public static void addCustomEmojiconSetEntity(PageSetAdapter pageSetAdapter, Context context, EmoticonClickListener emoticonClickListener) {
+        List<EmojiconPackage> emojiconPackages = HDClient.getInstance().emojiManager().getEmojiPackagesList();
+        if (emojiconPackages.size() > 0) {
+            synchronized (emojiconPackages){
+                for (EmojiconPackage aPackage : emojiconPackages) {
+                    EmoticonPageSetEntity easePageSetEntity
+                            = new EmoticonPageSetEntity.Builder()
+                            .setLine(3)
+                            .setRow(7)
+                            .setEmoticonList(HDClient.getInstance().emojiManager().getEmojiconList(aPackage))
+                            .setIPageViewInstantiateItem(getDefaultEmoticonPageViewInstantiateItem(getCustomEmoticonDisplayListener(emoticonClickListener, Constants.EMOTICON_CLICK_BIGIMAGE)))
+                            .setSetName(aPackage.packageName)
+                            .build();
+                    pageSetAdapter.add(easePageSetEntity);
+                }
+            }
+        }
     }
 
 
@@ -281,6 +287,63 @@ public class SimpleCommonUtils {
                     public void onClick(View v) {
                         if (onEmoticonClickListener != null) {
                             onEmoticonClickListener.onEmoticonClick(emoticonEntity, type, isDelBtn);
+                        }
+                    }
+                });
+            }
+        };
+    }
+
+    public static EmoticonDisplayListener<Object> getCustomEmoticonDisplayListener(final EmoticonClickListener onEmoticonClickListener, final int type) {
+        return new EmoticonDisplayListener<Object>() {
+            @Override
+            public void onBindView(int position, ViewGroup parent, EmoticonsAdapter.ViewHolder viewHolder, Object object, final boolean isDelBtn) {
+
+                final CustomEmojIconEntity emojicon = (CustomEmojIconEntity) object;
+                if (emojicon == null && !isDelBtn) {
+                    return;
+                }
+                viewHolder.ly_root.setBackgroundResource(sj.keyboard.R.drawable.bg_emoticon);
+
+                if (isDelBtn) {
+                    viewHolder.iv_emoticon.setImageResource(R.mipmap.icon_del);
+                } else {
+                    File localIcon = null;
+                    File localBigIcon = null;
+                    if(!TextUtils.isEmpty(emojicon.getIconPath())) {
+                        localIcon = new File(emojicon.getIconPath());
+                    }
+                    if (!TextUtils.isEmpty(emojicon.getBigIconPath())) {
+                        localBigIcon = new File(emojicon.getBigIconPath());
+                    }
+                    if (viewHolder.iv_emoticon != null){
+                        if (localIcon != null && localIcon.exists()) {
+                            Glide.with(viewHolder.iv_emoticon.getContext()).load(emojicon.getIconPath())
+                                    .apply(RequestOptions.placeholderOf(R.drawable.default_image))
+                                    .into(viewHolder.iv_emoticon);
+                        } else if (localBigIcon != null && localBigIcon.exists()) {
+                            Glide.with(viewHolder.iv_emoticon.getContext()).load(emojicon.getBigIconPath())
+                                    .apply(RequestOptions.placeholderOf(R.drawable.default_image))
+                                    .into(viewHolder.iv_emoticon);
+                        } else if (!TextUtils.isEmpty(emojicon.getIconRemotePath())) {
+                            Glide.with(viewHolder.iv_emoticon.getContext()).load(emojicon.getIconRemotePath())
+                                    .apply(RequestOptions.placeholderOf(R.drawable.default_image))
+                                    .into(viewHolder.iv_emoticon);
+                        } else if (!TextUtils.isEmpty(emojicon.getBigIconRemotePath())) {
+                            Glide.with(viewHolder.iv_emoticon.getContext()).load(emojicon.getBigIconRemotePath())
+                                    .apply(RequestOptions.placeholderOf(R.drawable.default_image))
+                                    .into(viewHolder.iv_emoticon);
+                        } else {
+                            viewHolder.iv_emoticon.setImageResource(R.drawable.default_image);
+                        }
+                    }
+                }
+
+                viewHolder.rootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (onEmoticonClickListener != null) {
+                            onEmoticonClickListener.onEmoticonClick(emojicon, type, isDelBtn);
                         }
                     }
                 });

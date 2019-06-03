@@ -17,43 +17,44 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.easemob.helpdesk.EMValueCallBack;
 import com.easemob.helpdesk.HDApplication;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.AlertDialog;
 import com.easemob.helpdesk.activity.ScreeningActivity;
 import com.easemob.helpdesk.activity.SearchWaitAccessActivity;
+import com.easemob.helpdesk.activity.history.HistoryChatActivity;
 import com.easemob.helpdesk.activity.transfer.TransferActivity;
 import com.easemob.helpdesk.adapter.WaitAccessAdapter;
-import com.easemob.helpdesk.utils.AvatarManager;
-import com.easemob.helpdesk.utils.DateUtils;
-import com.hyphenate.kefusdk.entity.option.WaitAccessScreenEntity;
-import com.hyphenate.kefusdk.gsonmodel.main.SkillGroupResponse;
+import com.easemob.helpdesk.listener.OnDataItemClickListener;
 import com.easemob.helpdesk.mvp.MainActivity;
+import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.utils.CommonUtils;
+import com.easemob.helpdesk.utils.DateUtils;
 import com.easemob.helpdesk.utils.OnFreshCallbackListener;
 import com.easemob.helpdesk.utils.TimeInfo;
 import com.easemob.helpdesk.widget.recyclerview.DividerLine;
-import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.HistorySessionEntity;
 import com.hyphenate.kefusdk.entity.TechChannel;
-import com.hyphenate.kefusdk.gsonmodel.main.WaitQueueResponse;
+import com.hyphenate.kefusdk.entity.option.WaitAccessScreenEntity;
 import com.hyphenate.kefusdk.entity.user.HDUser;
+import com.hyphenate.kefusdk.entity.user.HDVisitorUser;
+import com.hyphenate.kefusdk.gsonmodel.main.SkillGroupResponse;
+import com.hyphenate.kefusdk.gsonmodel.main.WaitQueueResponse;
 import com.hyphenate.kefusdk.manager.main.WaitAccessManager;
 import com.hyphenate.kefusdk.utils.HDLog;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
-
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * 待接入页面
@@ -98,6 +99,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     private WaitAccessManager waitAccessManager;
     private int mCurPageNo;
     private TimeInfo currentTimeInfo = new TimeInfo();
+    @BindView(R.id.iv_notification) public ImageView ivNotification;
 
 
     @Nullable
@@ -142,10 +144,30 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                 adapter.resumeMore();
             }
         });
+        adapter.setOnDataItemClickListener(new OnDataItemClickListener<WaitQueueResponse.ItemsBean>() {
+            @Override
+            public void onClick(View itemView, WaitQueueResponse.ItemsBean data) {
+                String sessionId = data.getSessionId();
+
+                HDVisitorUser toUser = new HDVisitorUser();
+                toUser.setUserId(data.getVisitorId());
+                toUser.setUsername(data.getVisitorName());
+                toUser.setNicename(data.getVisitorName());
+                Intent intent = new Intent();
+                intent.setClass(getContext(), HistoryChatActivity.class);
+                intent.putExtra("user", toUser);
+                intent.putExtra("visitorid", sessionId);
+                intent.putExtra("originType", data.getOriginType());
+                intent.putExtra("techChannelName", data.getChanneName());
+                intent.putExtra("isWait", true);
+                startActivity(intent);
+
+            }
+        });
 
         recyclerView.setRefreshListener(this);
         adapter.addAll(waitUsersList);
-        loadTheFirstPageData();
+        loadSkillGroups();
         loadFirstStatus();
         refreshAgentAvatar();
 
@@ -162,6 +184,16 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
             }
         });
 
+    }
+
+    public void showNotification(boolean isShow) {
+        if (ivNotification != null) {
+            if (isShow) {
+                ivNotification.setImageResource(R.drawable.tip_audio_unread);
+            } else {
+                ivNotification.setImageResource(0);
+            }
+        }
     }
 
 
@@ -205,12 +237,12 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
 
     public void refreshAgentAvatar() {
         if(ivAvatar != null)
-            AvatarManager.getInstance(getContext()).refreshAgentAvatar(getActivity(), ivAvatar);
+            AvatarManager.getInstance().refreshAgentAvatar(getActivity(), ivAvatar);
     }
 
     @Override
     public void onRefresh() {
-        loadTheFirstPageData();
+        loadSkillGroups();
     }
 
     @Override
@@ -262,21 +294,6 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     public void run() {
                         closeDialog();
                         Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onAuthenticationException() {
-                if (getActivity() == null) {
-                    return;
-                }
-                (getActivity()).runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        closeDialog();
-                        HDApplication.getInstance().logout();
                     }
                 });
             }
@@ -370,7 +387,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
 
         final WaitQueueResponse.ItemsBean bean = adapter.getItem(position);
 
-        waitAccessManager.accessWaitUser(bean, new HDDataCallBack<String>() {
+        waitAccessManager.accessWaitUser(bean.getSessionId(), new HDDataCallBack<String>() {
 
             @Override
             public void onSuccess(String value) {
@@ -402,21 +419,6 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                     }
                 });
             }
-
-            @Override
-            public void onAuthenticationException() {
-                if (getActivity() == null) {
-                    return;
-                }
-                (getActivity()).runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        closeDialog();
-                        HDApplication.getInstance().logout();
-                    }
-                });
-            }
         });
     }
 
@@ -430,7 +432,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                 WaitQueueResponse.ItemsBean entity = (WaitQueueResponse.ItemsBean) data.getSerializableExtra("entty");
                 int pos = -1;
                 for (int i = 0; i < waitUsersList.size(); i++) {
-                    if(waitUsersList.get(i).getUserName().equals(entity.getUserName())){
+                    if(waitUsersList.get(i).getAgentUserName().equals(entity.getAgentUserName())){
                         pos = i;
                         break;
                     }
@@ -453,7 +455,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
 
                     final WaitQueueResponse.ItemsBean bean = adapter.getItem(position);
 
-                    waitAccessManager.accessWaitUser(bean, new HDDataCallBack<String>() {
+                    waitAccessManager.accessWaitUser(bean.getSessionId(), new HDDataCallBack<String>() {
 
                         @Override
                         public void onSuccess(String value) {
@@ -485,20 +487,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                             });
                         }
 
-                        @Override
-                        public void onAuthenticationException() {
-                            if (getActivity() == null) {
-                                return;
-                            }
-                            (getActivity()).runOnUiThread(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    closeDialog();
-                                    HDApplication.getInstance().logout();
-                                }
-                            });
-                        }
                     });
 
                 }else if (index == 2){
@@ -543,20 +532,7 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
                             });
                         }
 
-                        @Override
-                        public void onAuthenticationException() {
-                            if (getActivity() == null) {
-                                return;
-                            }
-                            (getActivity()).runOnUiThread(new Runnable() {
 
-                                @Override
-                                public void run() {
-                                    closeDialog();
-                                    HDApplication.getInstance().logout();
-                                }
-                            });
-                        }
                     });
 
                 }
@@ -632,6 +608,9 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
     public void onDestroy() {
         if (mWeakHandler != null) {
             mWeakHandler.removeCallbacksAndMessages(null);
+        }
+        if (adapter != null) {
+            adapter.setOnDataItemClickListener(null);
         }
         super.onDestroy();
         callback = null;
@@ -741,13 +720,13 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
             loadSkillGroups();
             return;
         }
-        waitAccessManager.getUserWaitQueues(isSearch, agentList, 1, new HDDataCallBack<List<WaitQueueResponse.ItemsBean>>() {
+        waitAccessManager.getUserWaitQueues(isSearch, agentList, 0, new HDDataCallBack<List<WaitQueueResponse.ItemsBean>>() {
             @Override
             public void onSuccess(List<WaitQueueResponse.ItemsBean> value) {
                 if (getActivity() == null) {
                     return;
                 }
-                mCurPageNo = 1;
+                mCurPageNo = 0;
                 Message message = mWeakHandler.obtainMessage();
                 message.what = MSG_REFRESH_DATA;
                 message.obj = value;
@@ -800,8 +779,6 @@ public class WaitAccessFragment extends Fragment implements OnFreshCallbackListe
         if (unbinder != null){
             unbinder.unbind();
         }
-        callback = null;
-        adapter = null;
     }
 
 

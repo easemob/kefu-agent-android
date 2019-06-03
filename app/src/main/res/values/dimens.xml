@@ -11,8 +11,8 @@
 
 
     <!-- topbar start -->
-    <dimen name="top_title_height">44dip</dimen>
-    <dimen name="top_title_text_size">15sp</dimen>
+    <dimen name="top_title_height">56dip</dimen>
+    <dimen name="top_title_text_size">16sp</dimen>
     <dimen name="top_title_icon_height">36dip</dimen>
     <!-- topbar end-->
 
@@ -74,4 +74,17 @@
 	<dimen name="image_thumbnail_size">100dp</dimen>
 	<dimen name="image_thumbnail_spacing">1dp</dimen>
 	<!-- chat video end -->
+
+    <!--layout_left_menu-->
+
+    <dimen name="title_bar_height">68dp</dimen>
+    <dimen name="avatar_width">40dp</dimen>
+    <dimen name="avatar_height">40dp</dimen>
+    <dimen name="item_height">62dp</dimen>
+    <dimen name="item_icon_size">@dimen/avatar_height</dimen>
+    <dimen name="title_text_size">18sp</dimen>
+    <dimen name="conversation_source_type_size">20dp</dimen>
+
+
+
 </resources>

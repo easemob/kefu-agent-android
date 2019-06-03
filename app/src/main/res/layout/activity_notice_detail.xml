@@ -151,6 +151,14 @@
                 android:textColor="#9b9b9b"
                 />
 
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@android:color/transparent"
+                android:dividerHeight="1dp"
+                />
+
         </LinearLayout>
 
 

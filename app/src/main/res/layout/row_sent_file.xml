@@ -38,13 +38,13 @@
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:layout_toLeftOf="@id/iv_userhead"
             android:layout_toRightOf="@+id/ll_loading"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/message_bubble_right">
 
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/image_icon_files"
+                android:src="@drawable/file_send_icon"
                 tools:ignore="ContentDescription" />
 
             <LinearLayout
@@ -96,6 +96,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/msg_state_failed_resend"
             android:visibility="invisible"
+            android:layout_marginLeft="10dp"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
@@ -105,6 +106,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:gravity="center"
+            android:layout_marginLeft="10dp"
             android:orientation="vertical"
 
             >

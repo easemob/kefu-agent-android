@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="12dp">
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/nickname"
+			android:text="客服昵称1"
+			android:textColor="#FF4D4D4D"
+			android:textSize="15sp"/>
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/user_status_layout"
+			android:layout_alignParentRight="true"
+			>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/user_status"
+				android:layout_alignParentRight="true"
+				android:textColor="#FF4D4D4D"
+				android:textSize="12sp"/>
+
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/iv_userstatus"
+				android:layout_toLeftOf="@+id/user_status"
+				android:layout_marginRight="5dp"
+				/>
+		</RelativeLayout>
+
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="15dp">
+		<ImageView
+			android:layout_width="15dp"
+			android:layout_height="15dp"
+			android:background="@drawable/icon_realtime_supervise_reception"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/current_session_count"
+			android:textColor="#FF4D4D4D"
+			android:layout_marginLeft="25dp"
+			android:textSize="12sp"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/max_session_count"
+			android:textColor="#FF4D4D4D"
+			android:layout_toRightOf="@+id/current_session_count"
+			android:layout_marginLeft="15dp"
+			android:textSize="12sp"
+			android:text="当前接待 / 最大接待"
+			/>
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="15dp">
+		<ImageView
+			android:layout_width="15dp"
+			android:layout_height="15dp"
+			android:background="@drawable/icon_realtime_supervise_terminal"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/end_session_count"
+			android:textColor="#FF4D4D4D"
+			android:layout_marginLeft="25dp"
+			android:textSize="12sp"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="#FF4D4D4D"
+			android:layout_toRightOf="@+id/end_session_count"
+			android:layout_marginLeft="15dp"
+			android:textSize="12sp"
+			android:text="已结束对话"
+			/>
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="15dp">
+		<ImageView
+			android:layout_width="15dp"
+			android:layout_height="15dp"
+			android:background="@drawable/icon_realtime_supervise_average_time"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/avg_session_time"
+			android:textColor="#FF4D4D4D"
+			android:layout_marginLeft="25dp"
+			android:textSize="12sp"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="#FF4D4D4D"
+			android:layout_toRightOf="@+id/avg_session_time"
+			android:layout_marginLeft="15dp"
+			android:textSize="12sp"
+			android:text="平均会话时长"
+			/>
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="15dp">
+		<ImageView
+			android:layout_width="15dp"
+			android:layout_height="15dp"
+			android:background="@drawable/icon_realtime_supervise_first_login"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/today_first_login_time"
+			android:textColor="#FF4D4D4D"
+			android:layout_marginLeft="25dp"
+			android:textSize="12sp"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="#FF4D4D4D"
+			android:layout_toRightOf="@+id/today_first_login_time"
+			android:layout_marginLeft="15dp"
+			android:textSize="12sp"
+			android:text="今天首次登陆"
+			/>
+	</RelativeLayout>
+
+</LinearLayout>

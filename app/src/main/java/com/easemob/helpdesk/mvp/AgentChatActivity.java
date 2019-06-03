@@ -25,9 +25,14 @@ import com.easemob.helpdesk.emoticon.view.SimpleUserDefAppsGridView;
 import com.easemob.helpdesk.widget.chatview.ChatEmoticonsKeyBoard;
 import com.hyphenate.kefusdk.HDChatListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.chat.HDClient;
+import com.hyphenate.kefusdk.entity.CustomEmojIconEntity;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
 import com.sj.emoji.EmojiBean;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,7 +157,7 @@ public class AgentChatActivity extends BaseChatActivity implements FuncLayout.On
 	}
 
 
-	@OnClick(R.id.rl_back)
+	@OnClick(R.id.iv_back)
 	public void onClickByBack(){
 		startActivity(new Intent(this, MainActivity.class));
 		finish();
@@ -280,6 +285,7 @@ public class AgentChatActivity extends BaseChatActivity implements FuncLayout.On
 
 	private void initEmoticonsKeyBoardBar(){
 
+		HDClient.getInstance().emojiManager().reflesh();
 		SimpleCommonUtils.initEmoticonsEditText(ekBar.getEtChat());
 		ekBar.setAdapter(SimpleCommonUtils.getCommonAdapter(this, emoticonClickListener));
 		ekBar.addOnFuncKeyBoardListener(this);
@@ -322,6 +328,8 @@ public class AgentChatActivity extends BaseChatActivity implements FuncLayout.On
 				if(actionType == Constants.EMOTICON_CLICK_BIGIMAGE){
 					if(o instanceof EmoticonEntity){
 						OnSendImage(((EmoticonEntity)o).getIconUri());
+					} else if(o instanceof CustomEmojIconEntity) {
+						sendCustomEmojMessage((CustomEmojIconEntity)o);
 					}
 				} else {
 					String content = null;
@@ -377,8 +385,8 @@ public class AgentChatActivity extends BaseChatActivity implements FuncLayout.On
 	@Override
 	public ArrayList<AppBean> getExtendAppBeans() {
 		ArrayList<AppBean> mAppBeanList = new ArrayList<>();
-		mAppBeanList.add(new AppBean(1, R.drawable.input_more_icon_camera, "图片"));
-		mAppBeanList.add(new AppBean(2, R.drawable.hd_chat_video_normal, "视频"));
+		mAppBeanList.add(new AppBean(1, R.drawable.more_picture_icon, "图片"));
+		mAppBeanList.add(new AppBean(2, R.drawable.more_video_icon, "视频"));
 		mAppBeanList.add(new AppBean(3, R.drawable.input_more_icon_file, "文件"));
 		return mAppBeanList;
 	}

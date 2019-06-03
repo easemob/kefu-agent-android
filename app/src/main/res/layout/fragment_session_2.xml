@@ -4,67 +4,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFEFF4"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <com.easemob.helpdesk.widget.relative.ViewPagerContainerLayout
-        android:id="@+id/myLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+  <com.easemob.helpdesk.widget.relative.ViewPagerContainerLayout
+      android:id="@+id/myLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
 
 
-        <RelativeLayout
-            android:id="@+id/rl_actionbar"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/top_title_height"
-            android:background="@color/bg_top_bar_2">
+    <RelativeLayout
+        android:id="@+id/rl_actionbar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/item_height"
+        android:background="#fff"
+        >
 
-             <include layout="@layout/top_bar_avatar_layout"/>
+      <include
+          layout="@layout/top_bar_avatar_layout"
+          android:id="@+id/avatar_layout"
+          />
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_toRightOf="@id/avatar_layout"
+          >
+        <TextView
+            android:id="@+id/tv_current_session"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="进行中会话"
+            android:textColor="#000"
+            android:textSize="@dimen/title_text_size"
+            />
+        <LinearLayout
+            android:id="@+id/ll_session_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_current_session"
+            android:layout_below="@id/tv_current_session"
+            android:orientation="horizontal"
+            >
+          <ImageView
+              android:id="@+id/iv_limit"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:src="@drawable/limited_icon"
+              />
+          <TextView
+              android:id="@+id/tv_session_count"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="6dp"
+              android:text="8/10"
+              android:textColor="#757575"
+              android:textSize="13sp"
+              />
+        </LinearLayout>
+      </RelativeLayout>
 
-            <com.flyco.tablayout.SegmentTabLayout
-                android:id="@+id/tablayout"
-                android:layout_width="158dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                tl:tl_bar_color="#000"
-                tl:tl_indicator_color="#fff"
-                tl:tl_indicator_corner_radius="4dp"
-                tl:tl_tab_padding="10dp"
-                tl:tl_tab_space_equal="true"
-                tl:tl_textSelectColor="#000"
-                tl:tl_textUnselectColor="#fff"
-                tl:tl_textBold="false"
-                tl:tl_textsize="12sp" />
+      <com.flyco.tablayout.SegmentTabLayout
+          android:id="@+id/tablayout"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentRight="true"
+          android:layout_centerVertical="true"
+          android:layout_gravity="center"
+          android:layout_marginRight="12dp"
+          />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/ib_setting"
-                android:layout_marginRight="10dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/icon_setting_limit"
-                />
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_session_count"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:textColor="#fff"
-                android:textSize="15sp"
-                android:layout_toRightOf="@id/tablayout"
-                android:layout_toLeftOf="@id/ib_setting"
-                />
-
-        </RelativeLayout>
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_below="@id/rl_actionbar" />
-    </com.easemob.helpdesk.widget.relative.ViewPagerContainerLayout>
+    <com.easemob.helpdesk.widget.HViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/rl_actionbar"
+        />
+  </com.easemob.helpdesk.widget.relative.ViewPagerContainerLayout>
 </RelativeLayout>

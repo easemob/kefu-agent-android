@@ -1,0 +1,237 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/top_title_height"
+                android:background="@color/white"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="登录"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_register"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="10dp"
+                    android:text="注册新用户"
+                    android:textColor="#1565C0"
+                    android:textSize="15sp"
+                    android:visibility="gone"
+                    />
+
+            </RelativeLayout>
+
+            <com.easemob.helpdesk.widget.scrollview.ResizeScrollView
+                android:id="@+id/scrollview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    >
+
+                    <com.easemob.helpdesk.widget.CircleImageView
+                        android:id="@+id/logo_imageview"
+                        android:layout_width="80dip"
+                        android:layout_height="80dip"
+                        android:layout_marginTop="70dp"
+                        android:src="@drawable/easemob_logo"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tv_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:gravity="center_horizontal|bottom"
+                        android:textColor="#000"
+                        android:textSize="20sp"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="30dp"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="35dip"
+                                >
+
+                                <EditText
+                                    android:id="@+id/etAccount"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@null"
+                                    android:hint="账号"
+                                    android:nextFocusDown="@+id/etPwd"
+                                    android:singleLine="true"
+                                    android:textColor="#1a1a1a"
+                                    android:textColorHint="#999"
+                                    android:textAllCaps="false"
+                                    android:textSize="16sp"
+                                    />
+
+                                <ImageView
+                                    android:id="@+id/ivAccountClear"
+                                    android:layout_width="32dip"
+                                    android:layout_height="32dip"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/icon_delete_2"
+                                    android:visibility="gone"
+                                    tools:ignore="ContentDescription"
+                                    />
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#999999"
+                                />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="35dip"
+                                android:layout_marginTop="20dip"
+                                >
+
+                                <EditText
+                                    android:id="@+id/etPwd"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@null"
+                                    android:hint="密码"
+                                    android:inputType="textPassword"
+                                    android:nextFocusDown="@+id/btnLogin"
+                                    android:singleLine="true"
+                                    android:textColor="#1a1a1a"
+                                    android:textColorHint="#999"
+                                    android:textSize="16sp"
+                                    />
+
+
+                                <ImageView
+                                    android:id="@+id/ivPwdClear"
+                                    android:layout_width="32dip"
+                                    android:layout_height="32dip"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/icon_delete_2"
+                                    android:visibility="visible"
+                                    tools:ignore="ContentDescription"
+                                    />
+
+                                <CheckBox
+                                    android:id="@+id/cb_input_hide"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginRight="32dip"
+                                    android:background="@drawable/icon_input_hide_2"
+                                    android:button="@null"
+                                    />
+
+                            </RelativeLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#999999"
+                                />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                >
+
+                                <CheckBox
+                                    android:id="@+id/cb_hidden_login"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="隐身登录"
+                                    android:textColor="#1a1a1a"
+                                    android:textSize="15sp"
+                                    />
+
+                            </RelativeLayout>
+
+                            <Button
+                                android:id="@+id/btnLogin"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dip"
+                                android:layout_marginTop="20dip"
+                                android:background="@drawable/bg_login_button"
+                                android:text="登录"
+                                android:textColor="#fff"
+                                android:textSize="18sp"
+                                />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_forget_pwd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:padding="5dp"
+                        android:text="忘记密码?"
+                        android:textColor="#19a3ff"
+                        android:textSize="15sp"
+                        />
+                </LinearLayout>
+
+
+            </com.easemob.helpdesk.widget.scrollview.ResizeScrollView>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</layout>

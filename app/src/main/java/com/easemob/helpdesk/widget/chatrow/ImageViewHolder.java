@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.activity.ContextMenu;
 import com.easemob.helpdesk.activity.chat.ShowBigImage;
@@ -91,15 +92,17 @@ public class ImageViewHolder extends BaseViewHolder {
 		});
 		if (message.isServerMsg()) {
 			Glide.with(activity).load(imgBody.getThumbnailUrl())
-					.diskCacheStrategy(DiskCacheStrategy.SOURCE).error(R.drawable.default_image)
-					.override(CommonUtils.convertDip2Px(activity, 120), CommonUtils.convertDip2Px(activity, 120))
+					.apply(RequestOptions.errorOf(R.drawable.default_image)
+							.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+							.override(CommonUtils.convertDip2Px(activity, 120)))
 					.into(bImageView);
 		} else {
 			//发送方向
 			if (message.direct() == HDMessage.Direct.SEND) {
 				// 发送的消息
-				Glide.with(activity).load(imgBody.getLocalPath()).error(R.drawable.default_image)
-						.override(CommonUtils.convertDip2Px(activity, 120), CommonUtils.convertDip2Px(activity, 120))
+				Glide.with(activity).load(imgBody.getLocalPath())
+						.apply(RequestOptions.errorOf(R.drawable.default_image)
+								.override(CommonUtils.convertDip2Px(activity, 120)))
 						.into(bImageView);
 				setMessageSendCallback(message);
 			}

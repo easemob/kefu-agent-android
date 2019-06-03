@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.entity.SlidingMenuItemEntity;
-import com.flyco.roundview.RoundTextView;
 
 import java.util.List;
 
@@ -60,7 +59,6 @@ public class SlidingMenuListAdapter extends BaseAdapter {
             holder.itemView = (RelativeLayout) convertView.findViewById(R.id.item_view);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon_left);
             holder.txtName = (TextView) convertView.findViewById(R.id.title_name);
-//            holder.countTextView = (RoundTextView) convertView.findViewById(R.id.tv_count);
             holder.tvCount = (TextView) convertView.findViewById(R.id.tv_count);
             convertView.setTag(holder);
         } else {
@@ -97,6 +95,5 @@ public class SlidingMenuListAdapter extends BaseAdapter {
         ImageView imageView;
         TextView txtName;
         TextView tvCount;
-        RoundTextView countTextView;
     }
 }

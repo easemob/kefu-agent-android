@@ -19,10 +19,11 @@ import com.easemob.helpdesk.mvp.MainActivity;
 import com.easemob.helpdesk.utils.AvatarManager;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.flyco.tablayout.CommonTabLayout;
+import com.flyco.tablayout.SegmentTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
-import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.user.HDUser;
 import com.hyphenate.kefusdk.gsonmodel.main.UnReadCountBean;
 import com.hyphenate.kefusdk.manager.main.NoticeManager;
@@ -33,7 +34,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -43,24 +43,19 @@ public class NoticeFragment extends Fragment {
 
     private static final String TAG = NoticeFragment.class.getSimpleName();
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private String[] mTabTitles = {"全部通知", "管理员通知", "系统通知"};
-    private String[] mTitles = {"未读通知", "已读通知"};
+    private String[] mTabTitles = { "全部通知", "管理员通知", "系统通知" };
+    private String[] mTitles = { "未读通知", "已读通知" };
+    private Integer[] drawableIds = { R.drawable.notice_unread_icon, R.drawable.notice_read_icon };
 
-    @BindView(R.id.tv_title)
-    protected TextView tvTitle;
-    @BindView(R.id.framelayout)
-    protected FrameLayout mFrameLayout;
-    @BindView(R.id.tablayout)
-    protected CommonTabLayout mTabLayout;
+    @BindView(R.id.tv_title) protected TextView tvTitle;
+    @BindView(R.id.framelayout) protected FrameLayout mFrameLayout;
+    @BindView(R.id.tablayout) protected CommonTabLayout mTabLayout;
     private FragmentManager mFragmentManager;
 
-    @BindView(R.id.tv_readed_notice)
-    protected TextView tvReadedNotice;
+    @BindView(R.id.notice_tablayout) protected SegmentTabLayout noticeTableLayout;
 
-    @BindView(R.id.iv_avatar)
-    protected ImageView ivAvatar;
-    @BindView(R.id.iv_status)
-    protected ImageView ivStatus;
+    @BindView(R.id.iv_avatar) protected ImageView ivAvatar;
+    @BindView(R.id.iv_status) protected ImageView ivStatus;
     private int currentSelectedIndex = 0;
 
     private HDUser loginUser;
@@ -68,25 +63,23 @@ public class NoticeFragment extends Fragment {
 
     private NoticeListFragment noticeListFragment;
     private boolean isUnreadSettings = true;
-    private String  typeSettings = "all";
+    private String typeSettings = "all";
 
     private NoticeManager noticeManager;
 
     private volatile int totalUnread;
 
+    @BindView(R.id.iv_notification) public ImageView ivNotification;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notice, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             currentSelectedIndex = savedInstanceState.getInt("selectedIndex", 0);
         }
         loginUser = HDClient.getInstance().getCurrentUser();
@@ -96,22 +89,39 @@ public class NoticeFragment extends Fragment {
         }
         mFragmentManager = getChildFragmentManager();
         mTabLayout.setTabData(mTabEntities);
+        noticeTableLayout.setTabSpaceEqual(false);
+        noticeTableLayout.setTabData(drawableIds, R.drawable.baseline_icon);
+        noticeTableLayout.setCurrentTab(0);
         mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
-                if (position == 0){
+            @Override public void onTabSelect(int position) {
+                if (position == 0) {
                     typeSettings = NoticeManager.typeAll;
-                }else if (position == 1){
+                } else if (position == 1) {
                     typeSettings = NoticeManager.typeAgent;
-                }else if (position == 2){
+                } else if (position == 2) {
                     typeSettings = NoticeManager.typeSystem;
                 }
                 currentSelectedIndex = position;
                 setTabSelection(position);
             }
 
-            @Override
-            public void onTabReselect(int position) {
+            @Override public void onTabReselect(int position) {
+
+            }
+        });
+
+        noticeTableLayout.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override public void onTabSelect(int position) {
+                if (isUnreadSettings) {
+                    tvTitle.setText(mTitles[1]);
+                } else {
+                    tvTitle.setText(mTitles[0]);
+                }
+                isUnreadSettings = !isUnreadSettings;
+                setTabSelection(currentSelectedIndex);
+            }
+
+            @Override public void onTabReselect(int position) {
 
             }
         });
@@ -133,17 +143,24 @@ public class NoticeFragment extends Fragment {
         refreshTabUnreadCount();
     }
 
+    public void showNotification(boolean isShow) {
+        if (ivNotification != null) {
+            if (isShow) {
+                ivNotification.setImageResource(R.drawable.tip_audio_unread);
+            } else {
+                ivNotification.setImageResource(0);
+            }
+        }
+    }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+    @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("selectedIndex", currentSelectedIndex);
     }
 
-
     private void setTabSelection(int index) {
         //每次选中之前先清除掉上次的选中状态
-//        clearSelection();
+        //        clearSelection();
         // 开启一个Fragment事务
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         //先隐藏掉所有的Fragment,以防止有多个Fragment显示在界面上的情况
@@ -158,10 +175,8 @@ public class NoticeFragment extends Fragment {
         refreshTabUnreadCount();
     }
 
-
     public void refreshAgentAvatar() {
-        if(ivAvatar != null)
-            AvatarManager.getInstance(getContext()).refreshAgentAvatar(getActivity(), ivAvatar);
+        if (ivAvatar != null) AvatarManager.getInstance().refreshAgentAvatar(getActivity(), ivAvatar);
     }
 
     public void refreshOnline(String status) {
@@ -177,48 +192,30 @@ public class NoticeFragment extends Fragment {
         }
     }
 
-
-    @OnClick(R.id.tv_readed_notice)
-    public void clickByReadedNotice(View view){
-        if (isUnreadSettings){
-            tvReadedNotice.setText("查看未读");
-            tvTitle.setText(mTitles[1]);
-        }else{
-            tvReadedNotice.setText("查看已读");
-            tvTitle.setText(mTitles[0]);
-        }
-        isUnreadSettings = !isUnreadSettings;
-        setTabSelection(currentSelectedIndex);
-    }
-
-
-    @Override
-    public void onDestroyView() {
+    @Override public void onDestroyView() {
         super.onDestroyView();
-        if (unbinder != null){
+        if (unbinder != null) {
             unbinder.unbind();
         }
     }
 
-    public void refreshChildDatas(){
-        if (noticeListFragment != null){
+    public void refreshChildDatas() {
+        if (noticeListFragment != null) {
             noticeListFragment.loadTheFirstPageData();
         }
     }
 
-    public void refreshTabUnreadCount(){
-        if (isUnreadSettings){
+    public void refreshTabUnreadCount() {
+        if (isUnreadSettings) {
             noticeManager.getUnReadCount(new HDDataCallBack<List<UnReadCountBean>>() {
-                @Override
-                public void onSuccess(final List<UnReadCountBean> value) {
-                    if (getActivity() == null){
+                @Override public void onSuccess(final List<UnReadCountBean> value) {
+                    if (getActivity() == null) {
                         return;
                     }
                     getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try{
-                                for (UnReadCountBean bean : value){
+                        @Override public void run() {
+                            try {
+                                for (UnReadCountBean bean : value) {
                                     String type = bean.getType();
                                     int count = bean.getCount_unread();
                                     int pos = 0;
@@ -234,49 +231,47 @@ public class NoticeFragment extends Fragment {
                                             pos = 2;
                                             break;
                                     }
-                                    if (count > 0){
+                                    if (mTabLayout == null)
+                                        return;
+                                    if (count > 0) {
                                         mTabLayout.showMsg(pos, count);
                                         mTabLayout.setMsgMargin(pos, -1, 2);
-                                    }else{
+                                        noticeTableLayout.showMsg(0, count);
+                                        noticeTableLayout.setMsgMargin(0, -15, 0);
+                                    } else {
                                         mTabLayout.hideMsg(pos);
+                                        noticeTableLayout.hideMsg(pos);
                                     }
                                 }
-                                ((MainActivity)getActivity()).refreshNoticeUnreadCount();
-                            }catch (Exception e){
+                                ((MainActivity) getActivity()).refreshNoticeUnreadCount();
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     });
                 }
 
-                @Override
-                public void onError(int error, String errorMsg) {
+                @Override public void onError(int error, String errorMsg) {
                     HDLog.e(TAG, "error:" + errorMsg);
-
                 }
 
-                @Override
-                public void onAuthenticationException() {
-                    if (getActivity() == null){
+                @Override public void onAuthenticationException() {
+                    if (getActivity() == null) {
                         return;
                     }
                     getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                        @Override public void run() {
                             HDApplication.getInstance().logout();
                         }
                     });
                 }
             });
-        }else{
+        } else {
             mTabLayout.hideMsg(0);
             mTabLayout.hideMsg(1);
             mTabLayout.hideMsg(2);
         }
     }
-
-
-
 
     public int getUnreadCount() {
         return totalUnread;
@@ -285,10 +280,9 @@ public class NoticeFragment extends Fragment {
     /**
      * 递减未读数
      */
-    public void  diminishingUnreadCount(){
-        if (totalUnread > 0){
+    public void diminishingUnreadCount() {
+        if (totalUnread > 0) {
             --totalUnread;
         }
     }
-
 }

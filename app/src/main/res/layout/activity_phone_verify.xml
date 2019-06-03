@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_title_height"
-        android:background="@color/top_bar_normal_bg">
+        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/rl_back"
@@ -21,9 +21,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_back_2"
+                android:src="@drawable/back_icon"
                 />
         </RelativeLayout>
 
@@ -34,7 +33,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="手机认证"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="18sp" />
     </RelativeLayout>
 

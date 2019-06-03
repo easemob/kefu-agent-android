@@ -1,1 +1,1 @@
-include ':app', ':xhsemotionskeyboard', ':kmpautotextview', ':filepicker','tagviewgroup', ':photopicker', ':flycotablayout_lib', ':pickview', ':slidingmenu', ':easyrecycleview', ':flowlayout', ':switchbutton', ':badgeutil', ':jsbridge', ':flowlayout', ':mpchartlib', ':hellocharts'
+include ':app',':xhsemotionskeyboard', ':reclib-easemobmoticons', ':hmspush'

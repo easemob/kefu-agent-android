@@ -9,7 +9,7 @@
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="@dimen/top_title_height"
-		android:background="@color/bg_top_bar_2">
+		android:background="@color/white">
 
 		<RelativeLayout
 			android:id="@+id/rl_back"
@@ -23,7 +23,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="10dp"
 				android:layout_centerVertical="true"
-				android:src="@drawable/icon_back_2"
+				android:src="@drawable/back_icon"
 				/>
 		</RelativeLayout>
 
@@ -33,7 +33,7 @@
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
 			android:text="留言筛选项"
-			android:textColor="#FFFFFF"
+			android:textColor="#000000"
 			android:textSize="17sp"
 			/>
 

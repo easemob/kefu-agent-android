@@ -1,186 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:onClick="popupclose" />
+  <RelativeLayout
+      android:layout_width="200dp"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="15dp"
+      >
 
-
-    <RelativeLayout
-        android:layout_width="130dip"
-        android:layout_height="wrap_content"
+    <View
+        android:id="@+id/triangle_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="-5dp">
+        android:background="@drawable/popup_triangle"
+        />
 
-        <View
-            android:id="@+id/triangle_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/popup_triangle" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/triangle_icon"
+        android:background="@drawable/popup_more_text_bg"
+        android:orientation="vertical"
+        >
+      <View style="@style/line_view"/>
+      <LinearLayout
+          android:id="@+id/ll_chat_transfer"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:onClick="chat_transfer"
+          >
 
-        <LinearLayout
-            android:layout_width="130dip"
+        <!--<ImageView-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:src="@drawable/expand_icon_transfer" />-->
+
+        <!--<com.zdxd.iconfont.IconFontView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:iconName="@string/if_icon_transfer"-->
+        <!--app:iconSize="15sp"-->
+        <!--app:iconColor="#4d4d4d"-->
+        <!--/>-->
+
+        <ImageView
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:src="@drawable/transfer_icon"
+            tools:ignore="ContentDescription"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/triangle_icon"
-            android:background="@drawable/popup_more_text_bg"
-            android:orientation="vertical">
+            android:layout_marginLeft="3dp"
+            android:text="会话转接"
+            android:textColor="#4d4d4d"
+            android:textSize="16sp"
+            />
+      </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_chat_transfer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:onClick="chat_transfer"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
+      <View style="@style/line_view"/>
 
-                <!--<ImageView-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:src="@drawable/expand_icon_transfer" />-->
+      <LinearLayout
+          android:id="@+id/ll_eval_send"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:onClick="eval_send"
+          android:paddingBottom="5dp"
+          android:paddingTop="5dp"
+          >
 
-                <!--<com.zdxd.iconfont.IconFontView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:iconName="@string/if_icon_transfer"-->
-                <!--app:iconSize="15sp"-->
-                <!--app:iconColor="#4d4d4d"-->
-                <!--/>-->
+        <!--<ImageView-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:src="@drawable/expand_icon_vote" />-->
+        <!--<com.zdxd.iconfont.IconFontView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:iconName="@string/if_icon_flower"-->
+        <!--app:iconSize="15sp"-->
+        <!--app:iconColor="#4d4d4d"-->
+        <!--/>-->
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/expand_icon_transfer"
-                    tools:ignore="ContentDescription" />
+        <ImageView
+            android:id="@+id/iv_eval"
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:src="@drawable/expand_icon_vote"
+            tools:ignore="ContentDescription"
+            />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="会话转接"
-                    android:textColor="#4d4d4d" />
-            </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="满意度评价"
+            android:textColor="#4d4d4d"
+            android:textSize="16sp"
+            />
+      </LinearLayout>
 
-            <View style="@style/line_view" />
+      <View style="@style/line_view"/>
 
-            <LinearLayout
-                android:id="@+id/ll_eval_send"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:onClick="eval_send"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
+      <LinearLayout
+          android:id="@+id/ll_label_setting"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:onClick="lable_setting"
+          >
 
-                <!--<ImageView-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:src="@drawable/expand_icon_vote" />-->
-                <!--<com.zdxd.iconfont.IconFontView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:iconName="@string/if_icon_flower"-->
-                <!--app:iconSize="15sp"-->
-                <!--app:iconColor="#4d4d4d"-->
-                <!--/>-->
-
-                <ImageView
-                    android:id="@+id/iv_eval"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/expand_icon_vote"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="满意度评价"
-                    android:textColor="#4d4d4d" />
-            </LinearLayout>
-
-            <View style="@style/line_view" />
-
-            <LinearLayout
-                android:id="@+id/ll_label_setting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:onClick="lable_setting"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
-
-                <!--<ImageView-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:src="@drawable/expand_icon_sessiontag" />-->
-                <!--<com.zdxd.iconfont.IconFontView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:iconName="@string/if_icon_sessiontag"-->
-                <!--app:iconSize="15sp"-->
-                <!--app:iconColor="#4d4d4d"-->
-                <!--/>-->
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/expand_icon_sessiontag"
-                    tools:ignore="ContentDescription" />
+        <!--<ImageView-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:src="@drawable/expand_icon_sessiontag" />-->
+        <!--<com.zdxd.iconfont.IconFontView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:iconName="@string/if_icon_sessiontag"-->
+        <!--app:iconSize="15sp"-->
+        <!--app:iconColor="#4d4d4d"-->
+        <!--/>-->
+        <ImageView
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:src="@drawable/sessiontag_icon"
+            tools:ignore="ContentDescription"
+            />
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="会话标签"
-                    android:textColor="#4d4d4d" />
-            </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="会话标签"
+            android:textColor="#4d4d4d"
+            android:textSize="16sp"
+            />
+      </LinearLayout>
 
-            <View style="@style/line_view" />
+      <View style="@style/line_view"/>
 
-            <LinearLayout
-                android:id="@+id/ll_chat_end"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:onClick="chat_end"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp">
+      <LinearLayout
+          android:id="@+id/ll_chat_end"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:onClick="chat_end"
+          >
 
-                <!--<com.zdxd.iconfont.IconFontView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--app:iconName="@string/if_icon_exit"-->
-                <!--app:iconSize="15sp"-->
-                <!--app:iconColor="#4d4d4d"-->
-                <!--/>-->
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/expand_icon_sessionend"
-                    tools:ignore="ContentDescription" />
+        <!--<com.zdxd.iconfont.IconFontView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:iconName="@string/if_icon_exit"-->
+        <!--app:iconSize="15sp"-->
+        <!--app:iconColor="#4d4d4d"-->
+        <!--/>-->
+        <ImageView
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
+            android:src="@drawable/session_end_icon"
+            tools:ignore="ContentDescription"
+            />
 
-                <!--<ImageView-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:src="@drawable/expand_icon_sessionend" />-->
+        <!--<ImageView-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:src="@drawable/expand_icon_sessionend" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:text="结束会话"
-                    android:textColor="#4d4d4d" />
-            </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:text="结束会话"
+            android:textColor="#4d4d4d"
+            android:textSize="16sp"
+            />
+      </LinearLayout>
 
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
+  </RelativeLayout>
 
 </RelativeLayout>

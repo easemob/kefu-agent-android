@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.easemob.helpdesk.AppConfig;
@@ -31,22 +32,25 @@ import com.easemob.helpdesk.recorder.MediaManager;
 import com.easemob.helpdesk.utils.CommonUtils;
 import com.easemob.helpdesk.utils.DialogUtils;
 import com.easemob.helpdesk.utils.FaceConversionUtil;
-import com.github.angads25.filepicker.controller.DialogSelectionListener;
-import com.github.angads25.filepicker.model.DialogConfigs;
-import com.github.angads25.filepicker.model.DialogProperties;
-import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.entity.CustomEmojIconEntity;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.entity.user.HDMessageUser;
 import com.hyphenate.kefusdk.messagebody.HDTextMessageBody;
 import com.hyphenate.kefusdk.manager.session.SessionManager;
+import com.hyphenate.kefusdk.utils.HDLog;
 import com.hyphenate.kefusdk.utils.PathUtil;
+import com.leon.lfilepickerlibrary.LFilePicker;
+import com.leon.lfilepickerlibrary.utils.CloseUtils;
+import com.leon.lfilepickerlibrary.utils.Constant;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -234,6 +238,30 @@ public abstract class BaseChatActivity extends BaseActivity {
 		setResult(RESULT_OK);
 	}
 
+	protected void sendCustomEmojMessage(CustomEmojIconEntity emojicon) {
+		if (!TextUtils.isEmpty(emojicon.getBigIconRemotePath())) {
+			sendCustomEmojMessage(emojicon.getBigIconRemotePath());
+		} else if (!TextUtils.isEmpty(emojicon.getIconRemotePath())) {
+			sendCustomEmojMessage(emojicon.getIconRemotePath());
+		} else if (!TextUtils.isEmpty(emojicon.getBigIconPath())) {
+			sendPicture(emojicon.getBigIconPath());
+		} else if (!TextUtils.isEmpty(emojicon.getIconPath())) {
+			sendPicture(emojicon.getIconPath());
+		}
+	}
+
+	protected void sendCustomEmojMessage(String remoteUrl) {
+		JSONObject jsonEmoji = new JSONObject();
+		try {
+			jsonEmoji.put("msgtype",
+					new JSONObject().put("customMagicEmoji",
+							new JSONObject().put("url", remoteUrl)));
+			sendText("", jsonEmoji);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 发送图片消息
 	 */
@@ -337,7 +365,8 @@ public abstract class BaseChatActivity extends BaseActivity {
 	@PermissionSuccess(requestCode = REQUEST_CODE_PERMISSIONS_CAMERA)
 	public void selectPicAuthSuccess(){
 		//打开相册新方法
-		Intent intent = ImageHandleUtils.pickSingleImage(this, true);
+		//Intent intent = ImageHandleUtils.pickSingleImage(this, true);
+		Intent intent = ImageHandleUtils.pickMultiImage(this,9, true);
 		this.startActivityForResult(intent, REQUEST_CODE_CHOOSE_PICTURE);
 	}
 
@@ -372,29 +401,38 @@ public abstract class BaseChatActivity extends BaseActivity {
 		selectFileFromLocalNew();
 	}
 
-	public void selectFileFromLocalNew(){
-		DialogProperties properties = new DialogProperties();
-		properties.selection_mode = DialogConfigs.SINGLE_MODE;
-		properties.selection_type = DialogConfigs.FILE_SELECT;
-		properties.root = Environment.getExternalStorageDirectory();
-		properties.error_dir = Environment.getExternalStorageDirectory();
-		properties.offset = new File(DialogConfigs.DEFAULT_DIR);
-		properties.extensions = null;
+	private int REQUEST_CODE_SELECT_LOCAL_FILE = 1000;
 
-		FilePickerDialog dialog = new FilePickerDialog(this, properties);
-		dialog.setTitle("选择要发送的文件");
-		dialog.setDialogSelectionListener(new DialogSelectionListener() {
-			@Override
-			public void onSelectedFilePaths(String[] files) {
-				// files is the array of the paths of files selected by the Application User.
-				if (files != null && files.length > 0){
-					for (String filePath : files){
-						sendFileMessage(filePath);
-					}
-				}
-			}
-		});
-		dialog.show();
+	public void selectFileFromLocalNew(){
+		new LFilePicker().withActivity(this)
+				.withRequestCode(REQUEST_CODE_SELECT_LOCAL_FILE)
+				.withStartPath(Environment.getExternalStorageDirectory().getPath())
+				.withTitle("选择要发送的文件")
+				.withIsGreater(false)
+				.withFileSize(500 * 1024)
+				.start();
+//		DialogProperties properties = new DialogProperties();
+//		properties.selection_mode = DialogConfigs.SINGLE_MODE;
+//		properties.selection_type = DialogConfigs.FILE_SELECT;
+//		properties.root = Environment.getExternalStorageDirectory();
+//		properties.error_dir = Environment.getExternalStorageDirectory();
+//		properties.offset = new File(DialogConfigs.DEFAULT_DIR);
+//		properties.extensions = null;
+//
+//		FilePickerDialog dialog = new FilePickerDialog(this, properties);
+//		dialog.setTitle("选择要发送的文件");
+//		dialog.setDialogSelectionListener(new DialogSelectionListener() {
+//			@Override
+//			public void onSelectedFilePaths(String[] files) {
+//				// files is the array of the paths of files selected by the Application User.
+//				if (files != null && files.length > 0){
+//					for (String filePath : files){
+//						sendFileMessage(filePath);
+//					}
+//				}
+//			}
+//		});
+//		dialog.show();
 	}
 
 
@@ -486,8 +524,10 @@ public abstract class BaseChatActivity extends BaseActivity {
 					if (picPathList == null || picPathList.size() == 0) {
 						return;
 					}
-					String picPath = picPathList.get(0);
-					sendPicture(picPath);
+					//String picPath = picPathList.get(0);
+					for (String picPath:picPathList){
+						sendPicture(picPath);
+					}
 				}
 			} else if (requestCode == REQUEST_CODE_RESEND) {
 				resendMessage();
@@ -495,15 +535,34 @@ public abstract class BaseChatActivity extends BaseActivity {
 				if (data != null) {
 					int duration = data.getIntExtra("dur", 0);
 					String videoPath = data.getStringExtra("path");
-					File file = new File(PathUtil.getInstance().getImagePath(), "thvideo" + System.currentTimeMillis());
+					if (videoPath == null) {
+						HDLog.e(TAG, "video Path is null");
+						return;
+					}
+					File file = new File(PathUtil.getInstance().getImagePath(), "thvideo" + System.currentTimeMillis() + ".png");
+					String thumbPath = file.getPath();
+					FileOutputStream fos = null;
 					try {
-						FileOutputStream fos = new FileOutputStream(file);
+						fos = new FileOutputStream(thumbPath);
 						Bitmap ThumbBitmap = ThumbnailUtils.createVideoThumbnail(videoPath, 3);
-						ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-						fos.close();
-						sendVideoMessage(videoPath, file.getAbsolutePath(), duration);
+						if (ThumbBitmap != null) {
+							ThumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+						} else {
+							thumbPath = "";
+						}
+						sendVideoMessage(videoPath, thumbPath, duration);
 					} catch (Exception e) {
 						e.printStackTrace();
+					}finally {
+						CloseUtils.closeIOQuietly(fos);
+					}
+				}
+			} else if (requestCode == REQUEST_CODE_SELECT_LOCAL_FILE) {
+				List<String> files = data.getStringArrayListExtra(Constant.RESULT_INFO);
+				// files is the array of the paths of files selected by the Application User.
+				if (files != null && files.size() > 0){
+					for (String filePath : files){
+						sendFileMessage(filePath);
 					}
 				}
 			}

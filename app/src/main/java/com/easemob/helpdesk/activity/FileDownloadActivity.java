@@ -11,6 +11,7 @@ import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.easemob.helpdesk.AppConfig;
 import com.easemob.helpdesk.R;
 import com.easemob.helpdesk.utils.CommonUtils;
+import com.easemob.helpdesk.utils.FileUtils;
 import com.hyphenate.kefusdk.HDDataCallBack;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.utils.HDLog;
@@ -79,6 +80,7 @@ public class FileDownloadActivity extends BaseActivity {
                                 finish();
                             }else{
                                 openFile(file);
+                                finish();
                             }
                         }
                     }
@@ -142,21 +144,22 @@ public class FileDownloadActivity extends BaseActivity {
     }
 
     private void openFile(File file) {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //设置intent的Action属性
-        intent.setAction(Intent.ACTION_VIEW);
-        //获取文件file的MIME类型
-        String type = CommonUtils.getMIMEType(file);
-        //设置intent的data和Type属性。
-        intent.setDataAndType(/*uri*/Uri.fromFile(file), type);
-        //跳转
-        try {
-            startActivity(intent); //这里最好try一下，有可能会报错。 //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
-            finish();
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "文件无法打开", Toast.LENGTH_SHORT).show();
-        }
+        FileUtils.openFile(file, FileDownloadActivity.this);
+//        Intent intent = new Intent();
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        //设置intent的Action属性
+//        intent.setAction(Intent.ACTION_VIEW);
+//        //获取文件file的MIME类型
+//        String type = CommonUtils.getMIMEType(file);
+//        //设置intent的data和Type属性。
+//        intent.setDataAndType(/*uri*/Uri.fromFile(file), type);
+//        //跳转
+//        try {
+//            startActivity(intent); //这里最好try一下，有可能会报错。 //比如说你的MIME类型是打开邮箱，但是你手机里面没装邮箱客户端，就会报错。
+//            finish();
+//        } catch (Exception e) {
+//            Toast.makeText(getApplicationContext(), "文件无法打开", Toast.LENGTH_SHORT).show();
+//        }
     }
 
 }

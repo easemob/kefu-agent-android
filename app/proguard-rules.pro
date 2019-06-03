@@ -15,27 +15,46 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--optimizationpasses 5                                                           # 指定代码的压缩级别
--dontusemixedcaseclassnames                                                     # 是否使用大小写混合
--dontskipnonpubliclibraryclasses                                                # 是否混淆第三方jar
--dontpreverify                                                                  # 混淆时是否做预校验
--verbose                                                                        # 混淆时是否记录日志
--optimizations !code/simplification/arithmetic,!field/*,!class/merging/*        # 混淆时所采用的算法
-
--keep public class * extends android.app.Activity                               # 保持哪些类不被混淆
--keep public class * extends android.app.Application                            # 保持哪些类不被混淆
--keep public class * extends android.app.Service                                # 保持哪些类不被混淆
--keep public class * extends android.content.BroadcastReceiver                  # 保持哪些类不被混淆
--keep public class * extends android.content.ContentProvider                    # 保持哪些类不被混淆
--keep public class * extends android.app.backup.BackupAgentHelper               # 保持哪些类不被混淆
--keep public class * extends android.preference.Preference                      # 保持哪些类不被混淆
--keep public class com.android.vending.licensing.ILicensingService              # 保持哪些类不被混淆
--keep public class * extends android.webkit.WebView
-
--dontskipnonpubliclibraryclassmembers
-
--keepclasseswithmembernames class * {                                           # 保持 native 方法不被混淆
-    native <methods>;
+# 混淆时不适用大小写混淆类名
+-dontusemixedcaseclassnames
+# 不跳过library中的非public类
+-dontskipnonpubliclibraryclasses
+# 打印混淆的详情信息
+-verbose
+# Optimization is turned off by default, Dex does not like code run
+# through the ProGuard optimize and preverify steps (and performs some
+# of these optimizations on its own).
+# 关闭优化
+-dontoptimize
+# 不进行预校验，可加快混淆速度
+-dontpreverify
+# 保留注解中的参数
+-keepattributes *Annotation*
+# 保留反射中的不混淆
+-keepattributes Signature
+# 不混淆Parcelable实现类中的CREATOR字段，以保证Parcelable机制正常工作
+-keepclassmembers class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator CREATOR;
+}
+# 不混淆R文件中的所有静态字段，以保证正确找到每个资源的id
+-keepclassmembers class **.R$* {
+    public static <fields>;
+}
+# 不混淆Keep类
+-keep class android.support.annotation.Keep
+# 不混淆使用了注解的类及类成员
+-keep @android.support.annotation.Keep class *{*;}
+# 如果类中有使用了注解的方法，则不混淆类和类成员
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep <methods>;
+}
+# 如果类中使用了注解的字段，则不混淆类和类成员
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep <fields>;
+}
+# 如果类中有使用了注解的构造函数，则不混淆类和类成员
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep <init>(...);
 }
 
 -keepclasseswithmembers class * {                                               # 保持自定义控件类不被混淆
@@ -46,115 +65,58 @@
     public <init>(android.content.Context, android.util.AttributeSet, int);     # 保持自定义控件类不被混淆
 }
 
--keepclassmembers class * extends android.app.Activity {                        # 保持自定义控件类不被混淆
-   public void *(android.view.View);
+#tinker multidex keep patterns:
+-keep public class * implements com.tencent.tinker.loader.app.ApplicationLifeCycle {
+    <init>(...);
+    void onBaseContextAttached(android.content.Context);
 }
 
--keepclassmembers enum * {                                                      # 保持枚举 enum 类不被混淆
-    public static **[] values();
-    public static ** valueOf(java.lang.String);
+-keep public class * extends com.tencent.tinker.loader.TinkerLoader {
+    <init>(...);
 }
 
--keep class * implements android.os.Parcelable {                                # 保持 Parcelable 不被混淆
-  public static final android.os.Parcelable$Creator *;
+-keep public class * extends android.app.Application {
+     <init>();
+     void attachBaseContext(android.content.Context);
 }
 
-# AppCompat
--dontwarn android.support.v7.**
--keep class android.support.v7.** { *; }
--keep interface android.support.v7.** { *; }
--keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,*Annotation*,EnclosingMethod,RuntimeVisibleAnnotations,AnnotationDefault
-#-dontobfuscate
--dontoptimize
--keep class !android.support.v7.internal.view.menu.**, ** { *; }
-
-# Keep line numbers to alleviate debugging stack traces
--renamesourcefileattribute SourceFile
-
-### for api client
--keepclassmembers class * {
-  @com.google.api.client.util.Key <fields>;
+-keep class com.tencent.tinker.loader.TinkerTestAndroidNClassLoader {
+    <init>(...);
 }
 
-# Fix bug on Samsung, Wiko (and other) devices running Android 4.2
-# See also: https://code.google.com/p/android/issues/detail?id=78377
--keepattributes **
--keep class !android.support.v7.view.menu.**,!android.support.design.internal.NavigationMenu,!android.support.design.internal.NavigationMenuPresenter,!android.support.design.internal.NavigationSubMenu,** {*;}
-
-# See: https://stackoverflow.com/questions/30562330/using-appcompat-layout-behavior-with-string-appbar-scrolling-view-behavior
--keep class android.support.design.widget.** { *; }
--keep interface android.support.design.widget.** { *; }
--dontwarn android.support.design.**
-
-# 保持自己定义的类不被混淆
--keep class com.easemob.** {*;}
--keep class org.jivesoftware.** {*;}
--keep class org.apache.** {*;}
--dontwarn  com.easemob.**
-
--dontwarn ch.imvs.**
--dontwarn org.slf4j.**
--keep class org.ice4j.** {*;}
--keep class net.java.sip.** {*;}
--keep class org.webrtc.voiceengine.** {*;}
--keep class org.bitlet.** {*;}
--keep class org.slf4j.** {*;}
--keep class ch.imvs.** {*;}
-
-
--keepclassmembers class * {
-   public <init>(org.json.JSONObject);
-}
--keep public class com.easemob.helpdesk.R$*{
-public static final int *;
+#your dex.loader patterns here
+-keep class tinker.sample.android.app.SampleApplication {
+    <init>(...);
 }
 
--keepclasseswithmembernames class * {    native <methods>;}
+-keep class com.tencent.tinker.loader.** {
+    <init>(...);
+}
 
 
-#okhttp
--dontwarn com.squareup.okhttp.**
--keep class com.squareup.okhttp.** { *;}
+-keep class com.hyphenate.** {*;}
+-dontwarn com.hyphenate.**
+
+
+# okio
 -dontwarn okio.**
--keep interface com.squareup.okhttp.** { *; }
--dontwarn com.squareup.okhttp.**
-
-
-
--keepnames class * extends android.view.View
-
--keep class * extends android.app.Fragment {
- public void setUserVisibleHint(boolean);
- public void onHiddenChanged(boolean);
- public void onResume();
- public void onPause();
-}
--keep class android.support.v4.app.Fragment {
- public void setUserVisibleHint(boolean);
- public void onHiddenChanged(boolean);
- public void onResume();
- public void onPause();
-}
--keep class * extends android.support.v4.app.Fragment {
- public void setUserVisibleHint(boolean);
- public void onHiddenChanged(boolean);
- public void onResume();
- public void onPause();
-}
-
-
-#mipush
--keep class com.xiaomi.push.** {*;}
--dontwarn com.xiaomi.push.**
-#-dontwarn com.xiaomi.push.service.a.a
--keepclasseswithmembernames class com.xiaomi.**{*;}
--keep public class * extends com.xiaomi.mipush.sdk.PushMessageReceiver
-
+-keep class okio.** { *; }
 
 #okhttp3
+-dontwarn okhttp3.**
 -dontwarn com.squareup.okhttp3.**
+-dontwarn javax.annotation.**
 -keep class com.squareup.okhttp3.** { *;}
--dontwarn okio.**
+-dontwarn com.squareup.okhttp.internal.huc.**
+-dontwarn com.squareup.okhttp.**
+-dontwarn com.squareup.okhttp3.**
+-dontwarn retrofit2.**
+-dontwarn org.codehaus.mojo.**
+-keep class retrofit2.** { *; }
+-keep interface com.squareup.okhttp3.** { *; }
+-keepattributes Exceptions
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
 
 #glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
@@ -176,89 +138,35 @@ public static final int *;
     @butterknife.* <methods>;
 }
 
-#### for support 22
--dontwarn android.support.**
+# Huawei push
+-ignorewarning
+-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+-keep class com.hianalytics.android.**{*;}
+-keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.hms.**{*;}
 
--keep class * implements android.os.Parcelable {
-   public static final android.os.Parcelable$Creator *;
-}
+-keep class com.huawei.gamebox.plugin.gameservice.**{*;}
 
-
-#iconfont
--keep class .R
--keep class **.R$* {
-    <fields>;
-}
-
-
--keepclassmembers class ** {
-    public void onEvent*(**);
-}
-# Keep GSON stuff
--keep class com.google.gson.** { *; }
-
-
-#不混淆org.apache.http.legacy.jar
--dontwarn android.net.compatibility.**
--dontwarn android.net.http.**
--dontwarn com.android.internal.http.multipart.**
--dontwarn org.apache.commons.**
--dontwarn org.apache.http.**
--keep class org.apache.http.**{*;}
--keep class android.net.compatibility.**{*;}
--keep class android.net.http.**{*;}
--keep class com.android.internal.http.multipart.**{*;}
--keep class org.apache.commons.**{*;}
+-keep public class com.huawei.android.hms.agent.** extends android.app.Activity { public *; protected *; }
+-keep interface com.huawei.android.hms.agent.common.INoProguard {*;}
+-keep class * extends com.huawei.android.hms.agent.common.INoProguard {*;}
 
 
 
-#volley
--keep class * extends java.lang.annotation.Annotation { *; }
+#mipush
+-keep class com.xiaomi.push.** {*;}
+-dontwarn com.xiaomi.push.**
+#-dontwarn com.xiaomi.push.service.a.a
+-keepclasseswithmembernames class com.xiaomi.**{*;}
+-keep public class * extends com.xiaomi.mipush.sdk.PushMessageReceiver
 
-################### region for xUtils
--keepattributes Signature,*Annotation*
--keep public class org.xutils.** {
-    public protected *;
-}
--keep public interface org.xutils.** {
-    public protected *;
-}
--keepclassmembers class * extends org.xutils.** {
-    public protected *;
-}
--keepclassmembers @org.xutils.db.annotation.* class * {*;}
--keepclassmembers @org.xutils.http.annotation.* class * {*;}
--keepclassmembers class * {
-    @org.xutils.view.annotation.Event <methods>;
-}
-#################### end region
-
-# Keep the pojos used by GSON or Jackson
--keep class com.twnel.android.models.retrofit.** { *; }
-
-# Keep Retrofit
--keep class retrofit.** { *; }
--keepclasseswithmembers class * {
-    @retrofit.** *;
-}
--keepclassmembers class * {
-    @retrofit.** *;
-}
-
--keepclassmembers class **.R$* {
-  public static <fields>;
-}
-
-
-#jsbridge
--keep interface com.easemob.jsbridge.** { *; }
--keepclasseswithmembernames class com.easemob.jsbridge.** {                                           # 保持 native 方法不被混淆
-    *;
-}
-
-#nineoldandroids
--dontwarn com.nineoldandroids.*
--keep class com.nineoldandroids.** { *;}
+#tencent bugly
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
 
 #gson
 -keep class sun.misc.Unsafe { *; }
@@ -266,32 +174,12 @@ public static final int *;
 -keep class com.google.gson.examples.android.model.* { *; }
 -keep class com.google.gson.* { *;}
 
-#support-v4
--dontwarn android.support.v4.**
--keep class android.support.v4.** { *; }
-
-
--keepclassmembers class com.easemob.helpdesk.** {
-        private <fields>;
-}
-
--keepclassmembers class * implements java.io.Serializable {
+-keep interface com.easemob.jsbridge.** { *; }
+-keepclasseswithmembernames class com.easemob.jsbridge.** {                                           # 保持 native 方法不被混淆
     *;
 }
--keep public class * implements java.io.Serializable {
-    public *;
-}
--keep class com.easemob.helpdesk.entity.**{*;}
--keep class com.hyphenate.kefusdk.gsonmodel.**{*;}
 
-# keep setters in Views so that animations can still work.
-# see http://proguard.sourceforge.net/manual/examples.html#beans
--keepclassmembers public class * extends android.view.View {
-   void set*(***);
-   *** get*();
-}
-
-
+# bugly
 -dontwarn u.aly.**
 -keep class u.aly.** {*;}
 -dontwarn u.upd.**
@@ -300,38 +188,11 @@ public static final int *;
 #permissiongen
 -keep class kr.co.namee.permissiongen.** {*;}
 
-# easemob 3.x
--keep class com.hyphenate.** {*;}
--dontwarn  com.hyphenate.**
-
-# Huawei push
--keep class com.huawei.android.pushagent.** {*;}
--keep class com.huawei.android.pushselfshow.** {*;}
--keep class com.huawei.android.microkernel.** {*;}
--keep class com.baidu.mapapi.** {*;}
--keep class com.hianalytics.android.** {*;}
--dontwarn com.huawei.android.pushagent.**
--dontwarn com.huawei.android.pushselfshow.**
--dontwarn com.huawei.android.microkernel.**
--dontwarn com.github.mikephil.charting.data.**
 
 # io.realm
--keep class io.realm.** {*;}
--dontwarn io.realm.**
+#-keep class io.realm.** {*;}
+#-dontwarn io.realm.**
 
-#adapter也不能混淆
--keep public class * extends android.widget.BaseAdapter {*;}
-
-#https://github.com/leolin310148/ShortcutBadger/issues/46
--keep class me.leolin.shortcutbadger.impl.AdwHomeBadger { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.ApexHomeBadger { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.AsusHomeLauncher { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.DefaultBadger { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.NewHtcHomeBadger { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.NovaHomeBadger { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.SolidHomeBadger { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.SonyHomeBadger { <init>(...); }
--keep class me.leolin.shortcutbadger.impl.XiaomiHomeBadger { <init>(...); }
 
 #rxjava start
 -dontwarn sun.misc.**
@@ -346,3 +207,10 @@ public static final int *;
  rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 #rxjava end
+
+-keep class sj.keyboard.** {*;}
+-keep class com.hyphenate.kefusdk.gsonmodel.**{*;}
+-keep class com.easemob.helpdesk.activity.manager.model.** {*;}
+-keep class com.easemob.bsdiff.* {*;}
+
+-keep class com.squareup.leakcanary.** {*;}

@@ -37,6 +37,7 @@
                 android:layout_alignParentRight="true"
                 android:text="2016-01-29 17:20:00"
                 android:textColor="#999999"
+                android:layout_centerVertical="true"
                 android:textSize="12sp" />
 
 
@@ -88,7 +89,7 @@
             <TextView
                 android:id="@+id/nickname"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:textSize="14dp"
                 android:textColor="#1a1a1a"

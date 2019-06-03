@@ -1,55 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/item_view"
     android:layout_width="match_parent"
-    android:layout_height="60dip"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
+    android:layout_height="match_parent"
     >
+  <RelativeLayout
+      android:id="@+id/item_view"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/item_height"
+      android:paddingLeft="12dp"
+      android:paddingRight="4dp"
+      >
+
     <ImageView
         android:id="@+id/icon_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/item_icon_size"
+        android:layout_height="@dimen/item_icon_size"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:padding="5dp"
         />
 
     <TextView
         android:id="@+id/title_name"
-        android:layout_toRightOf="@id/icon_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="#fff"
-        android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
-        android:text="Setting"/>
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@id/icon_left"
+        android:text="Setting"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        />
+    <ImageView
+        android:id="@+id/iv_arrow"
+        android:layout_width="@dimen/item_icon_size"
+        android:layout_height="@dimen/item_icon_size"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/arrow_status_black_right"
+        />
 
     <TextView
         android:id="@+id/tv_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/tip_red"
-        android:layout_alignParentRight="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dip"
-        android:textSize="12sp"
-        android:textColor="#fff"
+        android:layout_toLeftOf="@id/iv_arrow"
+        android:background="@drawable/tip_red"
         android:text="2"
+        android:textColor="#fff"
+        android:textSize="12sp"
         android:visibility="gone"
         />
+
     <!--<com.flyco.roundview.RoundTextView-->
-        <!--android:id="@+id/tv_count"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--/>-->
+    <!--android:id="@+id/tv_count"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--/>-->
 
-
-</RelativeLayout>
+  </RelativeLayout>
+</LinearLayout>

@@ -34,28 +34,22 @@ import butterknife.Unbinder;
 /**
  * Created by liyuzhao on 16/6/24.
  */
-public class ManagerVisitorsFragment extends Fragment{
+public class ManagerVisitorsFragment extends Fragment {
 
     private static final String TAG = ManagerVisitorsFragment.class.getSimpleName();
     private static final int REQUEST_CODE_FILTER = 0x01;
-    private String[] mTitle = {"图表", "访客"};
+    private String[] mTitle = { "图表", "访客" };
+    private Integer[] drawableId = { R.drawable.chart_icon, R.drawable.agents_icon };
 
-    @BindView(R.id.iv_avatar)
-    protected ImageView ivAvatar;
-
-    @BindView(R.id.iv_status)
-    protected ImageView ivStatus;
+    @BindView(R.id.iv_back) protected ImageView back;
 
     protected HDUser currentLoginUser;
 
-    @BindView(R.id.content_layout)
-    protected FrameLayout contentLayout;
+    @BindView(R.id.content_layout) protected FrameLayout contentLayout;
 
-    @BindView(R.id.tablayout)
-    protected SegmentTabLayout segmentTabLayout;
+    @BindView(R.id.tablayout) protected SegmentTabLayout segmentTabLayout;
 
-    @BindView(R.id.tv_title)
-    protected TextView tvTitle;
+    @BindView(R.id.tv_title) protected TextView tvTitle;
 
     private VisitorChartFragment visitorChartFragment;
     private VisitorLoadFragment visitorLoadFragment;
@@ -68,45 +62,44 @@ public class ManagerVisitorsFragment extends Fragment{
 
     private Unbinder unbinder;
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Nullable @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.manage_fragment_workload, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             currentSelectedIndex = savedInstanceState.getInt("selectedIndex", 0);
         }
         currentLoginUser = HDClient.getInstance().getCurrentUser();
         screenEntity.setCurrentTimeInfo(DateUtils.getTimeInfoByCurrentWeek().getStartTime(), DateUtils.getTimeInfoByCurrentWeek().getEndTime());
         fragmentManager = getFragmentManager();
-        if (currentSelectedIndex == 0){
+        if (currentSelectedIndex == 0) {
             visitorChartFragment = new VisitorChartFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.content_layout, visitorChartFragment).commit();
-        }else{
+        } else {
             visitorLoadFragment = new VisitorLoadFragment();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.add(R.id.content_layout, visitorLoadFragment).commit();
         }
 
         initView();
-        loadFirstStatus();
-        refreshAgentAvatar();
         settingTabLayout();
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                ((ManagerHomeActivity) getActivity()).back();
+            }
+        });
     }
 
     private void settingTabLayout() {
         //将Fragment添加入集合
-        segmentTabLayout.setTabData(mTitle);
+        segmentTabLayout.setTabData(drawableId, R.drawable.baseline_icon);
         segmentTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
+            @Override public void onTabSelect(int position) {
                 if (position == currentSelectedIndex) {
                     return;
                 }
@@ -117,17 +110,19 @@ public class ManagerVisitorsFragment extends Fragment{
                             visitorChartFragment = new VisitorChartFragment();
                         }
                         fragmentManager.beginTransaction().replace(R.id.content_layout, visitorChartFragment).commit();
+                        tvTitle.setText("来访客户统计");
                         break;
                     case 1:
                         if (visitorLoadFragment == null) {
                             visitorLoadFragment = new VisitorLoadFragment();
                         }
                         fragmentManager.beginTransaction().replace(R.id.content_layout, visitorLoadFragment).commit();
+                        tvTitle.setText("访客");
                         break;
                 }
             }
-            @Override
-            public void onTabReselect(int position) {
+
+            @Override public void onTabReselect(int position) {
 
             }
         });
@@ -136,34 +131,15 @@ public class ManagerVisitorsFragment extends Fragment{
 
     private void initView() {
         segmentTabLayout.setVisibility(View.VISIBLE);
-        tvTitle.setVisibility(View.GONE);
+        tvTitle.setText("来访客户统计");
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
+    @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("selectedIndex", currentSelectedIndex);
     }
 
-
-    private void loadFirstStatus() {
-        if (currentLoginUser != null) {
-            refreshOnline(currentLoginUser.getOnLineState());
-        }
-    }
-
-    public void refreshOnline(String status) {
-        CommonUtils.setAgentStatusView(ivStatus, status);
-    }
-
-    public void refreshAgentAvatar() {
-        if (ivAvatar != null) {
-            AvatarManager.getInstance(getContext()).refreshAgentAvatar(getActivity(), ivAvatar);
-        }
-    }
-
-    @OnClick(R.id.iv_filter)
-    public void onClickByFilter(View view){
+    @OnClick(R.id.iv_filter) public void onClickByFilter(View view) {
         Intent intent = new Intent();
         intent.setClass(getContext(), VisitorsFilterActivity.class);
         intent.putExtra("channel", screenEntity.getCurrentChannelString());
@@ -171,41 +147,38 @@ public class ManagerVisitorsFragment extends Fragment{
         startActivityForResult(intent, REQUEST_CODE_FILTER);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK){
-            if (requestCode == REQUEST_CODE_FILTER){
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_FILTER) {
                 TimeInfo timeInfo = (TimeInfo) data.getSerializableExtra("timeinfo");
                 screenEntity.setCurrentTimeInfo(timeInfo.getStartTime(), timeInfo.getEndTime());
                 String channelString = data.getStringExtra("channel");
-                if (!TextUtils.isEmpty(channelString)){
+                if (!TextUtils.isEmpty(channelString)) {
                     screenEntity.setCurrentChannelString(channelString);
-                }else{
+                } else {
                     screenEntity.setCurrentChannelString("V_ORIGINTYPE");
                 }
 
-                if (visitorLoadFragment != null){
+                if (visitorLoadFragment != null) {
                     visitorLoadFragment.setScreenEntity(screenEntity);
                     visitorLoadFragment.onRefresh();
                 }
-                if (visitorChartFragment != null){
+                if (visitorChartFragment != null) {
                     visitorChartFragment.setScreenEntity(screenEntity);
                     visitorChartFragment.refreshCurrentView();
                 }
             }
         }
-
     }
 
     public VisitorsScreenEntity getScreenEntity() {
         return screenEntity;
     }
 
-    @Override
-    public void onDestroyView() {
+    @Override public void onDestroyView() {
         super.onDestroyView();
-        if (unbinder != null){
+        if (unbinder != null) {
             unbinder.unbind();
         }
     }

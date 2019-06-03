@@ -8,7 +8,6 @@ import android.os.StrictMode;
 import com.easemob.helpdesk.widget.SystemBarTintManager;
 
 public class AppConfig {
-
     //开启严苛模式
     public static final boolean DEVELOPER_MODE = true;
 

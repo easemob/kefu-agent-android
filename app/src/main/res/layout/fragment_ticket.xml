@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_title_height"
-        android:background="@color/bg_top_bar_2">
+        android:background="@color/white">
 
         <RelativeLayout
             android:id="@+id/rl_back"
@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_centerVertical="true"
-                android:src="@drawable/icon_back_2"
+                android:src="@drawable/back_icon"
                 />
         </RelativeLayout>
 
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:text="全选"
-            android:textColor="#FFFFFF"
+            android:textColor="#000"
             android:textSize="17sp"
             android:visibility="gone"
             />
@@ -43,19 +43,19 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="留言"
-            android:textColor="#FFFFFF"
+            android:textColor="#000"
             android:textSize="17sp"
             />
 
 
         <ImageView
             android:id="@+id/iv_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/item_icon_size"
+            android:layout_height="@dimen/item_icon_size"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:background="@drawable/icon_screening"
+            android:background="@drawable/screening_icon"
             />
 
     </RelativeLayout>

@@ -2,7 +2,6 @@ package com.easemob.helpdesk.widget.popupwindow;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +23,12 @@ public class SessionCloseWindow extends BasePopupWindow {
         this.mContext = context;
         @SuppressLint("InflateParams") View contentView = LayoutInflater.from(context).inflate(R.layout.popup_session_more, null);
         this.setContentView(contentView);
-        this.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        this.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        this.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        this.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setFocusable(true);
         setOutsideTouchable(true);
         this.update();
-        ColorDrawable cDraw = new ColorDrawable(Color.argb(POPUPWINDOW_BG_ALPHA_HALF, 0, 0, 0));
-        this.setBackgroundDrawable(cDraw);
+        this.setBackgroundDrawable(new ColorDrawable(00000000));
         evalIcon = (ImageView) contentView.findViewById(R.id.iv_eval);
     }
 

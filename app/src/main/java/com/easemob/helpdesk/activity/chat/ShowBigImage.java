@@ -30,9 +30,11 @@ import com.easemob.helpdesk.utils.FileUtils;
 import com.easemob.helpdesk.widget.PhotoView;
 import com.easemob.helpdesk.widget.PhotoViewAttacher.OnPhotoTapListener;
 import com.hyphenate.kefusdk.HDDataCallBack;
+import com.hyphenate.kefusdk.chat.EmojiconManager;
 import com.hyphenate.kefusdk.chat.HDClient;
 import com.hyphenate.kefusdk.entity.HDMessage;
 import com.hyphenate.kefusdk.messagebody.HDImageMessageBody;
+import com.hyphenate.kefusdk.utils.MessageUtils;
 
 import java.io.File;
 import java.lang.ref.SoftReference;
@@ -50,6 +52,7 @@ public class ShowBigImage extends BaseActivity {
 	private SoftReference<Bitmap> softBitmap = null;
 	private String remoteURL = null;
 	private HDMessage message;
+	private boolean isShowCustomEmoj = false;
 
 	private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/easemob/kefu";
 
@@ -63,9 +66,16 @@ public class ShowBigImage extends BaseActivity {
 		imageSave = $(R.id.btn_image_save);
 		Intent gIntent = getIntent();
 		message = gIntent.getParcelableExtra("message");
-		HDImageMessageBody imageMessageBody = (HDImageMessageBody) message.getBody();
-		localFilePath = imageMessageBody.getLocalPath();
-		remoteURL = imageMessageBody.getRemoteUrl();
+		isShowCustomEmoj = gIntent.getBooleanExtra("showCustomEmoj", false);
+		if (!isShowCustomEmoj) {
+			HDImageMessageBody imageMessageBody = (HDImageMessageBody) message.getBody();
+			localFilePath = imageMessageBody.getLocalPath();
+			remoteURL = imageMessageBody.getRemoteUrl();
+		} else {
+			remoteURL = MessageUtils.getCustomEmojMessageRemoteUrl(message);
+			EmojiconManager.EmojiconEntity emojiconEntity = HDClient.getInstance().emojiManager().getEmojicon(remoteURL);
+			localFilePath = emojiconEntity.origin.localUrl;
+		}
 		//本地存在，直接显示本地的图片
 		if (localFilePath != null && new File(localFilePath).exists()) {
 			Bitmap bitmap = CommonUtils.getScaleBitmap(ShowBigImage.this, localFilePath);
