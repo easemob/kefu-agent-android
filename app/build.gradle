@@ -221,7 +221,7 @@ dependencies {
     implementation 'com.daimajia.numberprogressbar:library:1.2@aar'
     implementation project(':xhsemotionskeyboard')
     implementation project(':reclib-easemobmoticons')
-    implementation 'com.easemob:kefu-agentsdk-android:1.0.9'
+    implementation 'com.easemob:kefu-agentsdk-android:1.0.9r2'
     implementation 'com.google.code.gson:gson:2.8.5'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.1'
